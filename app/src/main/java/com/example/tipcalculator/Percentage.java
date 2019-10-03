@@ -8,7 +8,7 @@ public class Percentage {
     public Percentage(int userSpecifiedPercent) {
         if(userSpecifiedPercent >= 1) {
             if (userSpecifiedPercent <100) {
-                this.tipPercent = percent;
+                this.tipPercent = userSpecifiedPercent;
             }
             else {
                 throw new java.lang.IllegalArgumentException("tip percent must be less than 100");
