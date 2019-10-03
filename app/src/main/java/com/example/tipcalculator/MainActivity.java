@@ -94,10 +94,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateUI(int tipPercentFinal, double tipTotalFinal, double BillTotalFinal) {
-        //DISPLAY ON UI
+        //DISPLAY FINAL VALUES ON UI
         tipPercentOutput.setText(String.valueOf(tipPercentFinal) + "%");
         tipTotalOutput.setText(String.valueOf(tipTotalFinal) + "$");
         billTotalOutput.setText(String.valueOf(BillTotalFinal) + "$");
+    }
+
+    private void resetUIOutputElements() {
+        //RESETS DOLLAR OUTPUT CALCULATIONS IN UI
+        tipTotalOutput.setText("0.00$");
+        billTotalOutput.setText("0.00$");
     }
 
     private void percentageUIUpdater() {
@@ -152,6 +158,13 @@ public class MainActivity extends AppCompatActivity {
                        subTotalEntry.setText("");
                    }
                }
+                else {
+                    //checks to see if text is being deleted
+                     if(count==0 && before > count) {
+                         //reset UI
+                         resetUIOutputElements();
+                     }
+                }
            }
 
            @Override
