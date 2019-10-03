@@ -3,6 +3,8 @@ package com.example.tipcalculator;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -35,34 +37,21 @@ public class MainActivity extends AppCompatActivity {
         this.tipPercentOutput = findViewById(R.id.tipPercentOutputTag);
         this.tipTotalOutput = findViewById(R.id.tipTotalOutputTag);
         this.billTotalOutput = findViewById(R.id.billTotalOutputTag);;
+
+        //ASSIGNING EVENT HANDLERS
+        assignEventListeners();
     }
 
-    public void textEntryEventHandler(View view) {
-        //view conversion
-        int viewID = view.getId();
-        TextInputEditText inputField = findViewById(viewID);
-        //check and validate that at least two numbers have been entered AND they are both not zero
-        //this will prevent excessive overhead
-        String inputFieldData = inputField.getText().toString();
-        if((inputFieldData.length() >=2) &&
-            (inputFieldData.charAt(0) == 0 && inputFieldData.charAt(1) == 0)) {
-            //checks validity of characters
-            if(expressionIsValid(inputFieldData)==true) {
-                ///get subTotal from UI
-                double subTotal = Double.parseDouble(inputFieldData);
-                //get tip from internal object
-                int tipAmount = tipPercent.getPercent();
-                //cal tip total
-                double finalTipTotal = calculateTipTotal(tipAmount,subTotal);
-                //calc final bill total
-                double finalBillTotal = calculateFinalTotal(finalTipTotal,subTotal);
-                updateUI(tipAmount,finalTipTotal,finalBillTotal);
-            }
-            else {
-                //erase the bad chars
-                subTotalEntry.setText("");
-            }
-        }
+    public void textEntryEventHandler(CharSequence inputFieldData) {
+        ///get subTotal from UI (converting Charsequence to string and then to double)
+        double subTotal = Double.parseDouble(inputFieldData.toString());
+        //get tip from internal object
+        int tipAmount = tipPercent.getPercent();
+        //cal tip total
+        double finalTipTotal = calculateTipTotal(tipAmount,subTotal);
+        //calc final bill total
+        double finalBillTotal = calculateFinalTotal(finalTipTotal,subTotal);
+        updateUI(tipAmount,finalTipTotal,finalBillTotal);
     }
 
     public void percentButtonEventHandler(View view) {
@@ -129,11 +118,11 @@ public class MainActivity extends AppCompatActivity {
         return (Math.round(sum *100)/100.0);
     }
 
-    private boolean expressionIsValid(String expression) {
+    private boolean expressionIsValid(CharSequence expression) {
         //method checks if a given expression contains any alphabetic characters
         //will loop through inputted expression and compare each character to those in the "acceptableValues" array
         char acceptableValues[]  = {'0','1','2','3','4','5','6','7','8','9','.'};
-        for(int i = 0; i < expression.length(); i++) {
+        for(int i = 1; i < (expression.length()-1); i++) {
             char expressionCharacter = expression.charAt(i);
             for(int j = 0; j < acceptableValues.length; j++) {
                 if (expressionCharacter != acceptableValues[j])
@@ -144,7 +133,32 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void assignEventListeners() {
-        this.subTotalEntry
+       this.subTotalEntry.addTextChangedListener(new TextWatcher() {
+           @Override
+           public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+           }
+
+           @Override
+           public void onTextChanged(CharSequence s, int start, int before, int count) {
+               String inputFieldData = s.toString();
+                 if((inputFieldData.length() >=1)) {
+                   //checks validity of characters
+                   if (expressionIsValid(s) == true) {
+                       textEntryEventHandler(s);
+                   }
+                   else {
+                       //erase the bad chars
+                       subTotalEntry.setText("");
+                   }
+               }
+           }
+
+           @Override
+           public void afterTextChanged(Editable s) {
+
+           }
+       });
     }
 }
 
