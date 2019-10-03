@@ -46,18 +46,29 @@ public class MainActivity extends AppCompatActivity {
         Button clickedButton = findViewById(viewID);
         //check and validate the operation
         if (clickedButton.getText() == "+" || clickedButton.getText() == "-") {
+            //update tip internal object and UI label
             if(clickedButton.getText() == "+") {
                 //increment tip
                 tipPercent.incrementPercent();
+                percentageUIUpdater("increment");
             }
             else {
                 //decrement tip
                 tipPercent.decrementPercent();
+                percentageUIUpdater("decrement");
             }
-            //get subTotal from UI
-            double subTotal = Double.parseDouble(this.subTotalEntry.getText().toString());
-            //cal tip total
-            double finalTipTotal = calculateTipTotal(subt)
+            //this ensures that calculations only run when the subtotal has been entered
+            if(this.subTotalEntry.getText() != null && this.subTotalEntry.getText().toString() != "") {
+                //get subTotal from UI
+                double subTotal = Double.parseDouble(this.subTotalEntry.getText().toString());
+                //get tip from internal object
+                int tipAmount = tipPercent.getPercent();
+                //cal tip total
+                double finalTipTotal = calculateTipTotal(tipAmount,subTotal);
+                //calc final bill total
+                double finalBillTotal = calculateFinalTotal(finalTipTotal,subTotal);
+                updateUI(tipAmount,finalTipTotal,finalBillTotal);
+            }
         }
         else {
             //throw if + or - text signs are not seen by the method
@@ -65,7 +76,14 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void incrementPercentage(String incrementorBehavior) {
+    private void updateUI(int tipPercentFinal, double tipTotalFinal, double BillTotalFinal) {
+        //DISPLAY ON UI
+        tipPercentOutput.setText(String.valueOf(tipPercentFinal) + "%");
+        tipTotalOutput.setText(String.valueOf(tipTotalFinal));
+        billTotalOutput.setText(String.valueOf(BillTotalFinal));
+    }
+
+    private void percentageUIUpdater(String incrementorBehavior) {
         //parameter validation
         if(incrementorBehavior == "increment" || incrementorBehavior == "decrement") {
             //get raw percentage string
@@ -89,13 +107,6 @@ public class MainActivity extends AppCompatActivity {
         else {
             throw new java.lang.IllegalArgumentException("improper behavior parameter was passed; must be either 'increment' or 'decrement");
         }
-    }
-
-    private void updateUI(double tipPercentFinal, double tipTotalFinal, double BillTotalFinal) {
-        //DISPLAY ON UI
-        tipPercentOutput.setText(String.valueOf(tipPercentFinal) + "%");
-        tipTotalOutput.setText(String.valueOf(tipTotalFinal));
-        billTotalOutput.setText(String.valueOf(BillTotalFinal));
     }
 
     private double calculateTipTotal(int tipPercent, double billSubTotal) {
