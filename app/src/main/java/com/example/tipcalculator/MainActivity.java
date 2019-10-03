@@ -124,18 +124,18 @@ public class MainActivity extends AppCompatActivity {
         return (Math.round(sum *100)/100.0);
     }
 
-    private boolean expressionIsValid(CharSequence expression) {
+    private boolean expressionIsValid(String expression) {
         //method checks if a given expression contains any alphabetic characters
         //will loop through inputted expression and compare each character to those in the "acceptableValues" array
         char acceptableValues[]  = {'0','1','2','3','4','5','6','7','8','9','.'};
-        for(int i = 1; i < (expression.length()-1); i++) {
+        for(int i = 0; i < expression.length(); i++) {
             char expressionCharacter = expression.charAt(i);
             for(int j = 0; j < acceptableValues.length; j++) {
-                if (expressionCharacter != acceptableValues[j])
-                    return false;
+                if (expressionCharacter == acceptableValues[j])
+                    return true;
             }
         }
-        return true;
+        return false;
     }
 
     private void assignEventListeners() {
@@ -150,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
                String inputFieldData = s.toString();
                  if((inputFieldData.length() >=1)) {
                    //checks validity of characters
-                   if (expressionIsValid(s) == true) {
+                   if (expressionIsValid(inputFieldData) == true) {
                        textEntryEventHandler(s);
                    }
                    else {
@@ -160,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
                }
                 else {
                     //checks to see if text is being deleted
-                     if(count==0 && before > count) {
+                     if(inputFieldData.length()==0 && before > inputFieldData.length()) {
                          //reset UI
                          resetUIOutputElements();
                      }
