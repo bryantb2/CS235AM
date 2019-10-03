@@ -29,12 +29,12 @@ public class Percentage {
     }
 
     public void incrementPercent() {
-        this.tipPercent = this.tipPercent++;
+        this.tipPercent = this.tipPercent+1;
     }
 
     public void decrementPercent() {
         if (this.tipPercent > 0) {
-            this.tipPercent = this.tipPercent--;
+            this.tipPercent = this.tipPercent-1;
         }
     }
 }
