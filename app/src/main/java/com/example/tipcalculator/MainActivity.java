@@ -3,6 +3,10 @@ package com.example.tipcalculator;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.os.Build;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -10,9 +14,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-
-import com.example.tipcalculator.Percentage;
-import com.google.android.material.textfield.TextInputEditText;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -23,15 +24,16 @@ public class MainActivity extends AppCompatActivity {
     TextView tipPercentOutput;
     TextView tipTotalOutput;
     TextView billTotalOutput;
-    Percentage tipPercent = new Percentage();
+    Percentage tipPercent;
 
     //CLASS-LEVEL STATE KEYS
-    String tempState;
     private String SUB_TOTAL_ENTRY = "SUB_TOTAL_ENTRY";
     private String TIP_PERCENT_UI_OUTPUT = "TIP_PERCENT_UI_OUTPUT";
     private String TIP_TOTAL_OUTPUT = "TIP_TOTAL_OUTPUT";
     private String BILL_TOTAL_OUTPUT = "BILL_TOTAL_OUTPUT";
 
+    //TESTING TAGS AND VARS
+    public static final String TRACER = "tracer";
     String INSIDE_ONCREATE = "INSIDE_ONCREATE";
     String GENERAL_TEST = "GENERAL_TEST";
     String INSIDE_ONRESTORE = "INSIDE_ONRESTORE";
@@ -39,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        notify("onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -53,56 +56,87 @@ public class MainActivity extends AppCompatActivity {
         Log.d(GENERAL_TEST,"test of logging system");
         //getting the state (prepping UI)
         if(savedInstanceState != null) {
-            //get existing saved values from state
-            /*this.tipPercentOutput.setText(savedInstanceState.getString(TIP_PERCENT_UI_OUTPUT));
-            Log.d(INSIDE_ONCREATE,"test of onCreate utilizing savedInstanceState");*/
             this.TIP_PERCENT_UI_OUTPUT = savedInstanceState.getString(TIP_PERCENT_UI_OUTPUT);
             this.TIP_TOTAL_OUTPUT = savedInstanceState.getString(TIP_TOTAL_OUTPUT);
             this.SUB_TOTAL_ENTRY = savedInstanceState.getString(SUB_TOTAL_ENTRY);
             this.BILL_TOTAL_OUTPUT = savedInstanceState.getString(BILL_TOTAL_OUTPUT);
+            //use saveState data to create percent and assign new percentage
+            this.tipPercent = new Percentage(Integer.parseInt(TIP_PERCENT_UI_OUTPUT));
+            percentageUIUpdater(tipPercent.getPercent());
+            resetUIOutputElements();
         }
         else {
             //otherwise set default values
-           /* this.tipPercentOutput.setText(String.valueOf(tipPercent.getPercent())+ "%");
-            Log.d(INSIDE_ONCREATE,"test of onCreate utilizing savedInstanceState, NOT WORKING");*/
-            percentageUIUpdater(this.tipPercent.getPercent());
+            this.tipPercent = new Percentage();
+            percentageUIUpdater(tipPercent.getPercent());
             resetUIOutputElements();
         }
 
         //ASSIGNING EVENT HANDLERS
         assignEventListeners();
     }
-/*
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        notify("onPause");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        notify("onResume");
+    }
+
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        notify("onRestore");
         super.onRestoreInstanceState(savedInstanceState);
-        if (savedInstanceState.getString(TIP_PERCENT_UI_OUTPUT) != null) {
-            this.subTotalEntry.setText(savedInstanceState.getString(SUB_TOTAL_ENTRY));
-            this.tipPercentOutput.setText(savedInstanceState.getString(TIP_PERCENT_UI_OUTPUT));
-            this.tipTotalOutput.setText(savedInstanceState.getString(TIP_TOTAL_OUTPUT));
-            this.billTotalOutput.setText(savedInstanceState.getString(BILL_TOTAL_OUTPUT));
-            Log.d(INSIDE_ONRESTORE,"test of onRestoreInstance");
-        }
+        this.tipPercent = new Percentage(Integer.parseInt(TIP_PERCENT_UI_OUTPUT));
+        percentageUIUpdater(tipPercent.getPercent());
+        this.subTotalEntry.setText(savedInstanceState.getString(SUB_TOTAL_ENTRY));
+        this.tipPercentOutput.setText(savedInstanceState.getString(TIP_PERCENT_UI_OUTPUT));
+        this.tipTotalOutput.setText(savedInstanceState.getString(TIP_TOTAL_OUTPUT));
+        this.billTotalOutput.setText(savedInstanceState.getString(BILL_TOTAL_OUTPUT));
+        Log.d(INSIDE_ONRESTORE,"test of onRestoreInstance");
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        // call superclass to save any view hierarchy
-        super.onSaveInstanceState(outState);
+    protected void onSaveInstanceState(Bundle savedInstanceState) {
+        notify("onSaveInstanceState");
         //outState.putString(GAME_STATE_KEY, gameState);
         //outState.putString(TEXT_VIEW_KEY, textView.getText());
-        outState.putString(SUB_TOTAL_ENTRY,this.subTotalEntry.getText().toString());
-        outState.putString(TIP_PERCENT_UI_OUTPUT,this.tipPercentOutput.getText().toString());
-        outState.putString(TIP_TOTAL_OUTPUT,String.valueOf(this.tipPercent.getPercent()));
-        outState.putString(BILL_TOTAL_OUTPUT,this.billTotalOutput.getText().toString());
+        savedInstanceState.putString(SUB_TOTAL_ENTRY,this.subTotalEntry.getText().toString());
+        savedInstanceState.putString(TIP_PERCENT_UI_OUTPUT,this.tipPercentOutput.getText().toString());
+        savedInstanceState.putString(TIP_TOTAL_OUTPUT,String.valueOf(this.tipPercent.getPercent()));
+        savedInstanceState.putString(BILL_TOTAL_OUTPUT,this.billTotalOutput.getText().toString());
         Log.d(INSIDE_ONSAVE,"test of onSavInstance");
+        // call superclass to save any view hierarchy
+        super.onSaveInstanceState(savedInstanceState);
     }
 
-    @Override
-    protected void onDestroy(){
-        super.onDestroy();
+    private void notify(String methodName) {
+        //IMPORTANT NOTE ----- credit for notify() source code goes to: https://www.vogella.com/tutorials/AndroidLifeCycle/article.html -----
+        String name = this.getClass().getName();
+        String[] strings = name.split("\\.");
+        Notification.Builder notificationBuilder;
 
-    }*/
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            notificationBuilder = new Notification.Builder(this, TRACER);
+        } else {
+            //noinspection deprecation
+            notificationBuilder = new Notification.Builder(this);
+        }
+
+        Notification notification = notificationBuilder
+                .setContentTitle(methodName + " " + strings[strings.length - 1])
+                .setAutoCancel(true)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentText(name).build();
+        NotificationManager notificationManager =
+                (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.notify((int) System.currentTimeMillis(), notification);
+    }
 
 
     public void textEntryEventHandler(CharSequence inputFieldData) {
@@ -137,6 +171,7 @@ public class MainActivity extends AppCompatActivity {
             //special case: this conditional block ensures that calculations only run when the subtotal has been entered
             String subTotalEntry = this.subTotalEntry.getText().toString();
             if(expressionIsValid(subTotalEntry)==true) {
+                //CALCULATING BILL AND TIP TOTAL
                 //get subTotal from UI
                 double subTotal = Double.parseDouble(this.subTotalEntry.getText().toString());
                 //get tip from internal object
