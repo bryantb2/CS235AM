@@ -22,12 +22,23 @@ public class MainActivity extends AppCompatActivity {
     TextView tipPercentOutput;
     TextView tipTotalOutput;
     TextView billTotalOutput;
-
     Percentage tipPercent = new Percentage();
+
+    //CLASS-LEVEL STATE KEYS
+    String tempState;
+    private String SUB_TOTAL_ENTRY = "SUB_TOTAL_ENTRY";
+    private String TIP_PERCENT_UI_OUTPUT = "TIP_PERCENT_UI_OUTPUT";
+    private String BILL_TOTAL_OUTPUT = "BILL_TOTAL_OUTPUT";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //getting the state (prepping UI
+        if(savedInstanceState != null) {
+
+        }
+
         setContentView(R.layout.activity_main);
 
         //FETCHING UI ELEMENTS
@@ -42,6 +53,26 @@ public class MainActivity extends AppCompatActivity {
         assignEventListeners();
     }
 
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        //textView.setText(savedInstanceState.getString(TEXT_VIEW_KEY));
+        this.subTotalEntry.setText(savedInstanceState.getString(SUB_TOTAL_ENTRY));
+        this.tipTotalOutput.setText(savedInstanceState.getString(TIP_PERCENT_UI_OUTPUT));
+        this.billTotalOutput.setText(savedInstanceState.getString(BILL_TOTAL_OUTPUT));
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        //outState.putString(GAME_STATE_KEY, gameState);
+        //outState.putString(TEXT_VIEW_KEY, textView.getText());
+        outState.putString(SUB_TOTAL_ENTRY,this.subTotalEntry.getText().toString());
+        outState.putString(TIP_PERCENT_UI_OUTPUT,this.tipTotalOutput.getText().toString());
+        outState.putString(BILL_TOTAL_OUTPUT,this.billTotalOutput.getText().toString());
+
+        // call superclass to save any view hierarchy
+        super.onSaveInstanceState(outState);
+    }
+
     public void textEntryEventHandler(CharSequence inputFieldData) {
         ///get subTotal from UI (converting Charsequence to string and then to double)
         double subTotal = Double.parseDouble(inputFieldData.toString());
@@ -51,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
         double finalTipTotal = calculateTipTotal(tipAmount,subTotal);
         //calc final bill total
         double finalBillTotal = calculateFinalTotal(finalTipTotal,subTotal);
-        updateUI(tipAmount,finalTipTotal,finalBillTotal);
+        updateUI(finalTipTotal,finalBillTotal);
     }
 
     public void percentButtonEventHandler(View view) {
@@ -59,19 +90,17 @@ public class MainActivity extends AppCompatActivity {
         int viewID = view.getId();
         Button clickedButton = findViewById(viewID);
         //check and validate the operation;
-        Object buttonUITag = clickedButton.getTag();
         if (clickedButton == this.incrementorButton || clickedButton == this.decrementorButton) {
             //update tip internal object and UI label
             if(clickedButton == this.incrementorButton) {
                 //increment tip
                 tipPercent.incrementPercent();
-                int testingVar = tipPercent.getPercent();
-                percentageUIUpdater();
+                percentageUIUpdater(this.tipPercent.getPercent());
             }
             else {
                 //decrement tip
                 tipPercent.decrementPercent();
-                percentageUIUpdater();
+                percentageUIUpdater(this.tipPercent.getPercent());
             }
             //special case: this conditional block ensures that calculations only run when the subtotal has been entered
             String subTotalEntry = this.subTotalEntry.getText().toString();
@@ -84,7 +113,8 @@ public class MainActivity extends AppCompatActivity {
                 double finalTipTotal = calculateTipTotal(tipAmount,subTotal);
                 //calc final bill total
                 double finalBillTotal = calculateFinalTotal(finalTipTotal,subTotal);
-                updateUI(tipAmount,finalTipTotal,finalBillTotal);
+                updateUI(finalTipTotal,finalBillTotal);
+                percentageUIUpdater(this.tipPercent.getPercent());
             }
         }
         else {
@@ -93,9 +123,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void updateUI(int tipPercentFinal, double tipTotalFinal, double BillTotalFinal) {
+    private void updateUI(double tipTotalFinal, double BillTotalFinal) {
         //DISPLAY FINAL VALUES ON UI
-        tipPercentOutput.setText(String.valueOf(tipPercentFinal) + "%");
         tipTotalOutput.setText(String.valueOf(tipTotalFinal) + "$");
         billTotalOutput.setText(String.valueOf(BillTotalFinal) + "$");
     }
@@ -106,8 +135,7 @@ public class MainActivity extends AppCompatActivity {
         billTotalOutput.setText("0.00$");
     }
 
-    private void percentageUIUpdater() {
-        int percent = this.tipPercent.getPercent();
+    private void percentageUIUpdater(int percent) {
         //DISPLAY CHANGE IN UI
         tipPercentOutput.setText(String.valueOf(percent) + "%");
     }
