@@ -40,7 +40,6 @@ public class MainActivity extends AppCompatActivity {
     private Double billTotalData; //grand bill total (USD)
 
     //SAVE STATE KEYS
-    private boolean isStateSaved = false;
     private String SUB_TOTAL_STRING= "SUB_TOTAL_STRING";
     private String TIP_PERCENT_STRING = "TIP_PERCENT_UI_STRING";
     private String TIP_TOTAL_STRING = "TIP_TOTAL_STRING";
@@ -80,8 +79,6 @@ public class MainActivity extends AppCompatActivity {
             //getting saved strings and converting/setting them to the class data fields
             this.subTotalInputString = savedInstanceState.getString(TIP_PERCENT_STRING);
             this.tipPercentObject = new Percentage(Integer.parseInt(savedInstanceState.getString(TIP_PERCENT_STRING)));
-            //set is stateSaved tracking to true
-            isStateSaved = true;
         }
 
         // Get reference to SharedPrefs object
@@ -106,36 +103,22 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        //conditional selection between sharedPreferences (perma storage) and SAVESTATE (temp storage)
-        if(this.isStateSaved == true) {
-            //set text input field (if the subTotalInputString is a valid input)
-            if(!(this.subTotalInputString == "" || this.subTotalInputString == " ")) {
-                textEntryEventHandler(this.subTotalInputString);
-            }
-            else {
-                //execution of this block is done when the saved subTotalInputString contians no numeric values (aka EMPTY)
-                percentageUIUpdater(tipPercentObject.getPercent());
-                resetUIOutputElements();
-            }
+        notify("onResume temp storage access");
+        if(!(savedValues.getString(SUB_TOTAL_TEMP_STRING, "") == "")) {
+            //assumes that a tip percent return value of "" means that there is no values in perma storage
+            //Getting instance variables
+            this.subTotalInputString = savedValues.getString(SUB_TOTAL_TEMP_STRING, ""); //MAYBE THIS WILL BREAK STUFF
+            this.tipPercentObject = new Percentage(Integer.parseInt(savedValues.getString(TIP_PERCENT_TEMP_STRING, "")));
+            //Displaying percent and sub total in text input field
+            percentageUIUpdater(this.tipPercentObject.getPercent());
+            this.subTotalEntryField.setText(this.subTotalInputString);
+            //Calculating data (because there is something in the input field from a previous instance)
+            textEntryEventHandler(this.subTotalInputString);
         }
         else {
-            notify("onResume temp storage access");
-            if(!(savedValues.getString(SUB_TOTAL_TEMP_STRING, "") == "")) {
-                //assumes that a tip percent return value of "" means that there is no values in perma storage
-                //Getting instance variables
-                this.subTotalInputString = savedValues.getString(SUB_TOTAL_TEMP_STRING, ""); //MAYBE THIS WILL BREAK STUFF
-                this.tipPercentObject = new Percentage(Integer.parseInt(savedValues.getString(TIP_PERCENT_TEMP_STRING, "")));
-                //Displaying percent and sub total in text input field
-                percentageUIUpdater(this.tipPercentObject.getPercent());
-                this.subTotalEntryField.setText(this.subTotalInputString);
-                //Calculating data (because there is something in the input field from a previous instance)
-                textEntryEventHandler(this.subTotalInputString);
-            }
-            else {
-                this.tipPercentObject = new Percentage();
-                this.percentageUIUpdater(this.tipPercentObject.getPercent());
-                resetUIOutputElements();
-            }
+            this.tipPercentObject = new Percentage();
+            this.percentageUIUpdater(this.tipPercentObject.getPercent());
+            resetUIOutputElements();
         }
         super.onResume();
     }
