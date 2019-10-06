@@ -24,33 +24,40 @@ public class MainActivity extends AppCompatActivity {
     //Class-level sharedPreferences object
     private SharedPreferences savedValues;
 
-    //CLASS-LEVEL FIELDS
-    Button incrementorButton;
-    Button decrementorButton;
-    EditText subTotalEntryField;
-    TextView tipPercentLabel;
-    TextView tipTotalLabel;
-    TextView billTotalLabel;
+    //FIELDS
+    private Button incrementorButton;
+    private Button decrementorButton;
+    private EditText subTotalEntryField;
+    private TextView tipPercentLabel;
+    private TextView tipTotalLabel;
+    private TextView billTotalLabel;
 
-    //CLASS-LEVEL FIELD DATA
-    Percentage tipPercentObject;
+    //FIELD DATA
+    private Percentage tipPercentObject;
     private String subTotalInputString; //converted char sequence of user input
     private Double subTotalData; //user-input converted to a numeric value
     private Double tipTotalData; //cost of the tip (USD)
     private Double billTotalData; //grand bill total (USD)
 
-    //CLASS-LEVEL STATE KEYS
+    //SAVE STATE KEYS
+    private boolean isStateSaved = false;
     private String SUB_TOTAL_STRING= "SUB_TOTAL_STRING";
-    private String TIP_PERCENT_UI_STRING = "TIP_PERCENT_UI_STRING";
+    private String TIP_PERCENT_STRING = "TIP_PERCENT_UI_STRING";
     private String TIP_TOTAL_STRING = "TIP_TOTAL_STRING";
     private String BILL_TOTAL_STRING = "BILL_TOTAL_STRING";
 
+    //RESUME/PAUSE TEMP STATE KEYS
+    private String SUB_TOTAL_TEMP_STRING= "SUB_TOTAL_STRING";
+    private String TIP_PERCENT_TEMP_STRING = "TIP_PERCENT_UI_STRING";
+    private String TIP_TOTAL_TEMP_STRING = "TIP_TOTAL_STRING";
+    private String BILL_TOTAL_TEMP_STRING = "BILL_TOTAL_STRING";
+
     //TESTING TAGS AND VARS
-    public static final String TRACER = "tracer";
-    String INSIDE_ONCREATE = "INSIDE_ONCREATE";
-    String GENERAL_TEST = "GENERAL_TEST";
-    String INSIDE_ONRESTORE = "INSIDE_ONRESTORE";
-    String INSIDE_ONSAVE = "INSIDE_ONSAVE";
+    private static final String TRACER = "tracer";
+    private String INSIDE_ONCREATE = "INSIDE_ONCREATE";
+    private String GENERAL_TEST = "GENERAL_TEST";
+    private String INSIDE_ONRESTORE = "INSIDE_ONRESTORE";
+    private String INSIDE_ONSAVE = "INSIDE_ONSAVE";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,27 +73,100 @@ public class MainActivity extends AppCompatActivity {
         this.tipTotalLabel = findViewById(R.id.tipTotalOutputTag);
         this.billTotalLabel = findViewById(R.id.billTotalOutputTag);
 
-        Log.d(GENERAL_TEST,"test of logging system");
+        Log.d(INSIDE_ONCREATE,"onCreate");
         //getting the state (prepping UI)
-        /*if(savedInstanceState != null) {
-            this.TIP_PERCENT_UI_STRING = savedInstanceState.getString(TIP_PERCENT_UI_STRING);
-            this.TIP_TOTAL_STRING = savedInstanceState.getString(TIP_TOTAL_STRING);
-            this.SUB_TOTAL_STRING = savedInstanceState.getString(SUB_TOTAL_STRING);
-            this.BILL_TOTAL_STRING = savedInstanceState.getString(BILL_TOTAL_STRING);
-            //use saveState data to create percent and assign new percentage
-            this.tipPercentObject = new Percentage(Integer.parseInt(TIP_PERCENT_UI_STRING));
-            percentageUIUpdater(tipPercentObject.getPercent());
-            resetUIOutputElements();
+        if(savedInstanceState != null) {
+            //RESTORING INSTANCE VARIABLES
+            //getting saved strings and converting/setting them to the class data fields
+            this.subTotalInputString = savedInstanceState.getString(TIP_PERCENT_STRING);
+            this.tipPercentObject = new Percentage(Integer.parseInt(savedInstanceState.getString(TIP_PERCENT_STRING)));
+            //set is stateSaved tracking to true
+            isStateSaved = true;
         }
-        else {*/
-            //otherwise set default values
-            this.tipPercentObject = new Percentage();
-            percentageUIUpdater(tipPercentObject.getPercent());
-            resetUIOutputElements();
-        //}
+
+        // Get reference to SharedPrefs object
+        savedValues = getSharedPreferences("savedValues", MODE_PRIVATE);
 
         //ASSIGNING EVENT HANDLERS
         assignEventListeners();
+    }
+
+    //LIFECYCLE METHODS
+
+    @Override
+    protected void onPause() {
+        notify("onPause");
+        super.onPause();
+        //onPause will store the sub total, tip total, tip percent, and full bill amount
+        Editor editor = savedValues.edit();
+        editor.putString(this.SUB_TOTAL_TEMP_STRING, String.valueOf(this.subTotalData));
+        editor.putString(this.TIP_PERCENT_TEMP_STRING, String.valueOf(this.tipPercentObject.getPercent()));
+        editor.commit();
+    }
+
+    @Override
+    protected void onResume() {
+        //conditional selection between sharedPreferences (perma storage) and SAVESTATE (temp storage)
+        if(this.isStateSaved == true) {
+            //set text input field (if the subTotalInputString is a valid input)
+            if(!(this.subTotalInputString == "" || this.subTotalInputString == " ")) {
+                textEntryEventHandler(this.subTotalInputString);
+            }
+            else {
+                //execution of this block is done when the saved subTotalInputString contians no numeric values (aka EMPTY)
+                percentageUIUpdater(tipPercentObject.getPercent());
+                resetUIOutputElements();
+            }
+        }
+        else {
+            notify("onResume temp storage access");
+            if(!(savedValues.getString(SUB_TOTAL_TEMP_STRING, "") == "")) {
+                //assumes that a tip percent return value of "" means that there is no values in perma storage
+                //Getting instance variables
+                this.subTotalInputString = savedValues.getString(SUB_TOTAL_TEMP_STRING, ""); //MAYBE THIS WILL BREAK STUFF
+                this.tipPercentObject = new Percentage(Integer.parseInt(savedValues.getString(TIP_PERCENT_TEMP_STRING, "")));
+                //Displaying percent and sub total in text input field
+                percentageUIUpdater(this.tipPercentObject.getPercent());
+                this.subTotalEntryField.setText(this.subTotalInputString);
+                //Calculating data (because there is something in the input field from a previous instance)
+                textEntryEventHandler(this.subTotalInputString);
+            }
+            else {
+                this.tipPercentObject = new Percentage();
+                this.percentageUIUpdater(this.tipPercentObject.getPercent());
+                resetUIOutputElements();
+            }
+        }
+        super.onResume();
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        //assumption is that onCreate has restored the instance variables required to rebuild the user data
+        notify("onRestore");
+        super.onRestoreInstanceState(savedInstanceState);
+        if(this.subTotalInputString == "" || this.subTotalInputString == " ") {
+            //Displaying percent and resetting UI
+            percentageUIUpdater(this.tipPercentObject.getPercent());
+            resetUIOutputElements();
+        }
+        else {
+            //Displaying percent and sub total in text input field
+            percentageUIUpdater(this.tipPercentObject.getPercent());
+            this.subTotalEntryField.setText(this.subTotalInputString);
+            //Calculate data (because there is something in the input field from a previous instance)
+            textEntryEventHandler(this.subTotalInputString);
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle savedInstanceState) {
+        notify("onSaveInstanceState");
+        //saving important UI data to protect it from onDestroy()
+        savedInstanceState.putString(SUB_TOTAL_STRING,this.subTotalInputString);
+        savedInstanceState.putString(TIP_PERCENT_STRING,String.valueOf(this.tipPercentObject.getPercent()));
+        // call superclass to save any view hierarchy
+        super.onSaveInstanceState(savedInstanceState);
     }
 
     //EVENT HANDLERS AND LISTENERS
@@ -176,6 +256,7 @@ public class MainActivity extends AppCompatActivity {
        });
     }
 
+
     //METHODS
 
     private void notify(String methodName) {
@@ -243,58 +324,5 @@ public class MainActivity extends AppCompatActivity {
         }
         return false;
     }
-
-    //LIFECYCLE METHODS
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        //onPause will store the sub total, tip total, tip percent, and full bill amount
-        Editor editor = savedValues.edit();
-        editor.putString(this.SUB_TOTAL_STRING, String.valueOf(this.subTotalData));
-        editor.putString(this.TIP_PERCENT_UI_STRING, String.valueOf(this.tipPercentObject.getPercent()));
-        editor.commit();
-        notify("onPause");
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        //Get instance variables
-        this.subTotalInputString = savedValues.getString(SUB_TOTAL_STRING, ""); //MAYBE THIS WILL BREAK STUFF
-        this.tipPercentObject = new Percentage(Integer.parseInt(savedValues.getString(TIP_PERCENT_UI_STRING, "")));
-        //Display the sub total and percent text
-        this.subTotalEntryField.setText(this.subTotalInputString);
-        percentageUIUpdater(this.tipPercentObject.getPercent());
-        //Run data calculation
-        textEntryEventHandler(this.subTotalInputString);
-    }
-
-    /*@Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        notify("onRestore");
-        super.onRestoreInstanceState(savedInstanceState);
-        this.tipPercentObject = new Percentage(Integer.parseInt(TIP_PERCENT_UI_STRING));
-        percentageUIUpdater(tipPercentObject.getPercent());
-        this.subTotalEntryField.setText(savedInstanceState.getString(SUB_TOTAL_STRING));
-        this.tipPercentLabel.setText(savedInstanceState.getString(TIP_PERCENT_UI_STRING));
-        this.tipTotalLabel.setText(savedInstanceState.getString(TIP_TOTAL_STRING));
-        this.billTotalLabel.setText(savedInstanceState.getString(BILL_TOTAL_STRING));
-        Log.d(INSIDE_ONRESTORE,"test of onRestoreInstance");
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle savedInstanceState) {
-        notify("onSaveInstanceState");
-        //outState.putString(GAME_STATE_KEY, gameState);
-        //outState.putString(TEXT_VIEW_KEY, textView.getText());
-        savedInstanceState.putString(SUB_TOTAL_STRING,this.subTotalEntryField.getText().toString());
-        savedInstanceState.putString(TIP_PERCENT_UI_STRING,this.tipPercentLabel.getText().toString());
-        savedInstanceState.putString(TIP_TOTAL_STRING,String.valueOf(this.tipPercentObject.getPercent()));
-        savedInstanceState.putString(BILL_TOTAL_STRING,this.billTotalLabel.getText().toString());
-        Log.d(INSIDE_ONSAVE,"test of onSavInstance");
-        // call superclass to save any view hierarchy
-        super.onSaveInstanceState(savedInstanceState);
-    }*/
 }
 
