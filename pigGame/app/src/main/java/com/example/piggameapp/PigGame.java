@@ -21,15 +21,58 @@ public class PigGame {
 
     //PROPERTIES
     public String getPlayerName(int playerNumber) {
-
+        if(playerNumber==1) {
+            return player1.getName();
+        }
+        else {
+            return player2.getName();
+        }
     }
 
     public int getPlayerScore(int playerNumber) {
+        if(playerNumber==1) {
+            return player1.getPoints();
+        }
+        else {
+            return player2.getPoints();
+        }
+    }
 
+    public int getCurrentPlayerNumber() {
+        return currentPlayerTurn;
+    }
+
+    public String getCurrentPlayerName() {
+        return getPlayerName(currentPlayerTurn);
+    }
+
+    public int getPointsForCurrentTurn() {
+        return runningTotal;
     }
 
 
     //METHODS
+    public void resetPlayerScore(int playerNumber) {
+        if(playerNumber==1) {
+            this.player1.wipePoints();
+        }
+        else {
+            this.player2.wipePoints();
+        }
+    }
+
+    public void setPlayerTurn(int playerNumber) {
+        this.currentPlayerTurn = playerNumber;
+    }
+
+    public void addToPlayerScore(int playerNumber, int points) {
+        if(playerNumber==1) {
+            this.player1.addPoints(points);
+        }
+        else {
+            this.player2.addPoints(points);
+        }
+    }
 }
 
 /*
