@@ -53,7 +53,6 @@ public class PigGame {
 
     //METHODS
     public int RollAndCalc() {
-        //returns number of the roll
         //roll die
         //if roll doesn't equal 8
             //add to running total
@@ -62,13 +61,27 @@ public class PigGame {
             //reset running total
             //reset player score
             //return roll number
+        //returns number of the roll
+        int rolledNumber = this.rollDie();
+        if(rolledNumber != 8) {
+            addToRunningTotal(rolledNumber);
+            return rolledNumber;
+        }
+        else {
+            this.resetRunningTotal();
+            resetPlayerScore(currentPlayerTurn);
+            return rolledNumber;
+        }
     }
 
     public void EndTurn() {
         //add runningTotal to player score
         //reset runningTotal
+        //CALCULATE WINNER WOULD GET CALLED WITH THIS
         //set next player turn to opposite of current player turn
-
+        this.addToPlayerScore(currentPlayerTurn,runningTotal);
+        this.resetRunningTotal();
+        this.setNextPlayerTurn();
     }
 
     public void RestartGame() {
@@ -76,10 +89,10 @@ public class PigGame {
         //reset internal running score
         //set player turn back to default
         //reset points limit first tracker
-        resetPlayerScore(1);
-        resetPlayerScore(2);
-        resetPlayerTurn();
-        resetRunningTotal();
+        this.resetPlayerScore(1);
+        this.resetPlayerScore(2);
+        this.resetPlayerTurn();
+        this.resetRunningTotal();
         this.playerOneReached100 = false;
     }
 
@@ -111,6 +124,14 @@ public class PigGame {
         return this.eightSidedDie.roll();
     }
 
+    //PRIVATE CLASS METHODS
+    private void setNextPlayerTurn() {
+        if(this.currentPlayerTurn == 1)
+            this.currentPlayerTurn = 2;
+        else
+            this.currentPlayerTurn = 1;
+    }
+
     private void resetPlayerScore(int playerNumber) {
         if(playerNumber==1) {
             this.player1.wipePoints();
@@ -122,6 +143,10 @@ public class PigGame {
 
     private void resetRunningTotal() {
         this.runningTotal = 0;
+    }
+
+    private void addToRunningTotal(int points) {
+        this.runningTotal = points;
     }
 
     private void resetPlayerTurn() {
