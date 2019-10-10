@@ -11,9 +11,7 @@ public class Die {
 
     //METHODS
     public int roll() {
-        int max = this.numberOfSides;
-        int min = 0;
-        int outcome = numberGenerator(min,max);
+        int outcome = numberGenerator(0,this.numberOfSides);
         return outcome;
     }
 

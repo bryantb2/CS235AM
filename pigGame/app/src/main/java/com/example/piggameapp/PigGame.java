@@ -10,6 +10,7 @@ public class PigGame {
     private Die eightSidedDie;
     private int currentPlayerTurn;
     private int runningTotal;
+    private int reachedPointsLimitFirst;
 
     //CONSTRUCTOR
     public PigGame(String playerOneName, String playerTwoName, int dieSize) {
@@ -29,6 +30,10 @@ public class PigGame {
         }
     }
 
+    public String getCurrentPlayerName() {
+        return getPlayerName(currentPlayerTurn);
+    }
+
     public int getPlayerScore(int playerNumber) {
         if(playerNumber==1) {
             return player1.getPoints();
@@ -38,21 +43,57 @@ public class PigGame {
         }
     }
 
-    public int getCurrentPlayerNumber() {
-        return currentPlayerTurn;
-    }
-
-    public String getCurrentPlayerName() {
-        return getPlayerName(currentPlayerTurn);
-    }
-
     public int getPointsForCurrentTurn() {
         return runningTotal;
     }
 
+    /*public int getCurrentPlayerNumber() {
+        return currentPlayerTurn;
+    }*/
 
     //METHODS
-    public void resetPlayerScore(int playerNumber) {
+    public int RollAndCalc() {
+        //returns number of the roll
+        //roll die
+        //if roll doesn't equal 8
+            //add to running total
+            //return roll number
+        //else
+            //reset running total
+            //reset player score
+            //return roll number
+    }
+
+    public void EndTurn() {
+        //add runningTotal to player score
+        //reset runningTotal
+        //set next player turn to opposite of current player turn
+
+    }
+
+    public void RestartGame() {
+        //reset player scores
+        //set player turn back to default
+        //reset points limit first tracker
+        resetPlayerScore(1);
+        resetPlayerScore(2);
+        setPlayerTurn(1);
+        this.reachedPointsLimitFirst = 0;
+    }
+
+    public String CalcWinner()
+    {
+        //if currentPlayer has at least 100 points
+            //if currentPlayer is player1
+                //
+            //if currentPlayer is player2
+    }
+
+    public int rollDie() {
+        return this.eightSidedDie.roll();
+    }
+
+    private void resetPlayerScore(int playerNumber) {
         if(playerNumber==1) {
             this.player1.wipePoints();
         }
@@ -61,11 +102,15 @@ public class PigGame {
         }
     }
 
-    public void setPlayerTurn(int playerNumber) {
+    private void resetRunningTotal() {
+        this.runningTotal = 0;
+    }
+
+    private void setPlayerTurn(int playerNumber) {
         this.currentPlayerTurn = playerNumber;
     }
 
-    public void addToPlayerScore(int playerNumber, int points) {
+    private void addToPlayerScore(int playerNumber, int points) {
         if(playerNumber==1) {
             this.player1.addPoints(points);
         }
@@ -94,6 +139,12 @@ setPlayerTurn(1 or 2)
 
 addPointsToPlayer(1 or 2)
 addPointsToRunningTotal()
+
+THESE ARE THE PUBLIC METHODS
+roll()
+rollAndCalc()
+restartGame()
+endTurn()
 
 
  */
