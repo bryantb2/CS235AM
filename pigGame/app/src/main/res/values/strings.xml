@@ -10,4 +10,5 @@
     <string name="endTurn_Button">End Turn</string>
     <string name="newGame_Button">New Game</string>
     <string name="dieRoll_desc">Die roll image</string>
+    <string name="username_placeholder_text" >Enter username</string>
 </resources>

@@ -59,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
     //Event Listener Assigner
     private void CreateUIEventListeners() {
         this.GenerateUsernameListeners();
+        this.GenerateNewGameListener();
     }
 
     //Event Listener Assignment Methods
@@ -89,8 +90,10 @@ public class MainActivity extends AppCompatActivity {
         this.player2UsernameTextEntry.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                //forces username back to original state
-                player2UsernameTextEntry.setText(player2Name);
+                //forces username back to original state if running
+                if(gameInProgress == true) {
+                    player2UsernameTextEntry.setText(player2Name);
+                }
                 //creates message warning user
                 Toast.makeText(getApplicationContext(),"Cannot input username when game is running",Toast.LENGTH_LONG);
             }
@@ -198,11 +201,11 @@ public class MainActivity extends AppCompatActivity {
         String player1Username = this.player1UsernameTextEntry.getText().toString();
         String player2Username = this.player2UsernameTextEntry.getText().toString();
         //if empty
-        if(!(player1Username.length() != 0 && player1Username=="Please enter username")) {
+        if(!(player1Username.length() != 0 && player1Username=="Enter username")) {
             Toast.makeText(this,"Player 1 needs a username!",Toast.LENGTH_LONG);
             return false;
         }
-        if(!(player2Username.length() != 0 && player2Username=="\"Please enter username\"")) {
+        if(!(player2Username.length() != 0 && player2Username=="Enter username")) {
             Toast.makeText(this,"Player 2 needs a username!",Toast.LENGTH_LONG);
             return false;
         }
