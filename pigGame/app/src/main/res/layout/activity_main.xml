@@ -18,14 +18,26 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0">
 
+        <TextView
+            android:id="@+id/player2Score_Label"
+            android:layout_width="130dp"
+            android:layout_height="39dp"
+            android:layout_marginStart="260dp"
+            android:layout_marginTop="105dp"
+            android:background="#CC000000"
+            android:paddingLeft="15dp"
+            android:paddingTop="10dp"
+            android:paddingRight="15dp"
+            android:paddingBottom="10dp"
+            android:text="0 Total Points"
+            android:textColor="#FFFFFF" />
     </FrameLayout>
 
     <EditText
         android:id="@+id/player1Username_TextEntry"
         android:layout_width="128dp"
         android:layout_height="39dp"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="1dp"
         android:background="#CC000000"
         android:ems="10"
         android:hint="@string/player1_Label"
@@ -37,11 +49,27 @@
         android:text="player 1 name"
         android:textColor="#FFFFFF"
         android:textSize="15sp"
+        app:layout_constraintTop_toBottomOf="@+id/player1_Label"
+        tools:layout_editor_absoluteX="30dp" />
+
+    <TextView
+        android:id="@+id/player1Score_Label"
+        android:layout_width="130dp"
+        android:layout_height="39dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="105dp"
+        android:background="#CC000000"
+        android:paddingLeft="15dp"
+        android:paddingTop="10dp"
+        android:paddingRight="15dp"
+        android:paddingBottom="10dp"
+        android:text="0 Total Points"
+        android:textColor="#FFFFFF"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/player1Username_TextEntry"
+        android:id="@+id/player2Username_TextEntry"
         android:layout_width="128dp"
         android:layout_height="39dp"
         android:layout_marginStart="260dp"
