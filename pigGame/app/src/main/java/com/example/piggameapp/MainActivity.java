@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
                     //forces username back to original state
                     player1UsernameTextEntry.setText(player1Name);
                     //creates message warning user
-                    Toast.makeText(getApplicationContext(),"Cannot input username when game is running",Toast.LENGTH_LONG);
+                    Toast.makeText(getApplicationContext(),"Cannot input username when game is running",Toast.LENGTH_LONG).show();
                 }
             }
 
@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
                     player2UsernameTextEntry.setText(player2Name);
                 }
                 //creates message warning user
-                Toast.makeText(getApplicationContext(),"Cannot input username when game is running",Toast.LENGTH_LONG);
+                Toast.makeText(getApplicationContext(),"Cannot input username when game is running",Toast.LENGTH_LONG).show();
             }
 
             @Override
@@ -129,16 +129,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void NewGameHandler() {
+        //execute this block if the app was already running
         //delete existing usernames in fields
         //set game bool to not active
         //reset score labels to zero
         //reset runningtotal label to zero
         //reset current player label
-        this.ResetUsernameFields();
-        this.gameInProgress = false;
-        this.ResetScoreLabels();
-        this.ResetRunningTotalLabel();
-        this.ResetCurrrentPlayerLabel();
+        if(gameInProgress==true) {
+            this.ResetUsernameFields();
+            this.ResetScoreLabels();
+            this.ResetRunningTotalLabel();
+            this.ResetCurrrentPlayerLabel();
+            this.gameInProgress = false;
+        }
+        //execute this block if the app was not running
         //get the text from both edit text fields
         //if data in fields is valid, create PigGame object
         //pass in usernames and die size
@@ -148,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
             this.player2Name = this.player2UsernameTextEntry.getText().toString();
             this.pigGame = new PigGame(player1Name,player2Name,8);
             this.gameInProgress = true;
-            Toast.makeText(this,"New game started, good luck!",Toast.LENGTH_LONG);
+            Toast.makeText(getApplicationContext(),"New game started, good luck!",Toast.LENGTH_LONG).show();
             Log.d("pigGameUILayer","inside newGameButtonClick method, usernames valid");
         }
         Log.d("pigGameUILayer","inside newGameButtonClick method, usernames NOT valid");
@@ -200,13 +204,17 @@ public class MainActivity extends AppCompatActivity {
     private boolean AreUsernamesValid() {
         String player1Username = this.player1UsernameTextEntry.getText().toString();
         String player2Username = this.player2UsernameTextEntry.getText().toString();
-        //if empty
-        if(!(player1Username.length() != 0 && player1Username=="Enter username")) {
-            Toast.makeText(this,"Player 1 needs a username!",Toast.LENGTH_LONG);
+        //validation passes if both players have original names that are not the same
+        if(player1Username.length() == 0 || player1Username=="Enter username") {
+            Toast.makeText(this,"Player 1 needs a valid username!",Toast.LENGTH_LONG).show();
             return false;
         }
-        if(!(player2Username.length() != 0 && player2Username=="Enter username")) {
-            Toast.makeText(this,"Player 2 needs a username!",Toast.LENGTH_LONG);
+        if(player2Username.length() == 0 || player2Username=="Enter username") {
+            Toast.makeText(this,"Player 2 needs a valid username!",Toast.LENGTH_LONG).show();
+            return false;
+        }
+        if(player1Username != player2Username) {
+            Toast.makeText(this,"Players cannot have the same username!",Toast.LENGTH_LONG).show();
             return false;
         }
         return true;
