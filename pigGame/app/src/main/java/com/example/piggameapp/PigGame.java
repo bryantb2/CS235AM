@@ -10,7 +10,7 @@ public class PigGame {
     private Die eightSidedDie;
     private int currentPlayerTurn;
     private int runningTotal;
-    private int reachedPointsLimitFirst;
+    private boolean playerOneReached100;
 
     //CONSTRUCTOR
     public PigGame(String playerOneName, String playerTwoName, int dieSize) {
@@ -73,20 +73,38 @@ public class PigGame {
 
     public void RestartGame() {
         //reset player scores
+        //reset internal running score
         //set player turn back to default
         //reset points limit first tracker
         resetPlayerScore(1);
         resetPlayerScore(2);
-        setPlayerTurn(1);
-        this.reachedPointsLimitFirst = 0;
+        resetPlayerTurn();
+        resetRunningTotal();
+        this.playerOneReached100 = false;
     }
 
-    public String CalcWinner()
-    {
-        //if currentPlayer has at least 100 points
-            //if currentPlayer is player1
-                //
-            //if currentPlayer is player2
+    public String CalcWinner() {
+        //if player 2 has 100
+            //auto win if reached 100 is false
+            //also wins if reached 100 is on and (player2 > player1)
+        //if player 1 has 100
+            //turn on reached 100
+                //return empty string
+            //if reached 100 is on and (player1>player2)
+                //return string player1
+        final int player1Points = this.player1.getPoints();
+        final int player2Point = this.player2.getPoints();
+
+        if (player2Point >= 100) {
+            return "player";
+        }
+        else if(player1Points >= 100) {
+            if(this.playerOneReached100 == true && player1Points > player2Point) {
+                return "player1";
+            }
+            this.playerOneReached100 = true;
+        }
+        return "";
     }
 
     public int rollDie() {
@@ -106,8 +124,8 @@ public class PigGame {
         this.runningTotal = 0;
     }
 
-    private void setPlayerTurn(int playerNumber) {
-        this.currentPlayerTurn = playerNumber;
+    private void resetPlayerTurn() {
+        this.currentPlayerTurn = 1;
     }
 
     private void addToPlayerScore(int playerNumber, int points) {
