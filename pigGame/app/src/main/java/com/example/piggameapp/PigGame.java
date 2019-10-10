@@ -120,11 +120,11 @@ public class PigGame {
         return "";
     }
 
-    public int rollDie() {
+    //PRIVATE CLASS METHODS
+    private int rollDie() {
         return this.eightSidedDie.roll();
     }
 
-    //PRIVATE CLASS METHODS
     private void setNextPlayerTurn() {
         if(this.currentPlayerTurn == 1)
             this.currentPlayerTurn = 2;
