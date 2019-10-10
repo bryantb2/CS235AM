@@ -2,8 +2,12 @@ package com.example.piggameapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.renderscript.Sampler;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -14,8 +18,8 @@ public class MainActivity extends AppCompatActivity {
 
     //CLASS UI FIELDS
     private PigGame pigGame;
-    private EditText player1Username;
-    private EditText player2Username;
+    private EditText player1UsernameTextEntry;
+    private EditText player2UsernameTextEntry;
     private TextView player1ScoreLabel;
     private TextView player2ScoreLabel;
     private ImageView dieImage;
@@ -36,10 +40,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         //GETTING UI ELEMENTS
-        this.player1Username = findViewById(R.id.player1Username_TextEntry);
+        this.player1UsernameTextEntry = findViewById(R.id.player1Username_TextEntry);
         this.player1ScoreLabel = findViewById(R.id.player1Score_Label);
         this.player2ScoreLabel = findViewById(R.id.player2Score_Label);
-        this.player2Username = findViewById(R.id.player2Username_TextEntry);
+        this.player2UsernameTextEntry = findViewById(R.id.player2Username_TextEntry);
         this.currentPlayerLabel = findViewById(R.id.currentPlayer_Label);
         this.dieImage = findViewById(R.id.dieRollResult_Label);
         this.pointsAccumulatorLabel = findViewById(R.id.runningPointsTotal_Label);
@@ -49,8 +53,49 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //Event Listener Assignment
-    public void AssignEventListeners() {
+    private void GenerateUsernameLabelListeners() {
+        this.player1UsernameTextEntry.addTextChangedListener(new TextWatcher() {
+            //listener for entry field 1
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                if(gameInProgress==true) {
+                    //forces username back to original state
+                    player1UsernameTextEntry.setText(player1Name);
+                    //creates message warning user
+                    Toast.makeText(getApplicationContext(),"Cannot input username when game is running",Toast.LENGTH_LONG);
+                }
+            }
 
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+        //listener for entry field 2
+        this.player2UsernameTextEntry.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                //forces username back to original state
+                player2UsernameTextEntry.setText(player2Name);
+                //creates message warning user
+                Toast.makeText(getApplicationContext(),"Cannot input username when game is running",Toast.LENGTH_LONG);
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
     }
 
     //EVENT HANDLERS
@@ -78,19 +123,11 @@ public class MainActivity extends AppCompatActivity {
         //pass in usernames and die size
         //display current player's turn
         if(AreUsernamesValid()==true) {
-            this.player1Name = this.player1Username.getText().toString();
-            this.player2Name = this.player2Username.getText().toString();
-            this.LockUsernameEntryFields();
+            this.player1Name = this.player1UsernameTextEntry.getText().toString();
+            this.player2Name = this.player2UsernameTextEntry.getText().toString();
             this.pigGame = new PigGame(player1Name,player2Name,8);
             this.gameInProgress = true;
             Toast.makeText(this,"New game started, good luck!",Toast.LENGTH_LONG);
-        }
-    }
-
-    public void LockUsernameEntryFields() {
-        //display a toast message saying you must make a new game to re-input usernames
-        if(gameInProgress==true) {
-            Toast.makeText(this,"Cannot input username when game is running",Toast.LENGTH_LONG);
         }
     }
 
@@ -122,8 +159,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void ResetUsernameFields() {
-        this.player1Username.setText("");
-        this.player2Username.setText("");
+        this.player1UsernameTextEntry.setText("");
+        this.player2UsernameTextEntry.setText("");
     }
 
     private void UpdateCurrentPlayer(String currentPlayerUsername) {
@@ -131,14 +168,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void ResetCurrrentPlayerLabel() {
-        this.currentPlayerLabel.setText(this.player1Username + "'s turn");
+        this.currentPlayerLabel.setText(this.player1UsernameTextEntry + "'s turn");
     }
 
 
 
     private boolean AreUsernamesValid() {
-        String player1Username = this.player1Username.getText().toString();
-        String player2Username = this.player2Username.getText().toString();
+        String player1Username = this.player1UsernameTextEntry.getText().toString();
+        String player2Username = this.player2UsernameTextEntry.getText().toString();
         //if empty
         if(!(player1Username.length() != 0)) {
             Toast.makeText(this,"Player 1 username cannot be empty!",Toast.LENGTH_LONG);
