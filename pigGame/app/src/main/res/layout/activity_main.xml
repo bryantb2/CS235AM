@@ -10,7 +10,7 @@
         android:id="@+id/frameLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/androidWallpaper"
+        android:background="@drawable/androidwallpaper"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -161,7 +161,7 @@
         app:layout_constraintBottom_toTopOf="@+id/pointsDescription_Label"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/Die8Side1" />
+        app:srcCompat="@drawable/die8side1" />
 
     <Button
         android:id="@+id/newGame_Button"
