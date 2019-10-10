@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.renderscript.Sampler;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -50,10 +51,18 @@ public class MainActivity extends AppCompatActivity {
         this.rollDieButton = findViewById(R.id.rollDie_Button);
         this.endTurnButton = findViewById(R.id.endTurn_Button);
         this.newGameButton = findViewById(R.id.newGame_Button);
+
+        //Methods calls
+        CreateUIEventListeners();
     }
 
-    //Event Listener Assignment
-    private void GenerateUsernameLabelListeners() {
+    //Event Listener Assigner
+    private void CreateUIEventListeners() {
+        this.GenerateUsernameListeners();
+    }
+
+    //Event Listener Assignment Methods
+    private void GenerateUsernameListeners() {
         this.player1UsernameTextEntry.addTextChangedListener(new TextWatcher() {
             //listener for entry field 1
             @Override
@@ -98,16 +107,25 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private void GenerateNewGameListener() {
+        this.newGameButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NewGameHandler();
+            }
+        });
+    }
+
     //EVENT HANDLERS
-    public void RollButtonClick() {
+    public void RollButtonHandler() {
 
     }
 
-    public void EndTurnButtonClick() {
+    public void EndTurnHandler() {
 
     }
 
-    public void NewGameButtonClick() {
+    public void NewGameHandler() {
         //delete existing usernames in fields
         //set game bool to not active
         //reset score labels to zero
@@ -128,7 +146,9 @@ public class MainActivity extends AppCompatActivity {
             this.pigGame = new PigGame(player1Name,player2Name,8);
             this.gameInProgress = true;
             Toast.makeText(this,"New game started, good luck!",Toast.LENGTH_LONG);
+            Log.d("pigGameUILayer","inside newGameButtonClick method, usernames valid");
         }
+        Log.d("pigGameUILayer","inside newGameButtonClick method, usernames NOT valid");
     }
 
     //METHODS
@@ -159,8 +179,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void ResetUsernameFields() {
-        this.player1UsernameTextEntry.setText("");
-        this.player2UsernameTextEntry.setText("");
+        final String defaultPlaceHolderText = "Please enter username";
+        this.player1UsernameTextEntry.setText(defaultPlaceHolderText);
+        this.player2UsernameTextEntry.setText(defaultPlaceHolderText);
     }
 
     private void UpdateCurrentPlayer(String currentPlayerUsername) {
@@ -177,12 +198,12 @@ public class MainActivity extends AppCompatActivity {
         String player1Username = this.player1UsernameTextEntry.getText().toString();
         String player2Username = this.player2UsernameTextEntry.getText().toString();
         //if empty
-        if(!(player1Username.length() != 0)) {
-            Toast.makeText(this,"Player 1 username cannot be empty!",Toast.LENGTH_LONG);
+        if(!(player1Username.length() != 0 && player1Username=="Please enter username")) {
+            Toast.makeText(this,"Player 1 needs a username!",Toast.LENGTH_LONG);
             return false;
         }
-        if(!(player2Username.length() != 0)) {
-            Toast.makeText(this,"Player 2 username cannot be empty!",Toast.LENGTH_LONG);
+        if(!(player2Username.length() != 0 && player2Username=="\"Please enter username\"")) {
+            Toast.makeText(this,"Player 2 needs a username!",Toast.LENGTH_LONG);
             return false;
         }
         return true;
