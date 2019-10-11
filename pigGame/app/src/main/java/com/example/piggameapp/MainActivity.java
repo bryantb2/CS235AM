@@ -64,15 +64,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //Event Listener Assignment Methods
-    private void DisableUsernameEntryFields() {
-        //sets the input source of the entry fields to null
-            //prevents the user from clicking into the entry fields
-       this.player1UsernameTextEntry.setInputType(InputType.TYPE_NULL);
-       this.player2UsernameTextEntry.setInputType(InputType.TYPE_NULL);
-       this.player1UsernameTextEntry.setKeyListener(null);
-       this.player2UsernameTextEntry.setKeyListener(null);
-    }
-
     private void GenerateNewGameListener() {
         this.newGameButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -104,6 +95,7 @@ public class MainActivity extends AppCompatActivity {
             this.ResetRunningTotalLabel();
             this.ResetCurrrentPlayerLabel();
             this.gameInProgress = false;
+            Toast.makeText(getApplicationContext(),"Please enter valid usernames to begin",Toast.LENGTH_LONG).show();
         }
         //execute this block if the app was not running
         //get the text from both edit text fields
@@ -120,6 +112,24 @@ public class MainActivity extends AppCompatActivity {
             Log.d("pigGameUILayer","inside newGameButtonClick method, usernames valid");
         }
         Log.d("pigGameUILayer","inside newGameButtonClick method, usernames NOT valid");
+    }
+
+    public void EnableGameHandler() {
+        this.newGameButton.setEnabled(true);
+    }
+
+    public void DisableGameHandler() {
+        this.newGameButton.setEnabled(false);
+    }
+
+    private void EnableUsernameEntryFields() {
+        this.player1UsernameTextEntry.setEnabled(true);
+        this.player2UsernameTextEntry.setEnabled(true);
+    }
+
+    private void DisableUsernameEntryFields() {
+        this.player1UsernameTextEntry.setEnabled(false);
+        this.player2UsernameTextEntry.setEnabled(false);
     }
 
     //METHODS
@@ -150,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void ResetUsernameFields() {
-        final String defaultPlaceHolderText = "Please enter username";
+        final String defaultPlaceHolderText = "Enter username";
         this.player1UsernameTextEntry.setText(defaultPlaceHolderText);
         this.player2UsernameTextEntry.setText(defaultPlaceHolderText);
     }
@@ -160,7 +170,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void ResetCurrrentPlayerLabel() {
-        this.currentPlayerLabel.setText(this.player1UsernameTextEntry + "'s turn");
+        this.currentPlayerLabel.setText("Nobody's turn");
     }
 
 
