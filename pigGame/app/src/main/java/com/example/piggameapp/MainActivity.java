@@ -322,8 +322,6 @@ public class MainActivity extends AppCompatActivity {
         this.currentPlayerLabel.setText("Nobody's turn");
     }
 
-
-
     private boolean AreUsernamesValid() {
         String player1Username = this.player1UsernameTextEntry.getText().toString();
         String player2Username = this.player2UsernameTextEntry.getText().toString();
