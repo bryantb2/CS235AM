@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.renderscript.Sampler;
 import android.renderscript.ScriptGroup;
@@ -133,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
             //end turn auto switches the player turn if there is no winner, so all we have to do here reflect the change in the UI
             //re-enable the endturn button
             //re-enable the roll button
-            this.UpdateCurrentPlayer(this.pigGame.getCurrentPlayerName());
+            this.UpdateCurrentPlayer();
             this.EnableEndTurnButton();
             this.EnableRollButton();
         }
@@ -173,6 +174,7 @@ public class MainActivity extends AppCompatActivity {
                 this.pigGame = new PigGame(player1Name,player2Name,8);
             }
             this.gameInProgress = true;
+            this.UpdateCurrentPlayer();
             this.EnableRollButton();
             this.EnableEndTurnButton();
             Toast.makeText(getApplicationContext(),"New game started, good luck!",Toast.LENGTH_LONG).show();
@@ -192,10 +194,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void DisableEndTurnButton() {
         this.endTurnButton.setEnabled(false);
-    }
-
-    private void SwitcherPlayerTurn() {
-
     }
 
     private void EnableRollButton() {
@@ -218,8 +216,47 @@ public class MainActivity extends AppCompatActivity {
 
     //METHODS
     private void UpdateDieImage(int rolledNumber) {
-        String filePath = "die8side" + String.valueOf(rolledNumber) + ".png";
-        this.dieImage.setImageBitmap(BitmapFactory.decodeFile(filePath));
+        int referenceID = 0;
+        switch(rolledNumber) {
+            case 1: {
+                referenceID = R.drawable.die8side1;
+                break;
+            }
+            case 2: {
+                referenceID = R.drawable.die8side2;
+                break;
+            }
+            case 3: {
+                referenceID = R.drawable.die8side3;
+                break;
+            }
+            case 4: {
+                referenceID = R.drawable.die8side4;
+                break;
+            }
+            case 5: {
+                referenceID = R.drawable.die8side5;
+                break;
+            }
+            case 6: {
+                referenceID = R.drawable.die8side6;
+                break;
+            }
+            case 7: {
+                referenceID = R.drawable.die8side7;
+                break;
+            }
+            case 8: {
+                referenceID = R.drawable.die8side8;
+                break;
+            }
+            default: {
+                referenceID = -1;
+                break;
+            }
+        }
+        Drawable drawableImage = getResources().getDrawable(referenceID);
+        this.dieImage.setImageDrawable(drawableImage);
     }
 
     private void UpdatePlayerScore(int playerNumber, int score) {
@@ -250,8 +287,8 @@ public class MainActivity extends AppCompatActivity {
         this.player2UsernameTextEntry.setText(defaultPlaceHolderText);
     }
 
-    private void UpdateCurrentPlayer(String currentPlayerUsername) {
-        this.currentPlayerLabel.setText(currentPlayerUsername);
+    private void UpdateCurrentPlayer() {
+        this.currentPlayerLabel.setText(this.pigGame.getCurrentPlayerName()+"'s turn");
     }
 
     private void ResetCurrrentPlayerLabel() {
