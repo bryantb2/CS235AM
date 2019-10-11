@@ -3,6 +3,9 @@ package com.example.piggameapp;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
+import android.content.res.AssetManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.renderscript.Sampler;
 import android.renderscript.ScriptGroup;
@@ -16,6 +19,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.io.InputStream;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -68,29 +73,46 @@ public class MainActivity extends AppCompatActivity {
         this.newGameButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                NewGameHandler();
+                NewGame();
             }
         });
         this.endTurnButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EndTurnHandler();
+                EndTurn();
             }
         });
         this.rollDieButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RollHandler();
+                Roll();
             }
         });
     }
 
     //EVENT HANDLERS
-    public void RollHandler() {
+    public void Roll() {
+        //lock roll button
+        //roll pigGame die
+        //if rolled number is not 8
+            //set the die image
+            //update running total label
+        //else reset currentPlayerUI elements
+            //execute endturn methods
 
+        this.DisableRollButton();
+        int rollResult = this.pigGame.RollAndCalc();
+        if(rollResult != 8) {
+            this.UpdateDieImage(rollResult);
+            this.UpdatePointsRunningTotal(this.pigGame.getPointsForCurrentTurn());
+        }
+        else {
+            this.UpdatePlayerScore(this.pigGame.getCurrentPlayerNumber(),rollResult);
+            this.EndTurn();
+        }
     }
 
-    public void EndTurnHandler() {
+    public void EndTurn() {
         //lock roll button
         //add runningtotal to current player score
         //calc winner
@@ -117,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void NewGameHandler() {
+    public void NewGame() {
         //execute this block if the app was already running
         //delete existing usernames in fields
         //set game bool to not active
@@ -125,24 +147,34 @@ public class MainActivity extends AppCompatActivity {
         //reset runningtotal label to zero
         //reset current player label
         if(gameInProgress==true) {
-            this.ResetUsernameFields();
+            this.ResetUsernameFields(); //this is what prevents the second block in this handler from firing
             this.ResetScoreLabels();
             this.ResetRunningTotalLabel();
             this.ResetCurrrentPlayerLabel();
             this.gameInProgress = false;
-            Toast.makeText(getApplicationContext(),"Please enter valid usernames to begin",Toast.LENGTH_LONG).show();
+            this.EnableUsernameEntryFields();
+            Toast.makeText(getApplicationContext(),"Please enter valid usernames, press new game",Toast.LENGTH_LONG).show();
         }
         //execute this block if the app was not running
         //get the text from both edit text fields
-        //if data in fields is valid, create PigGame object
+        //if data in fields is valid, reset PigGame object
         //pass in usernames and die size
         //display current player's turn
-        if(AreUsernamesValid()==true) {
+        //unlock the roll and endturn buttons
+        if(AreUsernamesValid() == true) {
             this.DisableUsernameEntryFields();
             this.player1Name = this.player1UsernameTextEntry.getText().toString();
             this.player2Name = this.player2UsernameTextEntry.getText().toString();
-            this.pigGame = new PigGame(player1Name,player2Name,8);
+            if(this.pigGame != null) {
+                //checking if the object was instantiated
+                this.pigGame.RestartGame(player1Name,player2Name);
+            }
+            else {
+                this.pigGame = new PigGame(player1Name,player2Name,8);
+            }
             this.gameInProgress = true;
+            this.EnableRollButton();
+            this.EnableEndTurnButton();
             Toast.makeText(getApplicationContext(),"New game started, good luck!",Toast.LENGTH_LONG).show();
             Log.d("pigGameUILayer","inside newGameButtonClick method, usernames valid");
         }
@@ -186,7 +218,8 @@ public class MainActivity extends AppCompatActivity {
 
     //METHODS
     private void UpdateDieImage(int rolledNumber) {
-
+        String filePath = "die8side" + String.valueOf(rolledNumber) + ".png";
+        this.dieImage.setImageBitmap(BitmapFactory.decodeFile(filePath));
     }
 
     private void UpdatePlayerScore(int playerNumber, int score) {

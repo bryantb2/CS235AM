@@ -102,11 +102,14 @@ public class PigGame {
         return 0;
     }
 
-    public void RestartGame() {
+    public void RestartGame(String player1Name, String player2Name) {
+        //reset player names
         //reset player scores
         //reset internal running score
         //set player turn back to default
         //reset points limit first tracker
+        this.player1.setName(player1Name);
+        this.player2.setName(player2Name);
         this.resetPlayerScore(1);
         this.resetPlayerScore(2);
         this.resetPlayerTurn();

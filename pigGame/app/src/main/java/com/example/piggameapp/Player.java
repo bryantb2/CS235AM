@@ -16,6 +16,10 @@ public class Player {
         return this.name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public int getPoints() {
         return this.points;
     }
