@@ -60,26 +60,46 @@ public class MainActivity extends AppCompatActivity {
 
     //Event Listener Assigner
     private void CreateUIEventListeners() {
-        this.GenerateNewGameListener();
+        this.GenerateButtonListeners();
     }
 
     //Event Listener Assignment Methods
-    private void GenerateNewGameListener() {
+    private void GenerateButtonListeners() {
         this.newGameButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 NewGameHandler();
             }
         });
+        this.endTurnButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EndTurnHandler();
+            }
+        });
+        this.rollDieButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RollHandler();
+            }
+        });
     }
 
     //EVENT HANDLERS
-    public void RollButtonHandler() {
+    public void RollHandler() {
 
     }
 
     public void EndTurnHandler() {
-
+        //lock roll button
+        //add runningtotal to current player score
+        //calc winner
+            //if current player is winner, display name in turn label
+                //give toast message saying click newgame to start again
+            //else switch current player to next player
+                //unlock roll button
+        this.DisableRollButton();
+        this.pigGame.
     }
 
     public void NewGameHandler() {
@@ -114,12 +134,12 @@ public class MainActivity extends AppCompatActivity {
         Log.d("pigGameUILayer","inside newGameButtonClick method, usernames NOT valid");
     }
 
-    public void EnableGameHandler() {
-        this.newGameButton.setEnabled(true);
+    private void EnableRollButton() {
+        this.rollDieButton.setEnabled(true);
     }
 
-    public void DisableGameHandler() {
-        this.newGameButton.setEnabled(false);
+    private void DisableRollButton() {
+        this.rollDieButton.setEnabled(false);
     }
 
     private void EnableUsernameEntryFields() {
