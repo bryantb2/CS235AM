@@ -22,6 +22,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.InputStream;
+import java.util.Timer;
+import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -105,6 +107,9 @@ public class MainActivity extends AppCompatActivity {
         //else reset currentPlayerUI elements
             //execute endturn methods
 
+        boolean willCurrentPlayerSwithc = false;
+        Timer timer = new Timer();
+
         this.DisableRollButton();
         int rollResult = this.pigGame.RollAndCalc();
         this.UpdateDieImage(rollResult);
@@ -114,8 +119,16 @@ public class MainActivity extends AppCompatActivity {
         else {
             this.UpdatePlayerScore(this.pigGame.getCurrentPlayerNumber(),0);
             this.ResetRunningTotalLabel();
-            Toast.makeText(this,("Ouch, "+this.pigGame.getCurrentPlayerName()+" has rolled an 8!"),Toast.LENGTH_LONG);
+            Toast.makeText(this,("Ouch, "+this.pigGame.getCurrentPlayerName()+" has rolled an 8!"),Toast.LENGTH_SHORT);
             this.EndTurn();
+            willCurrentPlayerSwithc = true;
+        }
+        try {
+            //this process is done to slow down the user and prevent spamming
+            Thread.sleep(500);
+        }
+        catch (InterruptedException e) {
+            Log.d("PigGame","sleep function for roll button was interrupted");
         }
         this.EnableRollButton();
     }
@@ -142,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
             this.DisableEndTurnButton();
             this.DisableRollButton();
             //display toast message
-            Toast.makeText(getApplicationContext(), (this.pigGame.getPlayerName(winnerNumber) + " has won!"),Toast.LENGTH_LONG);
+            Toast.makeText(getApplicationContext(), (this.pigGame.getPlayerName(winnerNumber) + " has won!"),Toast.LENGTH_SHORT);
         }
         else {
             //end turn auto switches the player turn if there is no winner, so all we have to do here reflect the change in the UI
@@ -168,7 +181,7 @@ public class MainActivity extends AppCompatActivity {
             this.ResetCurrrentPlayerLabel();
             this.gameInProgress = false;
             this.EnableUsernameEntryFields();
-            Toast.makeText(getApplicationContext(),"Please enter valid usernames, press new game",Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(),"Please enter valid usernames, press new game",Toast.LENGTH_SHORT).show();
         }
         //execute this block if the app was not running
         //get the text from both edit text fields
@@ -191,7 +204,7 @@ public class MainActivity extends AppCompatActivity {
             this.UpdateCurrentPlayer();
             this.EnableRollButton();
             this.EnableEndTurnButton();
-            Toast.makeText(getApplicationContext(),"New game started, good luck!",Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(),"New game started, good luck!",Toast.LENGTH_SHORT).show();
             Log.d("pigGameUILayer","inside newGameButtonClick method, usernames valid");
         }
         Log.d("pigGameUILayer","inside newGameButtonClick method, usernames NOT valid");
@@ -317,15 +330,15 @@ public class MainActivity extends AppCompatActivity {
         boolean isValid = true;
         //validation passes if both players have original names that are not the same
         if(player1Username.length() == 0 || player1Username.equals("Enter username")) {
-            Toast.makeText(this,"Player 1 needs a valid username!",Toast.LENGTH_LONG).show();
+            Toast.makeText(this,"Player 1 needs a valid username!",Toast.LENGTH_SHORT).show();
             isValid = false;
         }
         if(player2Username.length() == 0 || player2Username.equals("Enter username")) {
-            Toast.makeText(this,"Player 2 needs a valid username!",Toast.LENGTH_LONG).show();
+            Toast.makeText(this,"Player 2 needs a valid username!",Toast.LENGTH_SHORT).show();
             isValid = false;
         }
         if(player1Username.equals(player2Username)) {
-            Toast.makeText(this,"Players cannot have the same username!",Toast.LENGTH_LONG).show();
+            Toast.makeText(this,"Players cannot have the same username!",Toast.LENGTH_SHORT).show();
             isValid = false;
         }
         return isValid;
