@@ -31,7 +31,18 @@ public class PigGame {
     }
 
     public String getCurrentPlayerName() {
-        return getPlayerName(currentPlayerTurn);
+        //this method takes the class's currentPlayerTurn variable and gets the current player's name as a string
+        if(currentPlayerTurn == 1) {
+            return this.player1.getName();
+        }
+        else {
+            return this.player2.getName();
+        }
+    }
+
+    public int getCurrentPlayerNumber() {
+        //this method returns the number of the player that is currently rolling
+        return this.currentPlayerTurn;
     }
 
     public int getPlayerScore(int playerNumber) {
@@ -46,10 +57,6 @@ public class PigGame {
     public int getPointsForCurrentTurn() {
         return runningTotal;
     }
-
-    /*public int getCurrentPlayerNumber() {
-        return currentPlayerTurn;
-    }*/
 
     //METHODS
     public int RollAndCalc() {
@@ -74,14 +81,25 @@ public class PigGame {
         }
     }
 
-    public void EndTurn() {
+    public int EndTurn() {
         //add runningTotal to player score
+        //calculate winner
         //reset runningTotal
         //CALCULATE WINNER WOULD GET CALLED WITH THIS
         //set next player turn to opposite of current player turn
         this.addToPlayerScore(currentPlayerTurn,runningTotal);
-        this.resetRunningTotal();
-        this.setNextPlayerTurn();
+        int winner = this.CalcWinner();
+        if(winner != 0) {
+            //if the return int is not 0, then there is a winner
+            return winner;
+        }
+        else {
+            //otherwise reset the internal game mechanisms for next player
+            this.resetRunningTotal();
+            this.setNextPlayerTurn();
+        }
+        //returns zero if no winner
+        return 0;
     }
 
     public void RestartGame() {
@@ -96,7 +114,7 @@ public class PigGame {
         this.playerOneReached100 = false;
     }
 
-    public String CalcWinner() {
+    public int CalcWinner() {
         //if player 2 has 100
             //auto win if reached 100 is false
             //also wins if reached 100 is on and (player2 > player1)
@@ -108,16 +126,20 @@ public class PigGame {
         final int player1Points = this.player1.getPoints();
         final int player2Point = this.player2.getPoints();
 
+        final int player1 = 1;
+        final int player2 = 2;
+
         if (player2Point >= 100) {
-            return "player";
+            return player2;
         }
         else if(player1Points >= 100) {
             if(this.playerOneReached100 == true && player1Points > player2Point) {
-                return "player1";
+                return player1;
             }
             this.playerOneReached100 = true;
         }
-        return "";
+        //this returns if there are no winners
+        return 0;
     }
 
     //PRIVATE CLASS METHODS

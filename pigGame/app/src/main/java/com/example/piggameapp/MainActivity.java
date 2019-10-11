@@ -99,7 +99,22 @@ public class MainActivity extends AppCompatActivity {
             //else switch current player to next player
                 //unlock roll button
         this.DisableRollButton();
-        this.pigGame.
+        this.DisableEndTurnButton();
+        int winnerNumber = this.pigGame.EndTurn();
+        if(winnerNumber != 0) {
+            //display winner on UI
+            this.DisplayWinner(winnerNumber);
+            //display toast message
+            Toast.makeText(getApplicationContext(), (this.pigGame.getPlayerName(winnerNumber) + " has won!"),Toast.LENGTH_LONG);
+        }
+        else {
+            //end turn auto switches the player turn if there is no winner, so all we have to do here reflect the change in the UI
+            //re-enable the endturn button
+            //re-enable the roll button
+            this.UpdateCurrentPlayer(this.pigGame.getCurrentPlayerName());
+            this.EnableEndTurnButton();
+            this.EnableRollButton();
+        }
     }
 
     public void NewGameHandler() {
@@ -132,6 +147,23 @@ public class MainActivity extends AppCompatActivity {
             Log.d("pigGameUILayer","inside newGameButtonClick method, usernames valid");
         }
         Log.d("pigGameUILayer","inside newGameButtonClick method, usernames NOT valid");
+    }
+
+    private void DisplayWinner(int winnerNumber) {
+        //set the display points label to the name of the winner
+        this.pointsAccumulatorLabel.setText(this.pigGame.getPlayerName(winnerNumber) + " has won!");
+    }
+
+    private void EnableEndTurnButton() {
+        this.endTurnButton.setEnabled(true);
+    }
+
+    private void DisableEndTurnButton() {
+        this.endTurnButton.setEnabled(false);
+    }
+
+    private void SwitcherPlayerTurn() {
+
     }
 
     private void EnableRollButton() {
