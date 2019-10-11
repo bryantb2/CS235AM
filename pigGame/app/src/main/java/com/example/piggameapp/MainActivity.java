@@ -62,6 +62,9 @@ public class MainActivity extends AppCompatActivity {
 
         //Methods calls
         CreateUIEventListeners();
+        //disable buttons until a new game has been created
+        this.DisableRollButton();
+        this.DisableEndTurnButton();
     }
 
     //Event Listener Assigner
@@ -111,6 +114,7 @@ public class MainActivity extends AppCompatActivity {
             this.UpdatePlayerScore(this.pigGame.getCurrentPlayerNumber(),rollResult);
             this.EndTurn();
         }
+        this.EnableRollButton();
     }
 
     public void EndTurn() {

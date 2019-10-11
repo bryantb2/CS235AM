@@ -5,7 +5,7 @@
     <string name="player2_Label">Player 2</string>
     <string name="playerTurn_Label">Player 1\'s Turn</string>
     <string name="pointsDesc_Label">Points for this round:</string>
-    <string name="runningPointsTotal_Label">100 Points</string>
+    <string name="runningPointsTotal_Label">0 Points</string>
     <string name="rollDie_Button">Roll Die</string>
     <string name="endTurn_Button">End Turn</string>
     <string name="newGame_Button">New Game</string>
