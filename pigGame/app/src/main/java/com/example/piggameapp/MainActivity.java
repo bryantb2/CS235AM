@@ -96,6 +96,7 @@ public class MainActivity extends AppCompatActivity {
 
     //EVENT HANDLERS
     public void Roll() {
+        //THIS METHOD ADDS TO PLAYER RUNNING TOTAL AND CALCULATES SCORE -------------------------------------
         //lock roll button
         //roll pigGame die
         //if rolled number is not 8
@@ -106,20 +107,23 @@ public class MainActivity extends AppCompatActivity {
 
         this.DisableRollButton();
         int rollResult = this.pigGame.RollAndCalc();
+        this.UpdateDieImage(rollResult);
         if(rollResult != 8) {
-            this.UpdateDieImage(rollResult);
             this.UpdatePointsRunningTotal(this.pigGame.getPointsForCurrentTurn());
         }
         else {
-            this.UpdatePlayerScore(this.pigGame.getCurrentPlayerNumber(),rollResult);
+            this.UpdatePlayerScore(this.pigGame.getCurrentPlayerNumber(),0);
+            this.ResetRunningTotalLabel();
+            Toast.makeText(this,("Ouch, "+this.pigGame.getCurrentPlayerName()+" has rolled an 8!"),Toast.LENGTH_LONG);
             this.EndTurn();
         }
         this.EnableRollButton();
     }
 
     public void EndTurn() {
+        //THIS METHOD ADDS TO SCORE AND DETERMINES IF THERE IS A WINNER -------------------------------------
         //lock roll button
-        //add runningtotal to current player score
+        //move running total to total points label
         //calc winner
             //if current player is winner, display name in turn label
                 //give toast message saying click newgame to start again
@@ -127,10 +131,16 @@ public class MainActivity extends AppCompatActivity {
                 //unlock roll button
         this.DisableRollButton();
         this.DisableEndTurnButton();
+        int playerThatJustWent = this.pigGame.getCurrentPlayerNumber();
         int winnerNumber = this.pigGame.EndTurn();
+        this.UpdatePlayerScore(playerThatJustWent,this.pigGame.getPlayerScore(playerThatJustWent));
+        this.UpdatePointsRunningTotal(0);
         if(winnerNumber != 0) {
             //display winner on UI
             this.DisplayWinner(winnerNumber);
+            //disable game buttons
+            this.DisableEndTurnButton();
+            this.DisableRollButton();
             //display toast message
             Toast.makeText(getApplicationContext(), (this.pigGame.getPlayerName(winnerNumber) + " has won!"),Toast.LENGTH_LONG);
         }
@@ -265,10 +275,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void UpdatePlayerScore(int playerNumber, int score) {
         if(playerNumber==1) {
-            this.player1ScoreLabel.setText(String.valueOf(score));
+            this.player1ScoreLabel.setText(String.valueOf(score + " Points"));
         }
         else {
-            this.player2ScoreLabel.setText(String.valueOf(score));
+            this.player2ScoreLabel.setText(String.valueOf(score + " Points"));
         }
     }
 

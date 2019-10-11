@@ -171,7 +171,7 @@ public class PigGame {
     }
 
     private void addToRunningTotal(int points) {
-        this.runningTotal = points;
+        this.runningTotal += points;
     }
 
     private void resetPlayerTurn() {
