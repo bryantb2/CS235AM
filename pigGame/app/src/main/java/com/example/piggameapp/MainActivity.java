@@ -5,7 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.renderscript.Sampler;
+import android.renderscript.ScriptGroup;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
@@ -58,56 +60,17 @@ public class MainActivity extends AppCompatActivity {
 
     //Event Listener Assigner
     private void CreateUIEventListeners() {
-        this.GenerateUsernameListeners();
         this.GenerateNewGameListener();
     }
 
     //Event Listener Assignment Methods
-    private void GenerateUsernameListeners() {
-        this.player1UsernameTextEntry.addTextChangedListener(new TextWatcher() {
-            //listener for entry field 1
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                if(gameInProgress==true) {
-                    //forces username back to original state
-                    player1UsernameTextEntry.setText(player1Name);
-                    //creates message warning user
-                    Toast.makeText(getApplicationContext(),"Cannot input username when game is running",Toast.LENGTH_LONG).show();
-                }
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-        //listener for entry field 2
-        this.player2UsernameTextEntry.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                //forces username back to original state if running
-                if(gameInProgress == true) {
-                    player2UsernameTextEntry.setText(player2Name);
-                }
-                //creates message warning user
-                Toast.makeText(getApplicationContext(),"Cannot input username when game is running",Toast.LENGTH_LONG).show();
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
+    private void DisableUsernameEntryFields() {
+        //sets the input source of the entry fields to null
+            //prevents the user from clicking into the entry fields
+       this.player1UsernameTextEntry.setInputType(InputType.TYPE_NULL);
+       this.player2UsernameTextEntry.setInputType(InputType.TYPE_NULL);
+       this.player1UsernameTextEntry.setKeyListener(null);
+       this.player2UsernameTextEntry.setKeyListener(null);
     }
 
     private void GenerateNewGameListener() {
@@ -148,6 +111,7 @@ public class MainActivity extends AppCompatActivity {
         //pass in usernames and die size
         //display current player's turn
         if(AreUsernamesValid()==true) {
+            this.DisableUsernameEntryFields();
             this.player1Name = this.player1UsernameTextEntry.getText().toString();
             this.player2Name = this.player2UsernameTextEntry.getText().toString();
             this.pigGame = new PigGame(player1Name,player2Name,8);
@@ -204,20 +168,21 @@ public class MainActivity extends AppCompatActivity {
     private boolean AreUsernamesValid() {
         String player1Username = this.player1UsernameTextEntry.getText().toString();
         String player2Username = this.player2UsernameTextEntry.getText().toString();
+        boolean isValid = true;
         //validation passes if both players have original names that are not the same
-        if(player1Username.length() == 0 || player1Username=="Enter username") {
+        if(player1Username.length() == 0 || player1Username.equals("Enter username")) {
             Toast.makeText(this,"Player 1 needs a valid username!",Toast.LENGTH_LONG).show();
-            return false;
+            isValid = false;
         }
-        if(player2Username.length() == 0 || player2Username=="Enter username") {
+        if(player2Username.length() == 0 || player2Username.equals("Enter username")) {
             Toast.makeText(this,"Player 2 needs a valid username!",Toast.LENGTH_LONG).show();
-            return false;
+            isValid = false;
         }
-        if(player1Username != player2Username) {
+        if(player1Username.equals(player2Username)) {
             Toast.makeText(this,"Players cannot have the same username!",Toast.LENGTH_LONG).show();
-            return false;
+            isValid = false;
         }
-        return true;
+        return isValid;
     }
 
 
