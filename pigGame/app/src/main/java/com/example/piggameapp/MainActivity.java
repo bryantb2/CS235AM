@@ -3,6 +3,7 @@ package com.example.piggameapp;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -40,9 +41,19 @@ public class MainActivity extends AppCompatActivity {
     private Button endTurnButton;
     private Button newGameButton;
 
+    //these string vars are used to store the desired usernames of players that will be passed into the PigGame object
+    //these will not be used after the PigGame object is created
     private String player1Name;
     private String player2Name;
+    //tracks if the game is running
     private boolean gameInProgress = false;
+
+    //Class-level sharedPreferences object
+    private SharedPreferences savedValues;
+
+    //SAVE STATE KEYS
+    private PigGame PIG_GAME_OBJECT_TEMP = new PigGame("placeHolder1","placeHolder2",8);
+    private boolean GAME_IN_PROGRESS_TEMP = false;
 
     //LIFECYCLES
     @Override
@@ -62,11 +73,22 @@ public class MainActivity extends AppCompatActivity {
         this.endTurnButton = findViewById(R.id.endTurn_Button);
         this.newGameButton = findViewById(R.id.newGame_Button);
 
+        //GETS REFERENCE TO SharedPrefs OBJECT
+        savedValues = getSharedPreferences("savedValues", MODE_PRIVATE);
+
         //Methods calls
         CreateUIEventListeners();
         //disable buttons until a new game has been created
         this.DisableRollButton();
         this.DisableEndTurnButton();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        //will save the necessary data for recreating the app onResume
+        SharedPreferences.Editor editor = savedValues.edit();
+        //editor.put
     }
 
     //Event Listener Assigner
@@ -107,9 +129,6 @@ public class MainActivity extends AppCompatActivity {
         //else reset currentPlayerUI elements
             //execute endturn methods
 
-        boolean willCurrentPlayerSwithc = false;
-        Timer timer = new Timer();
-
         this.DisableRollButton();
         int rollResult = this.pigGame.RollAndCalc();
         this.UpdateDieImage(rollResult);
@@ -119,13 +138,12 @@ public class MainActivity extends AppCompatActivity {
         else {
             this.UpdatePlayerScore(this.pigGame.getCurrentPlayerNumber(),0);
             this.ResetRunningTotalLabel();
-            Toast.makeText(this,("Ouch, "+this.pigGame.getCurrentPlayerName()+" has rolled an 8!"),Toast.LENGTH_SHORT);
             this.EndTurn();
-            willCurrentPlayerSwithc = true;
+            Toast.makeText(this,("Ouch, "+this.pigGame.getCurrentPlayerName()+" has rolled an 8!"),Toast.LENGTH_SHORT);
         }
         try {
             //this process is done to slow down the user and prevent spamming
-            Thread.sleep(500);
+            Thread.sleep(800);
         }
         catch (InterruptedException e) {
             Log.d("PigGame","sleep function for roll button was interrupted");
