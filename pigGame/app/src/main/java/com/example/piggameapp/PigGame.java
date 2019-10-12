@@ -72,7 +72,7 @@ public class PigGame {
         return runningTotal;
     }
 
-    public void setPointsForCurrentTurn(int points) {
+        public void setPointsForCurrentTurn(int points) {
         this.runningTotal = points;
     }
 
