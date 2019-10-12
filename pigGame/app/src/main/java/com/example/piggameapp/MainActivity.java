@@ -50,11 +50,12 @@ public class MainActivity extends AppCompatActivity {
 
     //Class-level sharedPreferences object
     private SharedPreferences savedValues;
+    boolean stateHasBeenRecovered = false;
 
     //SAVE STATE KEYS
     private String RUNNING_POINTS_TOTAL = "RUNNING_POINTS_TOTAL";
-    private String PLAYER1_USERNAME_KEY = "USERNAME1";
-    private String PLAYER2_USERNAME_KEY = "USERNAME2";
+    private String PLAYER1_USERNAME_KEY = "PLAYER1_USERNAME_KEY";
+    private String PLAYER2_USERNAME_KEY = "PLAYER2_USERNAME_KEY";
     private String PLAYER1_SCORE_KEY = "PLAYER1_SCORE_KEY";
     private String PLAYER2_SCORE_KEY = "PLAYER2_SCORE_KEY";
     private String CURRENT_PLAYER_KEY = "CURRENT_PLAYER_KEY";
@@ -79,38 +80,35 @@ public class MainActivity extends AppCompatActivity {
         this.endTurnButton = findViewById(R.id.endTurn_Button);
         this.newGameButton = findViewById(R.id.newGame_Button);
 
-        boolean stateHasBeenRecovered = false;
-
         if(savedInstanceState != null) {
-            Log.d("PigGame","inside onSaveInstanceState");
-            if(savedInstanceState.getBoolean(IS_GAME_RUNNING,false) != false) {
-                Log.d("PigGame","inside onSaveInstanceState: reinitializing class variables");
-                //getting variables from sharedPrefs
-                String player1Username = savedInstanceState.getString(PLAYER1_USERNAME_KEY, "");
-                String player2Username = savedInstanceState.getString(PLAYER2_USERNAME_KEY, "");
-                int player1Score = savedInstanceState.getInt(PLAYER1_SCORE_KEY,-1);
-                int player2Score = savedInstanceState.getInt(PLAYER2_SCORE_KEY,-1);
-                boolean isGameRunning = savedInstanceState.getBoolean(IS_GAME_RUNNING,false);
-                int currentPlayerTurn = savedInstanceState.getInt(CURRENT_PLAYER_KEY,-1);
-                int runningPointsTotal = savedInstanceState.getInt(RUNNING_POINTS_TOTAL,-1);
-                int lastRolledNumber = savedInstanceState.getInt(DIE_IMAGE_NUMBER,-1);
-                //rebuild game objects and settings
-                this.pigGame = new PigGame(player1Username,player2Username,8);
-                this.gameInProgress = isGameRunning;
-                this.pigGame.setPlayerScore(1,player1Score);
-                this.pigGame.setPlayerScore(2,player2Score);;
-                this.pigGame.setCurrentPlayerTurn(currentPlayerTurn);
-                this.pigGame.setPointsForCurrentTurn(runningPointsTotal);
+            Log.d("PigGame","inside onCreate: reinitializing class variables");
+            //getting variables from sharedPrefs
+            String player1Username = savedInstanceState.getString(PLAYER1_USERNAME_KEY, "");
+            String player2Username = savedInstanceState.getString(PLAYER2_USERNAME_KEY, "");
+            int player1Score = savedInstanceState.getInt(PLAYER1_SCORE_KEY,-1);
+            int player2Score = savedInstanceState.getInt(PLAYER2_SCORE_KEY,-1);
+            boolean isGameRunning = savedInstanceState.getBoolean(IS_GAME_RUNNING,false);
+            int currentPlayerTurn = savedInstanceState.getInt(CURRENT_PLAYER_KEY,-1);
+            int runningPointsTotal = savedInstanceState.getInt(RUNNING_POINTS_TOTAL,-1);
+            int lastRolledNumber = savedInstanceState.getInt(DIE_IMAGE_NUMBER,-1);
 
-                this.DisableUsernameEntryFields();
-                this.SetUsernameFields(this.player1Name,this.player2Name);
-                this.UpdatePlayerScore(1,this.pigGame.getPlayerScore(1));
-                this.UpdatePlayerScore(2,this.pigGame.getPlayerScore(2));
-                this.UpdatePointsRunningTotal(this.pigGame.getPointsForCurrentTurn());
-                this.UpdateCurrentPlayer();
-                this.UpdateDieImage(lastRolledNumber);
-                stateHasBeenRecovered = true;
-            }
+            //rebuild game objects and settings
+            this.pigGame = new PigGame(player1Username,player2Username,8);
+            this.gameInProgress = isGameRunning;
+            this.pigGame.setPlayerScore(1,player1Score);
+            this.pigGame.setPlayerScore(2,player2Score);;
+            this.pigGame.setCurrentPlayerTurn(currentPlayerTurn);
+            this.pigGame.setPointsForCurrentTurn(runningPointsTotal);
+
+            //UI preparation and restoration
+            this.DisableUsernameEntryFields();
+            this.SetUsernameFields(this.player1Name,this.player2Name);
+            this.UpdatePlayerScore(1,this.pigGame.getPlayerScore(1));
+            this.UpdatePlayerScore(2,this.pigGame.getPlayerScore(2));
+            this.UpdatePointsRunningTotal(this.pigGame.getPointsForCurrentTurn());
+            this.UpdateCurrentPlayer();
+            this.UpdateDieImage(lastRolledNumber);
+            stateHasBeenRecovered = true;
         }
 
         //GETS REFERENCE TO SharedPrefs OBJECT
@@ -131,17 +129,26 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle savedInstanceState) {
         Log.d("PigGame","inside onSaveInstanceState");
-        savedInstanceState.putString(this.PLAYER1_USERNAME_KEY,this.pigGame.getPlayerName(1));
-        savedInstanceState.putString(this.PLAYER2_USERNAME_KEY,this.pigGame.getPlayerName(2));
-        savedInstanceState.putInt(this.PLAYER1_SCORE_KEY,this.pigGame.getPlayerScore(1));
-        savedInstanceState.putInt(this.PLAYER2_SCORE_KEY,this.pigGame.getPlayerScore(2));
-        savedInstanceState.putInt(this.CURRENT_PLAYER_KEY,this.pigGame.getCurrentPlayerNumber());
-        savedInstanceState.putInt(this.RUNNING_POINTS_TOTAL,this.pigGame.getPointsForCurrentTurn());
-        savedInstanceState.putInt(this.DIE_IMAGE_NUMBER,this.pigGame.getLastRolledNumber());
-        savedInstanceState.putBoolean(this.IS_GAME_RUNNING,this.gameInProgress);
+        if(this.gameInProgress==true) {
+            //no point in saving state if the game was never running
+            savedInstanceState.putString(this.PLAYER1_USERNAME_KEY,this.pigGame.getPlayerName(1));
+            Log.d("PigGame","inside onSaveInstanceState, logging player1 username key: ");
+            Log.d("PigGame",savedInstanceState.getString(PLAYER1_USERNAME_KEY));
+            savedInstanceState.putString(this.PLAYER2_USERNAME_KEY,this.pigGame.getPlayerName(2));
+            Log.d("PigGame","inside onSaveInstanceState, logging player2 username key: ");
+            Log.d("PigGame",savedInstanceState.getString(PLAYER2_USERNAME_KEY));
+            savedInstanceState.putInt(this.PLAYER1_SCORE_KEY,this.pigGame.getPlayerScore(1));
+            Log.d("PigGame","inside onSaveInstanceState, logging player1 score key: ");
+            Log.d("PigGame",savedInstanceState.getString(PLAYER1_SCORE_KEY));
+            savedInstanceState.putInt(this.PLAYER2_SCORE_KEY,this.pigGame.getPlayerScore(2));
+            savedInstanceState.putInt(this.CURRENT_PLAYER_KEY,this.pigGame.getCurrentPlayerNumber());
+            savedInstanceState.putInt(this.RUNNING_POINTS_TOTAL,this.pigGame.getPointsForCurrentTurn());
+            savedInstanceState.putInt(this.DIE_IMAGE_NUMBER,this.pigGame.getLastRolledNumber());
+            savedInstanceState.putBoolean(this.IS_GAME_RUNNING,this.gameInProgress);
+        }
         super.onSaveInstanceState((savedInstanceState));
     }
-
+/*
     @Override
     protected void onPause() {
         super.onPause();
@@ -162,7 +169,10 @@ public class MainActivity extends AppCompatActivity {
         Log.d("PigGame", "inisde onResume method");
         //checks if the game was running before the state change
         //pointless to update and recover state if it was never running in the first place
-        if(!(savedValues.getBoolean(IS_GAME_RUNNING,false)==false)) {
+        //IMPORTANT: onResume only takes effect if saveState is null (otherwise there will be conflicts!!!
+            //testing to see if the class-level variable stateHasbeenRecovered is true, meaning that oncreate already restored the state
+        if(!(savedValues.getBoolean(IS_GAME_RUNNING,false)==false) && this.stateHasBeenRecovered != true) {
+            Log.d("PigGame", "onResume recovering state");
             //getting variables from sharedPrefs
             String player1Username = savedValues.getString(PLAYER1_USERNAME_KEY, "");
             String player2Username = savedValues.getString(PLAYER2_USERNAME_KEY, "");
@@ -188,7 +198,7 @@ public class MainActivity extends AppCompatActivity {
             this.UpdateCurrentPlayer();
         }
         super.onResume();
-    }
+    }*/
 
     //Event Listener Assigner
     private void CreateUIEventListeners() {
@@ -260,7 +270,7 @@ public class MainActivity extends AppCompatActivity {
         int playerThatJustWent = this.pigGame.getCurrentPlayerNumber();
         int winnerNumber = this.pigGame.EndTurn();
         this.UpdatePlayerScore(playerThatJustWent,this.pigGame.getPlayerScore(playerThatJustWent));
-        this.UpdatePointsRunningTotal(0);
+        this.ResetRunningTotalLabel();
         if(winnerNumber != 0) {
             //display winner on UI
             this.DisplayWinner(winnerNumber);
@@ -323,6 +333,7 @@ public class MainActivity extends AppCompatActivity {
         Log.d("pigGameUILayer","inside newGameButtonClick method, usernames NOT valid");
     }
 
+    //METHODS
     private void DisplayWinner(int winnerNumber) {
         //set the display points label to the name of the winner
         this.pointsAccumulatorLabel.setText(this.pigGame.getPlayerName(winnerNumber) + " has won!");
@@ -354,7 +365,6 @@ public class MainActivity extends AppCompatActivity {
         this.player2UsernameTextEntry.setEnabled(false);
     }
 
-    //METHODS
     private void UpdateDieImage(int rolledNumber) {
         int referenceID = 0;
         switch(rolledNumber) {
