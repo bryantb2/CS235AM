@@ -10,6 +10,7 @@ public class PigGame {
     private Die eightSidedDie;
     private int currentPlayerTurn;
     private int runningTotal;
+    private int lastRolledNumber;
     private boolean playerOneReached100;
 
     //CONSTRUCTOR
@@ -74,6 +75,14 @@ public class PigGame {
 
         public void setPointsForCurrentTurn(int points) {
         this.runningTotal = points;
+    }
+
+    public int getLastRolledNumber() {
+        return this.lastRolledNumber;
+    }
+
+    public void setLastRolledNumber(int rolledNumber) {
+        this.lastRolledNumber = rolledNumber;
     }
 
     //METHODS

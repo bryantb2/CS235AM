@@ -53,12 +53,13 @@ public class MainActivity extends AppCompatActivity {
 
     //SAVE STATE KEYS
     private String RUNNING_POINTS_TOTAL = "RUNNING_POINTS_TOTAL";
-    private String PLAYER1_USERNAME_KEY = "USERNAME";
-    private String PLAYER2_USERNAME_KEY = "USERNAME";
+    private String PLAYER1_USERNAME_KEY = "USERNAME1";
+    private String PLAYER2_USERNAME_KEY = "USERNAME2";
     private String PLAYER1_SCORE_KEY = "PLAYER1_SCORE_KEY";
     private String PLAYER2_SCORE_KEY = "PLAYER2_SCORE_KEY";
     private String CURRENT_PLAYER_KEY = "CURRENT_PLAYER_KEY";
     private String IS_GAME_RUNNING = "IS_GAME_RUNNING";
+    private String DIE_IMAGE_NUMBER = "DIE_IMAGE_NUMBER";
 
     //LIFECYCLES
     @Override
@@ -92,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
                 boolean isGameRunning = savedInstanceState.getBoolean(IS_GAME_RUNNING,false);
                 int currentPlayerTurn = savedInstanceState.getInt(CURRENT_PLAYER_KEY,-1);
                 int runningPointsTotal = savedInstanceState.getInt(RUNNING_POINTS_TOTAL,-1);
+                int lastRolledNumber = savedInstanceState.getInt(DIE_IMAGE_NUMBER,-1);
                 //rebuild game objects and settings
                 this.pigGame = new PigGame(player1Username,player2Username,8);
                 this.gameInProgress = isGameRunning;
@@ -106,6 +108,7 @@ public class MainActivity extends AppCompatActivity {
                 this.UpdatePlayerScore(2,this.pigGame.getPlayerScore(2));
                 this.UpdatePointsRunningTotal(this.pigGame.getPointsForCurrentTurn());
                 this.UpdateCurrentPlayer();
+                this.UpdateDieImage(lastRolledNumber);
                 stateHasBeenRecovered = true;
             }
         }
@@ -117,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
         CreateUIEventListeners();
         //disable buttons until a new game has been created
         if (stateHasBeenRecovered != true) {
-            //ASSEUMPTION:
+            //ASSUMPTION:
                 //if the state has been recovered, a game was already running, therefore not requiring the roll and disable buttons to be disabled
             //these will only be disabled if there was no previously saved state data, because a new game will need to be created first
             this.DisableRollButton();
@@ -134,6 +137,7 @@ public class MainActivity extends AppCompatActivity {
         savedInstanceState.putInt(this.PLAYER2_SCORE_KEY,this.pigGame.getPlayerScore(2));
         savedInstanceState.putInt(this.CURRENT_PLAYER_KEY,this.pigGame.getCurrentPlayerNumber());
         savedInstanceState.putInt(this.RUNNING_POINTS_TOTAL,this.pigGame.getPointsForCurrentTurn());
+        savedInstanceState.putInt(this.DIE_IMAGE_NUMBER,this.pigGame.getLastRolledNumber());
         savedInstanceState.putBoolean(this.IS_GAME_RUNNING,this.gameInProgress);
         super.onSaveInstanceState((savedInstanceState));
     }
@@ -188,11 +192,6 @@ public class MainActivity extends AppCompatActivity {
 
     //Event Listener Assigner
     private void CreateUIEventListeners() {
-        this.GenerateButtonListeners();
-    }
-
-    //Event Listener Assignment Methods
-    private void GenerateButtonListeners() {
         this.newGameButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -243,6 +242,7 @@ public class MainActivity extends AppCompatActivity {
         catch (InterruptedException e) {
             Log.d("PigGame","sleep function for roll button was interrupted");
         }
+        this.pigGame.setLastRolledNumber(rollResult);
         this.EnableRollButton();
     }
 
