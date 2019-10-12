@@ -52,8 +52,13 @@ public class MainActivity extends AppCompatActivity {
     private SharedPreferences savedValues;
 
     //SAVE STATE KEYS
-    private PigGame PIG_GAME_OBJECT_TEMP = new PigGame("placeHolder1","placeHolder2",8);
-    private boolean GAME_IN_PROGRESS_TEMP = false;
+    private String RUNNING_POINTS_TOTAL = "RUNNING_POINTS_TOTAL";
+    private String PLAYER1_USERNAME_KEY = "USERNAME";
+    private String PLAYER2_USERNAME_KEY = "USERNAME";
+    private String PLAYER1_SCORE_KEY = "PLAYER1_SCORE_KEY";
+    private String PLAYER2_SCORE_KEY = "PLAYER2_SCORE_KEY";
+    private String CURRENT_PLAYER_KEY = "CURRENT_PLAYER_KEY";
+    private String IS_GAME_RUNNING = "IS_GAME_RUNNING";
 
     //LIFECYCLES
     @Override
@@ -86,9 +91,90 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        Log.d("PigGame", "inisde onPause method");
         //will save the necessary data for recreating the app onResume
         SharedPreferences.Editor editor = savedValues.edit();
-        //editor.put
+        editor.putString(this.PLAYER1_USERNAME_KEY,this.pigGame.getPlayerName(1));
+        editor.putString(this.PLAYER2_USERNAME_KEY,this.pigGame.getPlayerName(2));
+        editor.putInt(this.PLAYER1_SCORE_KEY,this.pigGame.getPlayerScore(1));
+        editor.putInt(this.PLAYER2_SCORE_KEY,this.pigGame.getPlayerScore(2));
+        editor.putInt(this.CURRENT_PLAYER_KEY,this.pigGame.getCurrentPlayerNumber());
+        editor.putInt(this.RUNNING_POINTS_TOTAL,this.pigGame.getPointsForCurrentTurn());
+        editor.putBoolean(this.IS_GAME_RUNNING,this.gameInProgress);
+    }
+
+    @Override
+    protected void onResume() {
+        Log.d("PigGame", "inisde onResume method");
+        //checks if the game was running before the state change
+        //pointless to update and recover state if it was never running in the first place
+        if(!(savedValues.getBoolean(IS_GAME_RUNNING,false)==false)) {
+            //getting variables from sharedPrefs
+            String player1Username = savedValues.getString(PLAYER1_USERNAME_KEY, "");
+            String player2Username = savedValues.getString(PLAYER2_USERNAME_KEY, "");
+            int player1Score = savedValues.getInt(PLAYER1_SCORE_KEY,-1);
+            int player2Score = savedValues.getInt(PLAYER2_SCORE_KEY,-1);
+            boolean isGameRunning = savedValues.getBoolean(IS_GAME_RUNNING,false);
+            int currentPlayerTurn = savedValues.getInt(CURRENT_PLAYER_KEY,-1);
+            int runningPointsTotal = savedValues.getInt(RUNNING_POINTS_TOTAL,-1);
+            //rebuild game objects and settings
+            this.pigGame = new PigGame(player1Username,player2Username,8);
+            this.gameInProgress = isGameRunning;
+            this.pigGame.setPlayerScore(1,player1Score);
+            this.pigGame.setPlayerScore(2,player2Score);
+            this.pigGame.setCurrentPlayerTurn(currentPlayerTurn);
+            this.pigGame.setPointsForCurrentTurn(runningPointsTotal);
+
+            //SETTING UI ELEMENTS AND DISABLING THE NECESSARY UI
+            this.DisableUsernameEntryFields();
+            this.SetUsernameFields(player1Username,player2Username);
+            this.UpdatePlayerScore(1,player1Score);
+            this.UpdatePlayerScore(2,player2Score);
+            this.UpdatePointsRunningTotal(runningPointsTotal);
+        }
+        super.onResume();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState((savedInstanceState));
+        savedInstanceState.putString(this.PLAYER1_USERNAME_KEY,this.pigGame.getPlayerName(1));
+        savedInstanceState.putString(this.PLAYER2_USERNAME_KEY,this.pigGame.getPlayerName(2));
+        savedInstanceState.putInt(this.PLAYER1_SCORE_KEY,this.pigGame.getPlayerScore(1));
+        savedInstanceState.putInt(this.PLAYER2_SCORE_KEY,this.pigGame.getPlayerScore(2));
+        savedInstanceState.putInt(this.CURRENT_PLAYER_KEY,this.pigGame.getCurrentPlayerNumber());
+        savedInstanceState.putInt(this.RUNNING_POINTS_TOTAL,this.pigGame.getPointsForCurrentTurn());
+        savedInstanceState.putBoolean(this.IS_GAME_RUNNING,this.gameInProgress);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        if(!(savedInstanceState.getBoolean(IS_GAME_RUNNING,false) == false)) {
+            //getting variables from sharedPrefs
+            String player1Username = savedInstanceState.getString(PLAYER1_USERNAME_KEY, "");
+            String player2Username = savedInstanceState.getString(PLAYER2_USERNAME_KEY, "");
+            int player1Score = savedInstanceState.getInt(PLAYER1_SCORE_KEY,-1);
+            int player2Score = savedInstanceState.getInt(PLAYER2_SCORE_KEY,-1);
+            boolean isGameRunning = savedInstanceState.getBoolean(IS_GAME_RUNNING,false);
+            int currentPlayerTurn = savedInstanceState.getInt(CURRENT_PLAYER_KEY,-1);
+            int runningPointsTotal = savedInstanceState.getInt(RUNNING_POINTS_TOTAL,-1);
+            //rebuild game objects and settings
+            this.pigGame = new PigGame(player1Username,player2Username,8);
+            this.gameInProgress = isGameRunning;
+            this.pigGame.setPlayerScore(1,player1Score);
+            this.pigGame.setPlayerScore(2,player2Score);
+            this.pigGame.setCurrentPlayerTurn(currentPlayerTurn);
+            this.pigGame.setPointsForCurrentTurn(runningPointsTotal);
+
+            //SETTING UI ELEMENTS AND DISABLING THE NECESSARY UI
+            this.DisableUsernameEntryFields();
+            this.SetUsernameFields(player1Username,player2Username);
+            this.UpdatePlayerScore(1,player1Score);
+            this.UpdatePlayerScore(2,player2Score);
+            this.UpdatePointsRunningTotal(runningPointsTotal);
+        }
+
     }
 
     //Event Listener Assigner
@@ -330,6 +416,12 @@ public class MainActivity extends AppCompatActivity {
         final String defaultPlaceHolderText = "Enter username";
         this.player1UsernameTextEntry.setText(defaultPlaceHolderText);
         this.player2UsernameTextEntry.setText(defaultPlaceHolderText);
+    }
+
+    private void SetUsernameFields(String player1Name, String player2Name) {
+        //this is used when the UI needs to be synced from the inside to out (such as recovering state)
+        this.player1UsernameTextEntry.setText(player1Name);
+        this.player2UsernameTextEntry.setText(player2Name);
     }
 
     private void UpdateCurrentPlayer() {

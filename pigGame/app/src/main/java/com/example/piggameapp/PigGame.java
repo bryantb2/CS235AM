@@ -45,6 +45,10 @@ public class PigGame {
         return this.currentPlayerTurn;
     }
 
+    public void setCurrentPlayerTurn(int playerNumber) {
+        this.currentPlayerTurn = playerNumber;
+    }
+
     public int getPlayerScore(int playerNumber) {
         if(playerNumber==1) {
             return player1.getPoints();
@@ -54,8 +58,22 @@ public class PigGame {
         }
     }
 
+    public void setPlayerScore(int playerNumber, int points) {
+        //this method will be used to restore player point numbers after some lifecycle change has occured
+        if(playerNumber==1) {
+            this.player1.addPoints(points);
+        }
+        else {
+            this.player2.addPoints(points);
+        }
+    }
+
     public int getPointsForCurrentTurn() {
         return runningTotal;
+    }
+
+    public void setPointsForCurrentTurn(int points) {
+        this.runningTotal = points;
     }
 
     //METHODS
