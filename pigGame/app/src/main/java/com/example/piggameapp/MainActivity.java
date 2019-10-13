@@ -47,10 +47,13 @@ public class MainActivity extends AppCompatActivity {
     private String player2Name;
     //tracks if the game is running
     private boolean gameInProgress = false;
+    //conditionally locks the roll die button if there is a winner
+    private boolean isWinner =false;
 
     //Class-level sharedPreferences object
     private SharedPreferences savedValues;
     boolean stateHasBeenRecovered = false;
+    boolean stateHasBeenSaved = false;
 
     //SAVE STATE KEYS
     private String RUNNING_POINTS_TOTAL = "RUNNING_POINTS_TOTAL";
@@ -145,9 +148,11 @@ public class MainActivity extends AppCompatActivity {
             savedInstanceState.putInt(this.RUNNING_POINTS_TOTAL,this.pigGame.getPointsForCurrentTurn());
             savedInstanceState.putInt(this.DIE_IMAGE_NUMBER,this.pigGame.getLastRolledNumber());
             savedInstanceState.putBoolean(this.IS_GAME_RUNNING,this.gameInProgress);
+            this.stateHasBeenSaved = true;
         }
         super.onSaveInstanceState((savedInstanceState));
     }
+
 /*
     @Override
     protected void onPause() {
@@ -253,7 +258,9 @@ public class MainActivity extends AppCompatActivity {
             Log.d("PigGame","sleep function for roll button was interrupted");
         }
         this.pigGame.setLastRolledNumber(rollResult);
-        this.EnableRollButton();
+        if(this.isWinner == false) {
+            this.EnableRollButton();
+        }
     }
 
     public void EndTurn() {
@@ -274,11 +281,15 @@ public class MainActivity extends AppCompatActivity {
         if(winnerNumber != 0) {
             //display winner on UI
             this.DisplayWinner(winnerNumber);
+            //update turn label to reflect end of game
+            this.UpdateCurrentPlayer("End of Game!");
             //disable game buttons
             this.DisableEndTurnButton();
             this.DisableRollButton();
             //display toast message
             Toast.makeText(getApplicationContext(), (this.pigGame.getPlayerName(winnerNumber) + " has won!"),Toast.LENGTH_SHORT);
+            //turn isWinner to true, preventing the roll die button from activating
+            this.isWinner = true;
         }
         else {
             //end turn auto switches the player turn if there is no winner, so all we have to do here reflect the change in the UI
@@ -298,6 +309,7 @@ public class MainActivity extends AppCompatActivity {
         //reset runningtotal label to zero
         //reset current player label
         if(gameInProgress==true) {
+            this.isWinner = false;
             this.ResetUsernameFields(); //this is what prevents the second block in this handler from firing
             this.ResetScoreLabels();
             this.ResetRunningTotalLabel();
@@ -444,7 +456,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void UpdateCurrentPlayer() {
+        //this is the default updateCurrentPlayer method and will automatically set the UI to reflect the currentPlayerName
         this.currentPlayerLabel.setText(this.pigGame.getCurrentPlayerName()+"'s turn");
+    }
+
+    private void UpdateCurrentPlayer(String optionalMessage) {
+        //this is for optional and specific messages that need to be displayed in the UpdateCurrentPlayer UI label
+        this.currentPlayerLabel.setText(optionalMessage);
     }
 
     private void ResetCurrrentPlayerLabel() {
