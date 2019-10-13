@@ -302,6 +302,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void NewGame() {
+        this.DisableRollButton();
+        this.DisableEndTurnButton();
         //execute this block if the app was already running
         //delete existing usernames in fields
         //set game bool to not active
