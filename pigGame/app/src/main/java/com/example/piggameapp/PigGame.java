@@ -51,12 +51,14 @@ public class PigGame {
     }
 
     public int getPlayerScore(int playerNumber) {
+        int points;
         if(playerNumber==1) {
-            return player1.getPoints();
+            points = player1.getPoints();
         }
         else {
-            return player2.getPoints();
+            points = player2.getPoints();
         }
+        return points;
     }
 
     public void setPlayerScore(int playerNumber, int points) {

@@ -94,6 +94,10 @@ public class MainActivity extends AppCompatActivity {
             int currentPlayerTurn = savedInstanceState.getInt(CURRENT_PLAYER_KEY,-1);
             int runningPointsTotal = savedInstanceState.getInt(RUNNING_POINTS_TOTAL,-1);
             int lastRolledNumber = savedInstanceState.getInt(DIE_IMAGE_NUMBER,-1);
+            Log.d("PigGame","player1Username: " + player1Username);
+            Log.d("PigGame","player2Username: " + player2Username);
+            Log.d("PigGame","player1Score " + String.valueOf(player1Score));
+            Log.d("PigGame","player2Score " + String.valueOf(player2Score));
 
             //rebuild game objects and settings
             this.pigGame = new PigGame(player1Username,player2Username,8);
@@ -133,21 +137,53 @@ public class MainActivity extends AppCompatActivity {
     protected void onSaveInstanceState(Bundle savedInstanceState) {
         Log.d("PigGame","inside onSaveInstanceState");
         if(this.gameInProgress==true) {
-            //no point in saving state if the game was never running
-            savedInstanceState.putString(this.PLAYER1_USERNAME_KEY,this.pigGame.getPlayerName(1));
+            //fetching and storing data to be put into saveInstance
+            String username1 = this.pigGame.getPlayerName(1);
+            String username2 = this.pigGame.getPlayerName(2);
+
+            savedInstanceState.putString(this.PLAYER1_USERNAME_KEY,username1);
             Log.d("PigGame","inside onSaveInstanceState, logging player1 username key: ");
-            Log.d("PigGame",savedInstanceState.getString(PLAYER1_USERNAME_KEY));
-            savedInstanceState.putString(this.PLAYER2_USERNAME_KEY,this.pigGame.getPlayerName(2));
+            Log.d("PigGame",username1);
+
+            savedInstanceState.putString(this.PLAYER2_USERNAME_KEY,username2);
             Log.d("PigGame","inside onSaveInstanceState, logging player2 username key: ");
-            Log.d("PigGame",savedInstanceState.getString(PLAYER2_USERNAME_KEY));
-            savedInstanceState.putInt(this.PLAYER1_SCORE_KEY,this.pigGame.getPlayerScore(1));
+            Log.d("PigGame",username2);
+
+
+            int player1Score = this.pigGame.getPlayerScore(1);
+            int player2Score = this.pigGame.getPlayerScore(2);
+
+            savedInstanceState.putInt(this.PLAYER1_SCORE_KEY,player1Score);
             Log.d("PigGame","inside onSaveInstanceState, logging player1 score key: ");
-            Log.d("PigGame",savedInstanceState.getString(PLAYER1_SCORE_KEY));
-            savedInstanceState.putInt(this.PLAYER2_SCORE_KEY,this.pigGame.getPlayerScore(2));
-            savedInstanceState.putInt(this.CURRENT_PLAYER_KEY,this.pigGame.getCurrentPlayerNumber());
-            savedInstanceState.putInt(this.RUNNING_POINTS_TOTAL,this.pigGame.getPointsForCurrentTurn());
-            savedInstanceState.putInt(this.DIE_IMAGE_NUMBER,this.pigGame.getLastRolledNumber());
-            savedInstanceState.putBoolean(this.IS_GAME_RUNNING,this.gameInProgress);
+            Log.d("PigGame",String.valueOf(player1Score));
+
+            savedInstanceState.putInt(this.PLAYER2_SCORE_KEY,player2Score);
+            Log.d("PigGame","inside onSaveInstanceState, logging player2 score key: ");
+            Log.d("PigGame",String.valueOf(player2Score));
+
+
+            int currentPlayerNumber = this.pigGame.getCurrentPlayerNumber();
+            savedInstanceState.putInt(this.CURRENT_PLAYER_KEY,currentPlayerNumber);
+            Log.d("PigGame","inside onSaveInstanceState, logging current player key: ");
+            Log.d("PigGame",String.valueOf(currentPlayerNumber));
+
+
+            int runningPointsTotal = this.pigGame.getPointsForCurrentTurn();
+            savedInstanceState.putInt(this.RUNNING_POINTS_TOTAL,runningPointsTotal);
+            Log.d("PigGame","inside onSaveInstanceState, logging running points total key: ");
+            Log.d("PigGame",String.valueOf(runningPointsTotal));
+
+
+            int dieImageNumber = this.pigGame.getLastRolledNumber();
+            savedInstanceState.putInt(this.DIE_IMAGE_NUMBER,dieImageNumber);
+            Log.d("PigGame","inside onSaveInstanceState, logging die image number key: ");
+            Log.d("PigGame",String.valueOf(dieImageNumber));
+
+            boolean gameStatus = this.gameInProgress;
+            savedInstanceState.putBoolean(this.IS_GAME_RUNNING,gameStatus);
+            Log.d("PigGame","inside onSaveInstanceState, logging is game running key: ");
+            Log.d("PigGame",String.valueOf(gameStatus));
+
             this.stateHasBeenSaved = true;
         }
         super.onSaveInstanceState((savedInstanceState));
