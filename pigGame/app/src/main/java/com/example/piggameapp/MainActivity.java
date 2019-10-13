@@ -96,8 +96,12 @@ public class MainActivity extends AppCompatActivity {
             int lastRolledNumber = savedInstanceState.getInt(DIE_IMAGE_NUMBER,-1);
             Log.d("PigGame","player1Username: " + player1Username);
             Log.d("PigGame","player2Username: " + player2Username);
-            Log.d("PigGame","player1Score " + String.valueOf(player1Score));
-            Log.d("PigGame","player2Score " + String.valueOf(player2Score));
+            Log.d("PigGame","player1Score: " + String.valueOf(player1Score));
+            Log.d("PigGame","player2Score: " + String.valueOf(player2Score));
+            Log.d("PigGame","isGameRunning: " + String.valueOf(isGameRunning));
+            Log.d("PigGame","currentPlayerTurn: " + String.valueOf(currentPlayerTurn));
+            Log.d("PigGame","runningPointsTotal " + String.valueOf(runningPointsTotal));
+            Log.d("PigGame","lastRolledNumber " + String.valueOf(lastRolledNumber));
 
             //rebuild game objects and settings
             this.pigGame = new PigGame(player1Username,player2Username,8);
@@ -106,6 +110,7 @@ public class MainActivity extends AppCompatActivity {
             this.pigGame.setPlayerScore(2,player2Score);;
             this.pigGame.setCurrentPlayerTurn(currentPlayerTurn);
             this.pigGame.setPointsForCurrentTurn(runningPointsTotal);
+            this.pigGame.setLastRolledNumber(lastRolledNumber);
 
             //UI preparation and restoration
             this.DisableUsernameEntryFields();
