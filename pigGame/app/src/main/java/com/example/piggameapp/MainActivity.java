@@ -2,18 +2,9 @@ package com.example.piggameapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.content.res.AssetManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.renderscript.Sampler;
-import android.renderscript.ScriptGroup;
-import android.text.Editable;
-import android.text.InputType;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -21,10 +12,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.io.InputStream;
-import java.util.Timer;
-import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -72,10 +59,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         //GETTING UI ELEMENTS
-        this.player1UsernameTextEntry = findViewById(R.id.player1Username_TextEntry);
+        this.player1UsernameTextEntry = findViewById(R.id.player1UsernameTextEntry);
         this.player1ScoreLabel = findViewById(R.id.player1Score_Label);
         this.player2ScoreLabel = findViewById(R.id.player2Score_Label);
-        this.player2UsernameTextEntry = findViewById(R.id.player2Username_TextEntry);
+        this.player2UsernameTextEntry = findViewById(R.id.player2UsernameTextEntry);
         this.currentPlayerLabel = findViewById(R.id.currentPlayer_Label);
         this.dieImage = findViewById(R.id.dieRollResult_Label);
         this.pointsAccumulatorLabel = findViewById(R.id.runningPointsTotal_Label);
@@ -88,12 +75,12 @@ public class MainActivity extends AppCompatActivity {
             //getting variables from sharedPrefs
             String player1Username = savedInstanceState.getString(PLAYER1_USERNAME_KEY, "");
             String player2Username = savedInstanceState.getString(PLAYER2_USERNAME_KEY, "");
-            int player1Score = savedInstanceState.getInt(PLAYER1_SCORE_KEY,-1);
-            int player2Score = savedInstanceState.getInt(PLAYER2_SCORE_KEY,-1);
+            int player1Score = savedInstanceState.getInt(PLAYER1_SCORE_KEY,0);
+            int player2Score = savedInstanceState.getInt(PLAYER2_SCORE_KEY,0);
             boolean isGameRunning = savedInstanceState.getBoolean(IS_GAME_RUNNING,false);
-            int currentPlayerTurn = savedInstanceState.getInt(CURRENT_PLAYER_KEY,-1);
-            int runningPointsTotal = savedInstanceState.getInt(RUNNING_POINTS_TOTAL,-1);
-            int lastRolledNumber = savedInstanceState.getInt(DIE_IMAGE_NUMBER,-1);
+            int currentPlayerTurn = savedInstanceState.getInt(CURRENT_PLAYER_KEY,0);
+            int runningPointsTotal = savedInstanceState.getInt(RUNNING_POINTS_TOTAL,0);
+            int lastRolledNumber = savedInstanceState.getInt(DIE_IMAGE_NUMBER,0);
             Log.d("PigGame","player1Username: " + player1Username);
             Log.d("PigGame","player2Username: " + player2Username);
             Log.d("PigGame","player1Score: " + String.valueOf(player1Score));
@@ -456,7 +443,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
             }
             default: {
-                referenceID = -1;
+                referenceID = 0;
                 break;
             }
         }
