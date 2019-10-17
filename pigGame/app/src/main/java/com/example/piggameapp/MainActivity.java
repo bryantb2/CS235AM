@@ -70,53 +70,68 @@ public class MainActivity extends AppCompatActivity {
         this.endTurnButton = findViewById(R.id.endTurn_Button);
         this.newGameButton = findViewById(R.id.newGame_Button);
 
+
         if(savedInstanceState != null) {
-            Log.d("PigGame","inside onCreate: reinitializing class variables");
-            //getting variables from sharedPrefs
-            String player1Username = savedInstanceState.getString(PLAYER1_USERNAME_KEY, "");
-            String player2Username = savedInstanceState.getString(PLAYER2_USERNAME_KEY, "");
-            int player1Score = savedInstanceState.getInt(PLAYER1_SCORE_KEY,0);
-            int player2Score = savedInstanceState.getInt(PLAYER2_SCORE_KEY,0);
             boolean isGameRunning = savedInstanceState.getBoolean(IS_GAME_RUNNING,false);
-            int currentPlayerTurn = savedInstanceState.getInt(CURRENT_PLAYER_KEY,0);
-            int runningPointsTotal = savedInstanceState.getInt(RUNNING_POINTS_TOTAL,0);
-            int lastRolledNumber = savedInstanceState.getInt(DIE_IMAGE_NUMBER,0);
-            Log.d("PigGame","player1Username: " + player1Username);
-            Log.d("PigGame","player2Username: " + player2Username);
-            Log.d("PigGame","player1Score: " + String.valueOf(player1Score));
-            Log.d("PigGame","player2Score: " + String.valueOf(player2Score));
-            Log.d("PigGame","isGameRunning: " + String.valueOf(isGameRunning));
-            Log.d("PigGame","currentPlayerTurn: " + String.valueOf(currentPlayerTurn));
-            Log.d("PigGame","runningPointsTotal " + String.valueOf(runningPointsTotal));
-            Log.d("PigGame","lastRolledNumber " + String.valueOf(lastRolledNumber));
+            if(isGameRunning==true) {
+                Log.d("PigGame","inside onCreate: reinitializing class variables");
+                //getting variables from sharedPrefs
+                String player1Username = savedInstanceState.getString(PLAYER1_USERNAME_KEY, "");
+                String player2Username = savedInstanceState.getString(PLAYER2_USERNAME_KEY, "");
+                int player1Score = savedInstanceState.getInt(PLAYER1_SCORE_KEY,0);
+                int player2Score = savedInstanceState.getInt(PLAYER2_SCORE_KEY,0);
+                //boolean isGameRunning = savedInstanceState.getBoolean(IS_GAME_RUNNING,false);
+                int currentPlayerTurn = savedInstanceState.getInt(CURRENT_PLAYER_KEY,0);
+                int runningPointsTotal = savedInstanceState.getInt(RUNNING_POINTS_TOTAL,0);
+                int lastRolledNumber = savedInstanceState.getInt(DIE_IMAGE_NUMBER,8);
+                Log.d("PigGame","player1Username: " + player1Username);
+                Log.d("PigGame","player2Username: " + player2Username);
+                Log.d("PigGame","player1Score: " + String.valueOf(player1Score));
+                Log.d("PigGame","player2Score: " + String.valueOf(player2Score));
+                Log.d("PigGame","isGameRunning: " + String.valueOf(isGameRunning));
+                Log.d("PigGame","currentPlayerTurn: " + String.valueOf(currentPlayerTurn));
+                Log.d("PigGame","runningPointsTotal " + String.valueOf(runningPointsTotal));
+                Log.d("PigGame","lastRolledNumber " + String.valueOf(lastRolledNumber));
 
-            //rebuild game objects and settings
-            this.pigGame = new PigGame(player1Username,player2Username,8);
-            this.gameInProgress = isGameRunning;
-            this.pigGame.setPlayerScore(1,player1Score);
-            this.pigGame.setPlayerScore(2,player2Score);;
-            this.pigGame.setCurrentPlayerTurn(currentPlayerTurn);
-            this.pigGame.setPointsForCurrentTurn(runningPointsTotal);
-            this.pigGame.setLastRolledNumber(lastRolledNumber);
+                //rebuild game objects and settings
+                this.pigGame = new PigGame(player1Username,player2Username,8);
+                this.gameInProgress = isGameRunning;
+                this.pigGame.setPlayerScore(1,player1Score);
+                this.pigGame.setPlayerScore(2,player2Score);;
+                this.pigGame.setCurrentPlayerTurn(currentPlayerTurn);
+                this.pigGame.setPointsForCurrentTurn(runningPointsTotal);
+                this.pigGame.setLastRolledNumber(lastRolledNumber);
 
-            //UI preparation and restoration
-            this.DisableUsernameEntryFields();
-            this.SetUsernameFields(this.player1Name,this.player2Name);
-            this.UpdatePlayerScore(1,this.pigGame.getPlayerScore(1));
-            this.UpdatePlayerScore(2,this.pigGame.getPlayerScore(2));
-            this.UpdatePointsRunningTotal(this.pigGame.getPointsForCurrentTurn());
-            this.UpdateCurrentPlayer();
-            this.UpdateDieImage(lastRolledNumber);
-            stateHasBeenRecovered = true;
+                //UI preparation and restoration
+                this.DisableUsernameEntryFields();
+                this.SetUsernameFields(this.player1Name,this.player2Name);
+                this.UpdatePlayerScore(1,this.pigGame.getPlayerScore(1));
+                this.UpdatePlayerScore(2,this.pigGame.getPlayerScore(2));
+                this.UpdatePointsRunningTotal(this.pigGame.getPointsForCurrentTurn());
+                this.UpdateCurrentPlayer();
+                this.UpdateDieImage(lastRolledNumber);
+                stateHasBeenRecovered = true;
+            }
+        }
+        else {
+            Log.d("PigGame","Inside default state setter");
+            //setting UI to default state
+            this.isWinner = false;
+            this.ResetUsernameFields();
+            this.ResetScoreLabels();
+            this.ResetRunningTotalLabel();
+            this.ResetCurrrentPlayerLabel();
+            this.gameInProgress = false;
+            this.EnableUsernameEntryFields();
         }
 
         //GETS REFERENCE TO SharedPrefs OBJECT
-        savedValues = getSharedPreferences("savedValues", MODE_PRIVATE);
+        //savedValues = getSharedPreferences("savedValues", MODE_PRIVATE);
 
         //Methods calls
         CreateUIEventListeners();
-        //disable buttons until a new game has been created
-        if (stateHasBeenRecovered != true) {
+        //disable buttons until a new game has been created (or if the state has been recovered for a game that was not in progress)
+        if (stateHasBeenRecovered != true || (this.gameInProgress == false && stateHasBeenRecovered == true) ) {
             //ASSUMPTION:
                 //if the state has been recovered, a game was already running, therefore not requiring the roll and disable buttons to be disabled
             //these will only be disabled if there was no previously saved state data, because a new game will need to be created first
@@ -175,10 +190,8 @@ public class MainActivity extends AppCompatActivity {
             savedInstanceState.putBoolean(this.IS_GAME_RUNNING,gameStatus);
             Log.d("PigGame","inside onSaveInstanceState, logging is game running key: ");
             Log.d("PigGame",String.valueOf(gameStatus));
-
-            this.stateHasBeenSaved = true;
+            super.onSaveInstanceState((savedInstanceState));
         }
-        super.onSaveInstanceState((savedInstanceState));
     }
 
 /*
