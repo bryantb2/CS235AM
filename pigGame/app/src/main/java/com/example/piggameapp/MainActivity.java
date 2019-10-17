@@ -113,7 +113,8 @@ public class MainActivity extends AppCompatActivity {
                 stateHasBeenRecovered = true;
             }
         }
-        else {
+        //executes if there is no save state data to be utilized
+        if(stateHasBeenRecovered == false) {
             Log.d("PigGame","Inside default state setter");
             //setting UI to default state
             this.isWinner = false;
