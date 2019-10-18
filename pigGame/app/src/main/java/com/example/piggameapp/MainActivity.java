@@ -36,11 +36,12 @@ public class MainActivity extends AppCompatActivity {
     private boolean gameInProgress = false;
     //conditionally locks the roll die button if there is a winner
     private boolean isWinner =false;
+    private boolean areEntryFieldsDisabled = false;
 
-    //Class-level sharedPreferences object
+    //Class-level sharedPreferences object and state variables
     private SharedPreferences savedValues;
-    boolean stateHasBeenRecovered = false;
-    boolean stateHasBeenSaved = false;
+    private boolean stateHasBeenRecovered = false;
+    private boolean stateHasBeenSaved = false;
 
     //SAVE STATE KEYS
     private String RUNNING_POINTS_TOTAL = "RUNNING_POINTS_TOTAL";
@@ -132,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
         //Methods calls
         CreateUIEventListeners();
         //disable buttons until a new game has been created (or if the state has been recovered for a game that was not in progress)
-        if (stateHasBeenRecovered != true || (this.gameInProgress == false && stateHasBeenRecovered == true) ) {
+        if (stateHasBeenRecovered != true || (this.gameInProgress == false) ) {
             //ASSUMPTION:
                 //if the state has been recovered, a game was already running, therefore not requiring the roll and disable buttons to be disabled
             //these will only be disabled if there was no previously saved state data, because a new game will need to be created first
@@ -265,6 +266,23 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Roll();
+            }
+        });
+
+        this.player1UsernameTextEntry.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               if(areEntryFieldsDisabled == false && player1UsernameTextEntry.getText().toString().equals("Enter username")) {
+                    player1UsernameTextEntry.setText("");
+               }
+            }
+        });
+        this.player2UsernameTextEntry.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(areEntryFieldsDisabled == false && player2UsernameTextEntry.getText().toString().equals("Enter username")) {
+                    player2UsernameTextEntry.setText("");
+                }
             }
         });
     }
@@ -412,11 +430,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void EnableUsernameEntryFields() {
+        this.areEntryFieldsDisabled = false;
         this.player1UsernameTextEntry.setEnabled(true);
         this.player2UsernameTextEntry.setEnabled(true);
     }
 
     private void DisableUsernameEntryFields() {
+        this.areEntryFieldsDisabled = true;
         this.player1UsernameTextEntry.setEnabled(false);
         this.player2UsernameTextEntry.setEnabled(false);
     }
