@@ -5,12 +5,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.Build;
 import android.app.Notification;
-import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.text.Editable;
 //UI elements
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 //OnPause and OnResume
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -89,6 +91,29 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //LIFECYCLE METHODS
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        //mounting the XML to the main activity
+        //will convert the XML items to java objects that can be displayed in the activity
+        getMenuInflater().inflate(R.menu.activity_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            //determines which menu item was selected based off element IDs
+            case R.id.about:
+                Toast.makeText(this,"About", Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.settings:
+                Toast.makeText(this,"Settings", Toast.LENGTH_SHORT).show();
+                return true;
+            default:
+                //allows for default OptionsItemSelected behavior from the super class
+                return super.onOptionsItemSelected((item));
+        }
+    }
 
     @Override
     protected void onPause() {
