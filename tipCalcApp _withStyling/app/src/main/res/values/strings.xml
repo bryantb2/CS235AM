@@ -8,4 +8,9 @@
     <string name="percentTag_label">Percent</string>
     <string name="billAmountTag_label">Bill Amount</string>
     <string name="subTotalTextInput">Input Meal Sub-total</string>
+    <string-array name="preferenceList">
+        <item>None</item>
+        <item>Tip</item>
+        <item>Total</item>
+    </string-array>
 </resources>

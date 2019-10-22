@@ -2,6 +2,7 @@ package com.example.tipcalculator;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Build;
 import android.app.Notification;
@@ -105,9 +106,11 @@ public class MainActivity extends AppCompatActivity {
             //determines which menu item was selected based off element IDs
             case R.id.about:
                 Toast.makeText(this,"About", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(getApplicationContext(),AboutActivity.class));
                 return true;
             case R.id.settings:
                 Toast.makeText(this,"Settings", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(getApplicationContext(),SettingsActivity.class));
                 return true;
             default:
                 //allows for default OptionsItemSelected behavior from the super class
