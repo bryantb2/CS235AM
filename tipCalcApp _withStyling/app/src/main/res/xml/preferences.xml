@@ -10,6 +10,8 @@
         android:title="Round Calculation Numbers"
         android:summary="Sets the application logic to round numbers up to the nearest whole number."
         android:dialogTitle="Rounding?"
-        android:entries=""
+        android:entries="@array/preferenceList"
+        android:entryValues="@array/preferenceListValues"
+        android:defaultValue="@string/defaultPreferenceValue"
         />
 </PreferenceScreen>
