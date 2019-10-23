@@ -7,12 +7,6 @@ import android.preference.PreferenceManager;
 
 public class SettingsActivity extends Activity {
 
-    private final int ROUND_NONE = 0;
-    private SharedPreferences prefs;
-    private boolean rememberTipPercent = true;
-    private int rounding = ROUND_NONE;
-    private float tipPercent = 0;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,34 +17,16 @@ public class SettingsActivity extends Activity {
         adds fragment to activity by
             1. opening up a transaction between the fragment and activity
             2. replacing the content in the activity with the fragment object
-            3. commiting those changes to the new activity
+            3. committing those changes to the new activity
          */
         getFragmentManager().beginTransaction()
                 .replace(android.R.id.content,new SettingsActivityFragment())
                 .commit();
 
-        //setting default values
-        PreferenceManager.setDefaultValues(this, R.xml.preferences, false); //this only runs when the app is first started on a device
-        prefs = PreferenceManager.getDefaultSharedPreferences(this); //sets the preferences class object to an instance of sharedPreferences
-    }
+       }
 
     @Override
     public void onResume() {
         super.onResume();
-        rememberTipPercent = prefs.getBoolean("pref_remember_percent", true);
-        rounding = Integer.parseInt(prefs.getString("pref_rounding","0"));
-
-        //testing to determine what value the tipPercent variable will hold
-        if(rememberTipPercent == true) {
-            tipPercent = prefs.getFloat("TIP_PERCENT_TEMP_STRING",0.15f);
-        }
-        else {
-            tipPercent = 0.15f;
-        }
-
-        //checking fo which rounding preference is selected
-        
-
-
     }
 }

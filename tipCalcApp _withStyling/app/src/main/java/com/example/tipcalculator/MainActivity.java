@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Build;
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.preference.PreferenceManager;
 import android.text.Editable;
 //UI elements
 import android.text.TextWatcher;
@@ -44,7 +45,21 @@ public class MainActivity extends AppCompatActivity {
 
     //RESUME/PAUSE TEMP STATE KEYS
     private String SUB_TOTAL= "SUB_TOTAL_STRING";
-    private String TIP_PERCENT = "TIP_PERCENT_UI_STRING";
+    private String TIP_PERCENT = "TIP_PERCENT";
+
+    //SETTINGS VARIABLES
+    private final int ROUND_NONE = 0;
+    private final int ROUND_TIP = 1;
+    private final int ROUND_TOTAL = 2;
+
+    private SharedPreferences prefs;
+    private float tipPercent = 0;
+    private boolean rememberTipPercent = true;
+    private int rounding = ROUND_NONE;
+
+    private boolean isNoRounding = false;
+    private boolean isRoundingTip = false;
+    private boolean isRoundingTotal = false;
 
     //TESTING TAGS AND VARS
     private static final String TRACER = "tracer";
@@ -74,6 +89,10 @@ public class MainActivity extends AppCompatActivity {
 
         //ASSIGNING EVENT HANDLERS
         assignEventListeners();
+
+        //setting default values
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, false); //this only runs when the app is first started on a device
+        prefs = PreferenceManager.getDefaultSharedPreferences(this); //sets the preferences class object to an instance of sharedPreferences
     }
 
     //LIFECYCLE METHODS
@@ -117,17 +136,41 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         notify("onResume temp storage access");
+
+        //GETTING VALUES FROM DEFAULT PREFERENCES
+        rememberTipPercent = prefs.getBoolean("pref_remember_percent", true);
+        rounding = Integer.parseInt(prefs.getString("pref_rounding","0"));
+
+        //SETTING CLASS BOOLS FOR ROUNDING BEHAVIOR
+        if(rounding == ROUND_NONE) {
+            //no rounding on any of the numbers
+            this.isNoRounding = true;
+        }
+        else if(rounding == ROUND_TIP) {
+            this.isRoundingTip = true;
+        }
+        else if(rounding == ROUND_TOTAL) {
+            this.isRoundingTotal = true;
+        }
+
+
         if(!(savedValues.getFloat(SUB_TOTAL, 0) == 0)) {
-            //assumes that a tip percent return value of "" means that there is no values in perma storage
+            //assumes that a tip percent return value of 0 means that there is no values in storage
+            //testing to determine what value the tipPercent variable will hold
+            if(rememberTipPercent == true) {
+                this.tipTotalData = savedValues.getFloat(TIP_PERCENT,0);
+            }
+            else {
+                this.tipTotalData = 0.15f;
+            }
+
             //Getting instance variables
             this.subTotalData = savedValues.getFloat(SUB_TOTAL, 0);
             this.subTotalInputString = String.valueOf(this.subTotalData);
-            this.tipTotalData = savedValues.getFloat(TIP_PERCENT,0);
             this.tipPercentObject = new Percentage(Math.round(tipTotalData));
 
             //Displaying percent and sub total in text input field
             percentageUIUpdater(this.tipPercentObject.getPercent());
-
             //Calculating data (because there is something in the input field from a previous instance)
             this.subTotalEntryField.setText(this.subTotalInputString);
             textEntryEventHandler(this.subTotalInputString);
@@ -139,35 +182,6 @@ public class MainActivity extends AppCompatActivity {
         }
         super.onResume();
     }
-
-    /*@Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        //assumption is that onCreate has restored the instance variables required to rebuild the user data
-        notify("onRestore");
-        super.onRestoreInstanceState(savedInstanceState);
-        if(this.subTotalInputString == "" || this.subTotalInputString == " ") {
-            //Displaying percent and resetting UI
-            percentageUIUpdater(this.tipPercentObject.getPercent());
-            resetUIOutputElements();
-        }
-        else {
-            //Displaying percent and sub total in text input field
-            percentageUIUpdater(this.tipPercentObject.getPercent());
-            this.subTotalEntryField.setText(this.subTotalInputString);
-            //Calculate data (because there is something in the input field from a previous instance)
-            textEntryEventHandler(this.subTotalInputString);
-        }
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle savedInstanceState) {
-        notify("onSaveInstanceState");
-        //saving important UI data to protect it from onDestroy()
-        savedInstanceState.putString(SUB_TOTAL_STRING,this.subTotalInputString);
-        savedInstanceState.putString(TIP_PERCENT_STRING,String.valueOf(this.tipPercentObject.getPercent()));
-        // call superclass to save any view hierarchy
-        super.onSaveInstanceState(savedInstanceState);
-    }*/
 
     //EVENT HANDLERS AND LISTENERS
 
@@ -324,5 +338,38 @@ public class MainActivity extends AppCompatActivity {
         }
         return false;
     }
+
+
+
+
+
+    /*@Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        //assumption is that onCreate has restored the instance variables required to rebuild the user data
+        notify("onRestore");
+        super.onRestoreInstanceState(savedInstanceState);
+        if(this.subTotalInputString == "" || this.subTotalInputString == " ") {
+            //Displaying percent and resetting UI
+            percentageUIUpdater(this.tipPercentObject.getPercent());
+            resetUIOutputElements();
+        }
+        else {
+            //Displaying percent and sub total in text input field
+            percentageUIUpdater(this.tipPercentObject.getPercent());
+            this.subTotalEntryField.setText(this.subTotalInputString);
+            //Calculate data (because there is something in the input field from a previous instance)
+            textEntryEventHandler(this.subTotalInputString);
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle savedInstanceState) {
+        notify("onSaveInstanceState");
+        //saving important UI data to protect it from onDestroy()
+        savedInstanceState.putString(SUB_TOTAL_STRING,this.subTotalInputString);
+        savedInstanceState.putString(TIP_PERCENT_STRING,String.valueOf(this.tipPercentObject.getPercent()));
+        // call superclass to save any view hierarchy
+        super.onSaveInstanceState(savedInstanceState);
+    }*/
 }
 
