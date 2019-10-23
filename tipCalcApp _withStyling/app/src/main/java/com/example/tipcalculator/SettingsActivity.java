@@ -9,8 +9,9 @@ public class SettingsActivity extends Activity {
 
     private final int ROUND_NONE = 0;
     private SharedPreferences prefs;
-    private boolean remeberTipPercent = true;
+    private boolean rememberTipPercent = true;
     private int rounding = ROUND_NONE;
+    private float tipPercent = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -36,7 +37,20 @@ public class SettingsActivity extends Activity {
     @Override
     public void onResume() {
         super.onResume();
-        remeberTipPercent = prefs.getBoolean("pref_remember_percent", true);
+        rememberTipPercent = prefs.getBoolean("pref_remember_percent", true);
         rounding = Integer.parseInt(prefs.getString("pref_rounding","0"));
+
+        //testing to determine what value the tipPercent variable will hold
+        if(rememberTipPercent == true) {
+            tipPercent = prefs.getFloat("TIP_PERCENT_TEMP_STRING",0.15f);
+        }
+        else {
+            tipPercent = 0.15f;
+        }
+
+        //checking fo which rounding preference is selected
+        
+
+
     }
 }
