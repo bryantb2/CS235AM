@@ -162,13 +162,14 @@ public class MainActivity extends AppCompatActivity {
                 this.tipTotalData = Double.parseDouble(savedValues.getString(TIP_PERCENT,"0"));
             }
             else {
-                this.tipTotalData = 0.15f;
+                this.tipTotalData = 15;
             }
 
             //Getting instance variables
             this.subTotalData = Double.parseDouble(savedValues.getString(SUB_TOTAL, "0"));
             this.subTotalInputString = String.valueOf(this.subTotalData);
-            this.tipPercentObject = new Percentage((int)tipTotalData);
+            int internalPercentage = (int)(tipTotalData);
+            this.tipPercentObject = new Percentage(internalPercentage);
 
             //Displaying percent and sub total in text input field
             percentageUIUpdater(this.tipPercentObject.getPercent());
