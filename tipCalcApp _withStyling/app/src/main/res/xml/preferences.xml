@@ -3,11 +3,6 @@
     <PreferenceCategory
     android:title="Settings"
     android:key="pref_percent_category" >
-
-    </PreferenceCategory
-
-    >
-
         <CheckBoxPreference
             android:key="pref_remember_percent"
             android:title="Remember Percent"
@@ -22,4 +17,5 @@
             android:entryValues="@array/preferenceListValues"
             android:defaultValue="@string/defaultPreferenceValue"
             />
+    </PreferenceCategory>
 </PreferenceScreen>
