@@ -263,7 +263,7 @@ public class MainActivity extends AppCompatActivity {
 
             //UI preparation and restoration
             this.DisableUsernameEntryFields();
-            this.SetUsernameFields(this.player1Name,this.player2Name);
+            this.SetUsernameFields(player1Username,player2Username);
             this.UpdatePlayerScore(1,this.pigGame.getPlayerScore(1));
             this.UpdatePlayerScore(2,this.pigGame.getPlayerScore(2));
             this.UpdatePointsRunningTotal(this.pigGame.getPointsForCurrentTurn());
@@ -537,10 +537,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void UpdatePlayerScore(int playerNumber, int score) {
         if(playerNumber==1) {
-            this.player1ScoreLabel.setText(String.valueOf(score + " Points"));
+            this.player1ScoreLabel.setText(String.valueOf(score + " total points"));
         }
         else {
-            this.player2ScoreLabel.setText(String.valueOf(score + " Points"));
+            this.player2ScoreLabel.setText(String.valueOf(score + " total points"));
         }
     }
 
