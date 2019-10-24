@@ -1,21 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <PreferenceCategory
-    android:title="Settings"
-    android:key="pref_percent_category" >
-        <CheckBoxPreference
-            android:key="pref_remember_percent"
-            android:title="Remember Percent"
-            android:summary="Will modify the application behavior to save the tip percent when you leave the app."
-            android:defaultValue="true" />
-        <ListPreference
-            android:key="pref_rounding"
-            android:title="Round Calculation Numbers"
-            android:summary="Sets the application logic to round numbers up to the nearest whole number."
-            android:dialogTitle="Rounding?"
-            android:entries="@array/preferenceList"
-            android:entryValues="@array/preferenceListValues"
-            android:defaultValue="@string/defaultPreferenceValue"
-            />
-    </PreferenceCategory>
+    <CheckBoxPreference
+        android:key="pref_remember_percent"
+        android:title="Remember Percent"
+        android:summary="Will modify the application behavior to save the tip percent when you leave the app."
+        android:defaultValue="true" />
+    <ListPreference
+        android:key="pref_rounding"
+        android:title="Round Calculation Numbers"
+        android:summary="Sets the application logic to round numbers up to the nearest whole number."
+        android:dialogTitle="Rounding?"
+        android:entries="@array/preferenceList"
+        android:entryValues="@array/preferenceListValues"
+        android:defaultValue="0"
+        />
 </PreferenceScreen>

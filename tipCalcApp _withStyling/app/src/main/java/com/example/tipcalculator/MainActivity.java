@@ -136,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         notify("onResume temp storage access");
         //GETTING VALUES FROM DEFAULT PREFERENCES
-        rounding = Integer.parseInt(prefs.getString("pref_rounding","0"));
+        //rounding = Integer.parseInt(prefs.getString("pref_rounding","0"));
         Log.d("TipCalc","logging rounding from prefs object: " + rounding);
         rememberTipPercent = prefs.getBoolean("pref_remember_percent", true);
         Log.d("TipCalc","logging rememberTipPercent from prefs object: " + rememberTipPercent);
