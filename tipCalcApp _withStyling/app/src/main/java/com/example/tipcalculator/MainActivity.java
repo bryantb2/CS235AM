@@ -39,9 +39,9 @@ public class MainActivity extends AppCompatActivity {
     //FIELD DATA
     private Percentage tipPercentObject;
     private String subTotalInputString; //converted char sequence of user input
-    private Float subTotalData; //user-input converted to a numeric value
-    private Float tipTotalData; //cost of the tip (USD)
-    private Float billTotalData; //grand bill total (USD)
+    private double subTotalData; //user-input converted to a numeric value
+    private double tipTotalData; //cost of the tip (USD)
+    private double billTotalData; //grand bill total (USD)
 
     //RESUME/PAUSE TEMP STATE KEYS
     private String SUB_TOTAL = "SUB_TOTAL";
@@ -126,8 +126,9 @@ public class MainActivity extends AppCompatActivity {
         super.onPause();
         //onPause will store the sub total, tip total, tip percent, and full bill amount
         Editor editor = savedValues.edit();
-        editor.putFloat(this.SUB_TOTAL, this.subTotalData);
-        editor.putFloat(this.TIP_PERCENT, this.tipPercentObject.getPercent());
+        //doubles need to be saved as string and then parsed after
+        editor.putString(this.SUB_TOTAL, String.valueOf(this.subTotalData));
+        editor.putString(this.TIP_PERCENT, String.valueOf(this.tipPercentObject.getPercent()));
         editor.commit();
     }
 
@@ -154,20 +155,20 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-        if(!(savedValues.getFloat(SUB_TOTAL, 0) == 0)) {
+        if(!(Double.parseDouble(savedValues.getString(SUB_TOTAL, "0")) == 0)) {
             //assumes that a tip percent return value of 0 means that there is no values in storage
             //testing to determine what value the tipPercent variable will hold
             if(rememberTipPercent == true) {
-                this.tipTotalData = savedValues.getFloat(TIP_PERCENT,0);
+                this.tipTotalData = Double.parseDouble(savedValues.getString(TIP_PERCENT,"0"));
             }
             else {
                 this.tipTotalData = 0.15f;
             }
 
             //Getting instance variables
-            this.subTotalData = savedValues.getFloat(SUB_TOTAL, 0);
+            this.subTotalData = Double.parseDouble(savedValues.getString(SUB_TOTAL, "0"));
             this.subTotalInputString = String.valueOf(this.subTotalData);
-            this.tipPercentObject = new Percentage(Math.round(tipTotalData));
+            this.tipPercentObject = new Percentage((int)tipTotalData);
 
             //Displaying percent and sub total in text input field
             percentageUIUpdater(this.tipPercentObject.getPercent());
@@ -187,7 +188,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void textEntryEventHandler(String inputFieldData) {
         ///get and set subTotal from UI
-        this.subTotalData= Float.parseFloat(inputFieldData);
+        this.subTotalData= Double.parseDouble(inputFieldData);
         //cal and set tip total
         this.tipTotalData = calculateTipTotal(this.tipPercentObject.getPercent(),this.subTotalData);
         //calc final bill total
@@ -217,13 +218,13 @@ public class MainActivity extends AppCompatActivity {
             if(expressionIsValid(subTotalEntry)==true) {
                 //CALCULATING BILL AND TIP TOTAL
                 //get subTotal from UI
-                float subTotal = Float.parseFloat(this.subTotalEntryField.getText().toString());
+                double subTotal = Double.parseDouble(this.subTotalEntryField.getText().toString());
                 //get tip from internal object
-                float tipAmount = tipPercentObject.getPercent();
+                double tipAmount = tipPercentObject.getPercent();
                 //cal tip total
-                float finalTipTotal = calculateTipTotal(tipAmount,subTotal);
+                double finalTipTotal = calculateTipTotal(tipAmount,subTotal);
                 //calc final bill total
-                float finalBillTotal = calculateFinalTotal(finalTipTotal,subTotal);
+                double finalBillTotal = calculateFinalTotal(finalTipTotal,subTotal);
                 updateUI(finalTipTotal,finalBillTotal);
                 percentageUIUpdater(this.tipPercentObject.getPercent());
             }
@@ -313,16 +314,16 @@ public class MainActivity extends AppCompatActivity {
         tipPercentLabel.setText(String.valueOf(percent) + "%");
     }
 
-    private float calculateTipTotal(float tipPercent, float billSubTotal) {
-        float tipAsDecimal = (tipPercent/100f);
-        float sum = (billSubTotal * tipAsDecimal);
+    private double calculateTipTotal(double tipPercent, double billSubTotal) {
+        double tipAsDecimal = (tipPercent/100D);
+        double sum = (billSubTotal * tipAsDecimal);
         //will round to second decimal place
-        return ((sum *100)/100.0f);
+        return (Math.round(sum *100)/100.0);
     }
 
-    private float calculateFinalTotal(float tipTotal, float billSubTotal) {
-        float sum = (billSubTotal + tipTotal);
-        return ((sum *100)/100.0f);
+    private double calculateFinalTotal(double tipTotal, double billSubTotal) {
+        double sum = (billSubTotal + tipTotal);
+        return (Math.round(sum *100)/100.0);
     }
 
     private boolean expressionIsValid(String expression) {
