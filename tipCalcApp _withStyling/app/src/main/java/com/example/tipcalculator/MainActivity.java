@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
     private Float billTotalData; //grand bill total (USD)
 
     //RESUME/PAUSE TEMP STATE KEYS
-    private String SUB_TOTAL= "SUB_TOTAL_STRING";
+    private String SUB_TOTAL = "SUB_TOTAL";
     private String TIP_PERCENT = "TIP_PERCENT";
 
     //SETTINGS VARIABLES
@@ -53,9 +53,8 @@ public class MainActivity extends AppCompatActivity {
     private final int ROUND_TOTAL = 2;
 
     private SharedPreferences prefs;
-    private float tipPercent = 0;
-    private boolean rememberTipPercent = true;
-    private int rounding = ROUND_NONE;
+    private boolean rememberTipPercent;
+    private int rounding;
 
     private boolean isNoRounding = false;
     private boolean isRoundingTip = false;
@@ -91,8 +90,8 @@ public class MainActivity extends AppCompatActivity {
         assignEventListeners();
 
         //setting default values
-        PreferenceManager.setDefaultValues(this, R.xml.preferences, false); //this only runs when the app is first started on a device
         prefs = PreferenceManager.getDefaultSharedPreferences(this); //sets the preferences class object to an instance of sharedPreferences
+        Log.d("TipCalc","logging prefs object: " + prefs.toString());
     }
 
     //LIFECYCLE METHODS
@@ -110,7 +109,6 @@ public class MainActivity extends AppCompatActivity {
             //determines which menu item was selected based off element IDs
             case R.id.about:
                 Toast.makeText(this,"About", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(getApplicationContext(),AboutActivity.class));
                 return true;
             case R.id.settings:
                 Toast.makeText(this,"Settings", Toast.LENGTH_SHORT).show();
@@ -136,10 +134,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         notify("onResume temp storage access");
-
         //GETTING VALUES FROM DEFAULT PREFERENCES
-        rememberTipPercent = prefs.getBoolean("pref_remember_percent", true);
         rounding = Integer.parseInt(prefs.getString("pref_rounding","0"));
+        Log.d("TipCalc","logging rounding from prefs object: " + rounding);
+        rememberTipPercent = prefs.getBoolean("pref_remember_percent", true);
+        Log.d("TipCalc","logging rememberTipPercent from prefs object: " + rememberTipPercent);
+
 
         //SETTING CLASS BOOLS FOR ROUNDING BEHAVIOR
         if(rounding == ROUND_NONE) {

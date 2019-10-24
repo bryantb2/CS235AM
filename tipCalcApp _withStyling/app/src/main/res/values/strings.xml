@@ -16,13 +16,13 @@
         <item>Total</item>
     </string-array>
 
-    <integer-array name="preferenceListValues">
+    <string-array name="preferenceListValues">
         <item>0</item>
         <item>1</item>
         <item>2</item>
-    </integer-array>
+    </string-array>
 
-    <string name="defaultPreferenceValue">none</string>
+    <string name="defaultPreferenceValue">0</string>
 
 
 </resources>
