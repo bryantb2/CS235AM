@@ -105,61 +105,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    /*
-    @Override
-    protected void onSaveInstanceState(Bundle savedInstanceState) {
-        Log.d("PigGame","inside onSaveInstanceState");
-        if(this.gameInProgress==true) {
-            //fetching and storing data to be put into saveInstance
-            String username1 = this.pigGame.getPlayerName(1);
-            String username2 = this.pigGame.getPlayerName(2);
-
-            savedInstanceState.putString(this.PLAYER1_USERNAME_KEY,username1);
-            Log.d("PigGame","inside onSaveInstanceState, logging player1 username key: ");
-            Log.d("PigGame",username1);
-
-            savedInstanceState.putString(this.PLAYER2_USERNAME_KEY,username2);
-            Log.d("PigGame","inside onSaveInstanceState, logging player2 username key: ");
-            Log.d("PigGame",username2);
-
-
-            int player1Score = this.pigGame.getPlayerScore(1);
-            int player2Score = this.pigGame.getPlayerScore(2);
-
-            savedInstanceState.putInt(this.PLAYER1_SCORE_KEY,player1Score);
-            Log.d("PigGame","inside onSaveInstanceState, logging player1 score key: ");
-            Log.d("PigGame",String.valueOf(player1Score));
-
-            savedInstanceState.putInt(this.PLAYER2_SCORE_KEY,player2Score);
-            Log.d("PigGame","inside onSaveInstanceState, logging player2 score key: ");
-            Log.d("PigGame",String.valueOf(player2Score));
-
-
-            int currentPlayerNumber = this.pigGame.getCurrentPlayerNumber();
-            savedInstanceState.putInt(this.CURRENT_PLAYER_KEY,currentPlayerNumber);
-            Log.d("PigGame","inside onSaveInstanceState, logging current player key: ");
-            Log.d("PigGame",String.valueOf(currentPlayerNumber));
-
-
-            int runningPointsTotal = this.pigGame.getPointsForCurrentTurn();
-            savedInstanceState.putInt(this.RUNNING_POINTS_TOTAL,runningPointsTotal);
-            Log.d("PigGame","inside onSaveInstanceState, logging running points total key: ");
-            Log.d("PigGame",String.valueOf(runningPointsTotal));
-
-
-            int dieImageNumber = this.pigGame.getLastRolledNumber();
-            savedInstanceState.putInt(this.DIE_IMAGE_NUMBER,dieImageNumber);
-            Log.d("PigGame","inside onSaveInstanceState, logging die image number key: ");
-            Log.d("PigGame",String.valueOf(dieImageNumber));
-
-            boolean gameStatus = this.gameInProgress;
-            savedInstanceState.putBoolean(this.IS_GAME_RUNNING,gameStatus);
-            Log.d("PigGame","inside onSaveInstanceState, logging is game running key: ");
-            Log.d("PigGame",String.valueOf(gameStatus));
-            super.onSaveInstanceState((savedInstanceState));
-        }
-    }*/
-
     //TODO: wire onPause and onResume methods to work with settings preferences
     //TODO: create instance variables at the class level to get and set user's custom settings from the defaultPreferences object
     //TODO: add AI rolling logic (calc, roll, display, ect.)
@@ -335,6 +280,64 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    //COMPUTER AI
+    public void AITurn() {
+        //WORKING ASSUMPTION: EXISTING PLAYER 2 LOGIC WILL BE RIGGED TO HOLD COMPUTER ROLL DATA
+        //looping -->
+        //roll pigGame die
+        //set the die image
+            //if rolled number is not 8
+                //update running total label
+                //if running total equals 20
+                    //stop rolling and end turn
+                //else roll a total of 3 times or until an 8 is rolled
+            //else
+                //set canRoll to false
+                //reset running total label AND pigGame internal runningTotal
+
+        //end looping <--
+        //else reset currentPlayerUI elements
+        //execute endturn methods
+
+        final int maxComputerTurnPoints = 20;
+        boolean canRoll = true;
+        int numberOfRolls = 0;
+
+        while(canRoll == true && (this.pigGame.getPointsForCurrentTurn() < maxComputerTurnPoints)) {
+            if(numberOfRolls < 4) {
+                int rollResult = this.pigGame.RollAndCalc();
+                this.UpdateDieImage(rollResult);
+                if(rollResult != 8) {
+                    this.UpdatePointsRunningTotal(this.pigGame.getPointsForCurrentTurn());
+
+                }
+                else {
+                    this.UpdatePlayerScore(this.pigGame.getCurrentPlayerNumber(),0);
+                    this.ResetRunningTotalLabel();
+                    this.EndTurn();
+                    canRoll = false;
+                    Toast.makeText(this,("Ouch, "+this.pigGame.getCurrentPlayerName()+" has rolled an 8!"),Toast.LENGTH_SHORT);
+                }
+                //sets delay to allow user to see the UI information regarding the computer's roll
+                try {
+                    //this process is done to slow down the user and prevent spamming
+                    Thread.sleep(800);
+                }
+                catch (InterruptedException e) {
+                    Log.d("PigGame","sleep function for roll button was interrupted");
+                }
+                this.pigGame.setLastRolledNumber(rollResult);
+                if(this.isWinner == false) {
+                    this.EnableRollButton();
+                }
+            }
+            else {
+                canRoll = false;
+            }
+            numberOfRolls++;
+        }
     }
 
     //EVENT HANDLERS
