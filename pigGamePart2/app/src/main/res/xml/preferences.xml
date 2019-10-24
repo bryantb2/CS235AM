@@ -14,4 +14,7 @@
         android:entryValues="@array/dieListValues"
         android:defaultValue="@string/defaultPreferenceValue"
         />
+
+    <!-- TODO: add score to play to option -->
+
 </PreferenceScreen>

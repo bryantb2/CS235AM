@@ -224,6 +224,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    //TODO: wire onPause and onResume methods to work with settings preferences
+    //TODO: create instance variables at the class level to get and set user's custom settings from the defaultPreferences object
+    //TODO: add AI rolling logic (calc, roll, display, ect.)
+    //TODO: add functionality for two dice
+    //TODO: modify game logic to accept a changing max game score
+    //TODO: wire the entire app to dynamically change logic, using bools set at the class level, and display methods based off the user's desired game settings
 /*
     @Override
     protected void onPause() {
