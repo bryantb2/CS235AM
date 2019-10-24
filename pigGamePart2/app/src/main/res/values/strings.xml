@@ -13,5 +13,19 @@
     <string name="username_placeholder_text" >Enter username</string>
     <string name="player1Score_Label">0 Total Points</string>
     <string name="plaer2Score_Label">0 Total Points</string>
-    <string name="app_name_title">Pig Game Build V2</string>
+    <string name="app_name_title">Pig Game Build V3</string>
+
+    <!-- String values for preferences -->
+    <string-array name="dieList">
+        <item>One</item>
+        <item>Two</item>
+    </string-array>
+
+    <string-array name="dieListValues">
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
+    <string name="defaultPreferenceValue">0</string>
+
 </resources>
