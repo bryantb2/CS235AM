@@ -8,6 +8,7 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 
 public class SettingsActivityFragment extends PreferenceFragment implements OnSharedPreferenceChangeListener {
+
     private SharedPreferences prefs;
     private boolean rememberPercent;
 
@@ -17,7 +18,6 @@ public class SettingsActivityFragment extends PreferenceFragment implements OnSh
         //loads preferences from the XML files
         addPreferencesFromResource(R.xml.preferences);
         prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        //TODO
     }
 
     @Override
@@ -25,6 +25,7 @@ public class SettingsActivityFragment extends PreferenceFragment implements OnSh
         //calls super
         super.onResume();
         //TODO
+        prefs.registerOnSharedPreferenceChangeListener(this);
     }
 
     @Override
@@ -37,5 +38,10 @@ public class SettingsActivityFragment extends PreferenceFragment implements OnSh
     @Override
     public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
         //TODO
+    }
+
+
+    private void setDefaultPointsThreshold() {
+
     }
 }

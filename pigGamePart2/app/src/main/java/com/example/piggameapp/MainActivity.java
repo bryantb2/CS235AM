@@ -102,7 +102,6 @@ public class MainActivity extends AppCompatActivity {
 
         //GETS REFERENCE TO SharedPrefs OBJECT
         savedValues = getSharedPreferences("savedValues", MODE_PRIVATE);
-
     }
 
     //TODO: wire onPause and onResume methods to work with settings preferences
@@ -119,8 +118,8 @@ public class MainActivity extends AppCompatActivity {
         if (this.gameInProgress == true) {
             SharedPreferences.Editor editor = savedValues.edit();
             //fetching and storing data to be put into saveInstance
-            String username1 = this.pigGame.getPlayerName(1);
-            String username2 = this.pigGame.getPlayerName(2);
+            String username1 = pigGame.getPlayerName(1);
+            String username2 = pigGame.getPlayerName(2);
 
             editor.putString(this.PLAYER1_USERNAME_KEY, username1);
             Log.d("PigGame", "inside onPause, logging player1 username key: ");
@@ -131,8 +130,8 @@ public class MainActivity extends AppCompatActivity {
             Log.d("PigGame", username2);
 
 
-            int player1Score = this.pigGame.getPlayerScore(1);
-            int player2Score = this.pigGame.getPlayerScore(2);
+            int player1Score = pigGame.getPlayerScore(1);
+            int player2Score = pigGame.getPlayerScore(2);
 
             editor.putInt(this.PLAYER1_SCORE_KEY, player1Score);
             Log.d("PigGame", "inside onPause, logging player1 score key: ");
@@ -143,19 +142,19 @@ public class MainActivity extends AppCompatActivity {
             Log.d("PigGame", String.valueOf(player2Score));
 
 
-            int currentPlayerNumber = this.pigGame.getCurrentPlayerNumber();
+            int currentPlayerNumber = pigGame.getCurrentPlayerNumber();
             editor.putInt(this.CURRENT_PLAYER_KEY, currentPlayerNumber);
             Log.d("PigGame", "inside onPause, logging current player key: ");
             Log.d("PigGame", String.valueOf(currentPlayerNumber));
 
 
-            int runningPointsTotal = this.pigGame.getPointsForCurrentTurn();
+            int runningPointsTotal = pigGame.getPointsForCurrentTurn();
             editor.putInt(this.RUNNING_POINTS_TOTAL, runningPointsTotal);
             Log.d("PigGame", "inside onPause, logging running points total key: ");
             Log.d("PigGame", String.valueOf(runningPointsTotal));
 
 
-            int dieImageNumber = this.pigGame.getLastRolledNumber();
+            int dieImageNumber = pigGame.getLastRolledNumber();
             editor.putInt(this.DIE_IMAGE_NUMBER, dieImageNumber);
             Log.d("PigGame", "inside onPause, logging die image number key: ");
             Log.d("PigGame", String.valueOf(dieImageNumber));
@@ -198,20 +197,20 @@ public class MainActivity extends AppCompatActivity {
             Log.d("PigGame","lastRolledNumber " + String.valueOf(lastRolledNumber));
 
             //rebuild game objects and settings
-            this.pigGame = new PigGame(player1Username,player2Username,8);
+            pigGame = new PigGame(player1Username,player2Username,8);
             this.gameInProgress = isGameRunning;
-            this.pigGame.setPlayerScore(1,player1Score);
-            this.pigGame.setPlayerScore(2,player2Score);;
-            this.pigGame.setCurrentPlayerTurn(currentPlayerTurn);
-            this.pigGame.setPointsForCurrentTurn(runningPointsTotal);
-            this.pigGame.setLastRolledNumber(lastRolledNumber);
+            pigGame.setPlayerScore(1,player1Score);
+            pigGame.setPlayerScore(2,player2Score);;
+            pigGame.setCurrentPlayerTurn(currentPlayerTurn);
+            pigGame.setPointsForCurrentTurn(runningPointsTotal);
+            pigGame.setLastRolledNumber(lastRolledNumber);
 
             //UI preparation and restoration
             this.DisableUsernameEntryFields();
             this.SetUsernameFields(player1Username,player2Username);
-            this.UpdatePlayerScore(1,this.pigGame.getPlayerScore(1));
-            this.UpdatePlayerScore(2,this.pigGame.getPlayerScore(2));
-            this.UpdatePointsRunningTotal(this.pigGame.getPointsForCurrentTurn());
+            this.UpdatePlayerScore(1,pigGame.getPlayerScore(1));
+            this.UpdatePlayerScore(2,pigGame.getPlayerScore(2));
+            this.UpdatePointsRunningTotal(pigGame.getPointsForCurrentTurn());
             this.UpdateCurrentPlayer();
             this.UpdateDieImage(lastRolledNumber);
             stateHasBeenRecovered = true;
@@ -305,20 +304,20 @@ public class MainActivity extends AppCompatActivity {
         boolean canRoll = true;
         int numberOfRolls = 0;
 
-        while(canRoll == true && (this.pigGame.getPointsForCurrentTurn() < maxComputerTurnPoints)) {
+        while(canRoll == true && (pigGame.getPointsForCurrentTurn() < maxComputerTurnPoints)) {
             if(numberOfRolls < 4) {
-                int rollResult = this.pigGame.RollAndCalc();
+                int rollResult = pigGame.RollAndCalc();
                 this.UpdateDieImage(rollResult);
                 if(rollResult != 8) {
-                    this.UpdatePointsRunningTotal(this.pigGame.getPointsForCurrentTurn());
+                    this.UpdatePointsRunningTotal(pigGame.getPointsForCurrentTurn());
 
                 }
                 else {
-                    this.UpdatePlayerScore(this.pigGame.getCurrentPlayerNumber(),0);
+                    this.UpdatePlayerScore(pigGame.getCurrentPlayerNumber(),0);
                     this.ResetRunningTotalLabel();
                     this.EndTurn();
                     canRoll = false;
-                    Toast.makeText(this,("Ouch, "+this.pigGame.getCurrentPlayerName()+" has rolled an 8!"),Toast.LENGTH_SHORT);
+                    Toast.makeText(this,("Ouch, "+pigGame.getCurrentPlayerName()+" has rolled an 8!"),Toast.LENGTH_SHORT);
                 }
                 //sets delay to allow user to see the UI information regarding the computer's roll
                 try {
@@ -328,7 +327,7 @@ public class MainActivity extends AppCompatActivity {
                 catch (InterruptedException e) {
                     Log.d("PigGame","sleep function for roll button was interrupted");
                 }
-                this.pigGame.setLastRolledNumber(rollResult);
+                pigGame.setLastRolledNumber(rollResult);
                 if(this.isWinner == false) {
                     this.EnableRollButton();
                 }
@@ -352,16 +351,16 @@ public class MainActivity extends AppCompatActivity {
             //execute endturn methods
 
         this.DisableRollButton();
-        int rollResult = this.pigGame.RollAndCalc();
+        int rollResult = pigGame.RollAndCalc();
         this.UpdateDieImage(rollResult);
         if(rollResult != 8) {
-            this.UpdatePointsRunningTotal(this.pigGame.getPointsForCurrentTurn());
+            this.UpdatePointsRunningTotal(pigGame.getPointsForCurrentTurn());
         }
         else {
-            this.UpdatePlayerScore(this.pigGame.getCurrentPlayerNumber(),0);
+            this.UpdatePlayerScore(pigGame.getCurrentPlayerNumber(),0);
             this.ResetRunningTotalLabel();
             this.EndTurn();
-            Toast.makeText(this,("Ouch, "+this.pigGame.getCurrentPlayerName()+" has rolled an 8!"),Toast.LENGTH_SHORT);
+            Toast.makeText(this,("Ouch, "+pigGame.getCurrentPlayerName()+" has rolled an 8!"),Toast.LENGTH_SHORT);
         }
         try {
             //this process is done to slow down the user and prevent spamming
@@ -370,7 +369,7 @@ public class MainActivity extends AppCompatActivity {
         catch (InterruptedException e) {
             Log.d("PigGame","sleep function for roll button was interrupted");
         }
-        this.pigGame.setLastRolledNumber(rollResult);
+        pigGame.setLastRolledNumber(rollResult);
         if(this.isWinner == false) {
             this.EnableRollButton();
         }
@@ -387,9 +386,9 @@ public class MainActivity extends AppCompatActivity {
                 //unlock roll button
         this.DisableRollButton();
         this.DisableEndTurnButton();
-        int playerThatJustWent = this.pigGame.getCurrentPlayerNumber();
-        int winnerNumber = this.pigGame.EndTurn();
-        this.UpdatePlayerScore(playerThatJustWent,this.pigGame.getPlayerScore(playerThatJustWent));
+        int playerThatJustWent = pigGame.getCurrentPlayerNumber();
+        int winnerNumber = pigGame.EndTurn();
+        this.UpdatePlayerScore(playerThatJustWent,pigGame.getPlayerScore(playerThatJustWent));
         this.ResetRunningTotalLabel();
         if(winnerNumber != 0) {
             //display winner on UI
@@ -400,7 +399,7 @@ public class MainActivity extends AppCompatActivity {
             this.DisableEndTurnButton();
             this.DisableRollButton();
             //display toast message
-            Toast.makeText(getApplicationContext(), (this.pigGame.getPlayerName(winnerNumber) + " has won!"),Toast.LENGTH_SHORT);
+            Toast.makeText(getApplicationContext(), (pigGame.getPlayerName(winnerNumber) + " has won!"),Toast.LENGTH_SHORT);
             //turn isWinner to true, preventing the roll die button from activating
             this.isWinner = true;
         }
@@ -443,12 +442,12 @@ public class MainActivity extends AppCompatActivity {
             this.DisableUsernameEntryFields();
             this.player1Name = this.player1UsernameTextEntry.getText().toString();
             this.player2Name = this.player2UsernameTextEntry.getText().toString();
-            if(this.pigGame != null) {
+            if(pigGame != null) {
                 //checking if the object was instantiated
-                this.pigGame.RestartGame(player1Name,player2Name);
+                pigGame.RestartGame(player1Name,player2Name);
             }
             else {
-                this.pigGame = new PigGame(player1Name,player2Name,8);
+                pigGame = new PigGame(player1Name,player2Name,8);
             }
             this.gameInProgress = true;
             this.UpdateCurrentPlayer();
@@ -463,7 +462,7 @@ public class MainActivity extends AppCompatActivity {
     //METHODS
     private void DisplayWinner(int winnerNumber) {
         //set the display points label to the name of the winner
-        this.pointsAccumulatorLabel.setText(this.pigGame.getPlayerName(winnerNumber) + " has won!");
+        this.pointsAccumulatorLabel.setText(pigGame.getPlayerName(winnerNumber) + " has won!");
     }
 
     private void EnableEndTurnButton() {
@@ -574,7 +573,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void UpdateCurrentPlayer() {
         //this is the default updateCurrentPlayer method and will automatically set the UI to reflect the currentPlayerName
-        this.currentPlayerLabel.setText(this.pigGame.getCurrentPlayerName()+"'s turn");
+        this.currentPlayerLabel.setText(pigGame.getCurrentPlayerName()+"'s turn");
     }
 
     private void UpdateCurrentPlayer(String optionalMessage) {
