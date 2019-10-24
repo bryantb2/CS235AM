@@ -16,5 +16,16 @@
         />
 
     <!-- TODO: add score to play to option -->
-
+    <CheckBoxPreference
+        android:key="pref_enable_custom_score"
+        android:title="Enable AI"
+        android:summary="Checking this option will allow you to play against the computer in the absence of another player."
+        android:defaultValue="false" />
+    <EditTextPreference
+        android:key="pref_max_play_score"
+        android:title="Score Threshold"
+        android:summary="Change the score threshold for a win to occur."
+        android:defaultValue="100"
+        android:dependency="pref_enable_custom_score"
+        />
 </PreferenceScreen>
