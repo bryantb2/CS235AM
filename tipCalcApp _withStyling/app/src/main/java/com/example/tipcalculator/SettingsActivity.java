@@ -9,10 +9,11 @@ public class SettingsActivity extends Activity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    super.onCreate(savedInstanceState);
 
         //show fragment class as main content
         //MUST DECLARE ACTIVITY IN MANIFEST
+
         /*
         adds fragment to activity by
             1. opening up a transaction between the fragment and activity
@@ -23,10 +24,5 @@ public class SettingsActivity extends Activity {
                 .replace(android.R.id.content,new SettingsActivityFragment())
                 .commit();
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false); //this only runs when the app is first started on a device
-       }
-/*
-    @Override
-    public void onResume() {
-        super.onResume();
-    }*/
+    }
 }
