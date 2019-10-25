@@ -114,9 +114,7 @@ public class MainActivity extends AppCompatActivity {
 
         //GETTING PREFERENCE SETTINGS
         this.enableAI = prefs.getBoolean("pref_enable_AI",false);
-        Log.d("PigGame", "inside onCreate, logging enableAI key: " + enableAI);
         this.numberOfDie = Integer.parseInt(prefs.getString("pref_number_of_die","1"));
-        Log.d("PigGame", "inside onCreate, logging numberOfDie key: " + numberOfDie);
         this.enableCustomScore = prefs.getBoolean("pref_enable_custom_score",false);
         this.customScore = Integer.parseInt(prefs.getString("pref_max_play_score","100"));
     }

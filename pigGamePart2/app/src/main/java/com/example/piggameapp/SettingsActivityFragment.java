@@ -19,6 +19,7 @@ public class SettingsActivityFragment extends PreferenceFragment implements OnSh
         //loads preferences from the XML files
         addPreferencesFromResource(R.xml.preferences);
         prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        enableCustomScore = prefs.getBoolean("pref_enable_custom_score",false);
     }
 
     @Override
@@ -27,6 +28,7 @@ public class SettingsActivityFragment extends PreferenceFragment implements OnSh
         super.onResume();
         //TODO
         prefs.registerOnSharedPreferenceChangeListener(this);
+        setPointsThresholdUIBox(enableCustomScore);
     }
 
     @Override
@@ -44,13 +46,14 @@ public class SettingsActivityFragment extends PreferenceFragment implements OnSh
         //else
             //disable the custom score label
         if(key.equals("pref_enable_custom_score")) {
-            enableCustomScore = prefs.getBoolean("pref_enable_custom_score",false);
+            this.enableCustomScore = prefs.getBoolean("pref_enable_custom_score",false);
+            setPointsThresholdUIBox(enableCustomScore);
         }
     }
 
 
     private void setPointsThresholdUIBox(boolean customScoreEnabled) {
-        Preference customScore = findPreference("pref_enable_custom_score");
+        Preference customScore = findPreference("pref_max_play_score");
         if(customScoreEnabled == true) {
             customScore.setEnabled(true);
         }
