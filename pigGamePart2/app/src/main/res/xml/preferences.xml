@@ -15,7 +15,6 @@
         android:defaultValue="1"
         />
 
-    <!-- TODO: add score to play to option -->
     <CheckBoxPreference
         android:key="pref_enable_custom_score"
         android:title="Enable Custom Score"
