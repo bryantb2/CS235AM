@@ -123,8 +123,8 @@ public class MainActivity extends AppCompatActivity {
 
     //TODO: wire onPause and onResume methods to work with settings preferences
     //TODO: create instance variables at the class level to get and set user's custom settings from the defaultPreferences object       ---DONE---
-    //TODO: add AI rolling logic (calc, roll, display, ect.)        --- DONE ----
-    //TODO: add functionality for two dice
+    //TODO: add AI rolling logic (calc, roll, display, ect.)
+    //TODO: add functionality for two dice          --- DONE ----
     //TODO: modify game logic to accept a changing max game score         --- DONE ----
     //TODO: wire the entire app to dynamically change logic, using bools set at the class level, and display methods based off the user's desired game settings
 
