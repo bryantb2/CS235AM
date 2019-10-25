@@ -12,7 +12,7 @@
         android:dialogTitle="Select a play die number"
         android:entries="@array/dieList"
         android:entryValues="@array/dieListValues"
-        android:defaultValue="@string/defaultPreferenceValue"
+        android:defaultValue="1"
         />
 
     <!-- TODO: add score to play to option -->

@@ -111,17 +111,11 @@ public class MainActivity extends AppCompatActivity {
         //GETS REFERENCE TO SharedPrefs OBJECT
         savedValues = getSharedPreferences("savedValues", MODE_PRIVATE);
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
-
-        //GETTING PREFERENCE SETTINGS
-        this.enableAI = prefs.getBoolean("pref_enable_AI",false);
-        this.numberOfDie = Integer.parseInt(prefs.getString("pref_number_of_die","1"));
-        this.enableCustomScore = prefs.getBoolean("pref_enable_custom_score",false);
-        this.customScore = Integer.parseInt(prefs.getString("pref_max_play_score","100"));
     }
 
     //TODO: wire onPause and onResume methods to work with settings preferences
-    //TODO: create instance variables at the class level to get and set user's custom settings from the defaultPreferences object
-    //TODO: add AI rolling logic (calc, roll, display, ect.)
+    //TODO: create instance variables at the class level to get and set user's custom settings from the defaultPreferences object ---DONE---
+    //TODO: add AI rolling logic (calc, roll, display, ect.)    --- DONE ----
     //TODO: add functionality for two dice
     //TODO: modify game logic to accept a changing max game score
     //TODO: wire the entire app to dynamically change logic, using bools set at the class level, and display methods based off the user's desired game settings
@@ -185,6 +179,15 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
+        //GETTING PREFERENCE SETTINGS
+        this.enableAI = prefs.getBoolean("pref_enable_AI",false);
+        this.numberOfDie = Integer.parseInt(prefs.getString("pref_number_of_die","1"));
+        this.enableCustomScore = prefs.getBoolean("pref_enable_custom_score",false);
+        this.customScore = Integer.parseInt(prefs.getString("pref_max_play_score","100"));
+
+        Log.d("onResume","inside onResume method, logging enable Ai preference value: " + enableAI );
+        Log.d("onResume","inside onResume method, logging enable die # preference value: " + numberOfDie );
+
         Log.d("PigGame", "inisde onResume method");
         //checks if the game was running before the state change
         //pointless to update and recover state if it was never running in the first place
@@ -310,10 +313,7 @@ public class MainActivity extends AppCompatActivity {
             //else
                 //set canRoll to false
                 //reset running total label AND pigGame internal runningTotal
-
         //end looping <--
-        //else reset currentPlayerUI elements
-        //execute endturn methods
 
         final int maxComputerTurnPoints = 20;
         boolean canRoll = true;
@@ -333,9 +333,6 @@ public class MainActivity extends AppCompatActivity {
                     this.ResetRunningTotalLabel();
                     this.EndTurn();
                     canRoll = false;
-                    if(this.isWinner == false) {
-                        this.EnableRollButton();
-                    }
                 }
                 //sets delay to allow user to see the UI information regarding the computer's roll
                 try {
@@ -344,6 +341,9 @@ public class MainActivity extends AppCompatActivity {
                 }
                 catch (InterruptedException e) {
                     Log.d("PigGame","sleep function for roll button was interrupted");
+                }
+                if(this.isWinner == false) {
+                    this.EnableRollButton();
                 }
             }
             else {
@@ -376,9 +376,6 @@ public class MainActivity extends AppCompatActivity {
             this.UpdatePlayerScore(pigGame.getCurrentPlayerNumber(),0);
             this.ResetRunningTotalLabel();
             this.EndTurn();
-            if(this.isWinner == false) {
-                this.EnableRollButton();
-            }
         }
         try {
             //this process is done to slow down the user and prevent spamming
@@ -386,6 +383,9 @@ public class MainActivity extends AppCompatActivity {
         }
         catch (InterruptedException e) {
             Log.d("PigGame","sleep function for roll button was interrupted");
+        }
+        if(this.isWinner == false) {
+            this.EnableRollButton();
         }
     }
 
