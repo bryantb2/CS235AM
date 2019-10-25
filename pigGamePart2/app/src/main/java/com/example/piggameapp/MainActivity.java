@@ -135,63 +135,33 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = savedValues.edit();
         if (this.gameInProgress == true) {
             //fetching and storing data to be put into saveInstance
-            String username1 = pigGame.getPlayerName(1);
-            String username2 = pigGame.getPlayerName(2);
-
-            editor.putString(this.PLAYER1_USERNAME_KEY, username1);
-            Log.d("PigGame", "inside onPause, logging player1 username key: ");
-            Log.d("PigGame", username1);
-
-            editor.putString(this.PLAYER2_USERNAME_KEY, username2);
-            Log.d("PigGame", "inside onPause, logging player2 username key: ");
-            Log.d("PigGame", username2);
-
-
-            int player1Score = pigGame.getPlayerScore(1);
-            int player2Score = pigGame.getPlayerScore(2);
-
-            editor.putInt(this.PLAYER1_SCORE_KEY, player1Score);
-            Log.d("PigGame", "inside onPause, logging player1 score key: ");
-            Log.d("PigGame", String.valueOf(player1Score));
-
-            editor.putInt(this.PLAYER2_SCORE_KEY, player2Score);
-            Log.d("PigGame", "inside onPause, logging player2 score key: ");
-            Log.d("PigGame", String.valueOf(player2Score));
-
-
-            int currentPlayerNumber = pigGame.getCurrentPlayerNumber();
-            editor.putInt(this.CURRENT_PLAYER_KEY, currentPlayerNumber);
-            Log.d("PigGame", "inside onPause, logging current player key: ");
-            Log.d("PigGame", String.valueOf(currentPlayerNumber));
-
-
-            int runningPointsTotal = pigGame.getPointsForCurrentTurn();
-            editor.putInt(this.RUNNING_POINTS_TOTAL, runningPointsTotal);
-            Log.d("PigGame", "inside onPause, logging running points total key: ");
-            Log.d("PigGame", String.valueOf(runningPointsTotal));
-
-
-            int dieImageNumber = pigGame.getLastRolledNumber();
-            editor.putInt(this.DIE_IMAGE_NUMBER, dieImageNumber);
-            Log.d("PigGame", "inside onPause, logging die image number key: ");
-            Log.d("PigGame", String.valueOf(dieImageNumber));
-
-            boolean gameStatus = this.gameInProgress;
-            editor.putBoolean(this.IS_GAME_RUNNING, gameStatus);
-            Log.d("PigGame", "inside onPause, logging is game running key: ");
-            Log.d("PigGame", String.valueOf(gameStatus));
+            editor.putString(this.PLAYER1_USERNAME_KEY, pigGame.getPlayerName(1));
+            editor.putString(this.PLAYER2_USERNAME_KEY, pigGame.getPlayerName(2));
+            editor.putInt(this.PLAYER1_SCORE_KEY, pigGame.getPlayerScore(1));
+            editor.putInt(this.PLAYER2_SCORE_KEY, pigGame.getPlayerScore(2));
+            editor.putInt(this.CURRENT_PLAYER_KEY,  pigGame.getCurrentPlayerNumber());
+            editor.putInt(this.RUNNING_POINTS_TOTAL, pigGame.getPointsForCurrentTurn());
+            editor.putInt(this.DIE_IMAGE_NUMBER, pigGame.getLastRolledNumber());
+            if(this.numberOfDie == 2) {
+                editor.putInt(this.DIE_IMAGE_NUMBER_TWO, pigGame.getLastRolledNumber2());
+            }
+            editor.putBoolean(this.IS_GAME_RUNNING, this.gameInProgress);
+            editor.commit();
         }
 
-        //SAVING PREFERENCES
-        editor.putBoolean(OLD_PREF_ENABLE_AI,this.enableAI);
-        editor.putInt(OLD_PREF_NUMBER_OF_DIE,this.numberOfDie);
-        editor.putBoolean(ENABLE_CUSTOM_SCORE,this.enableCustomScore);
-        editor.putInt(CUSTOM_SCORE,this.customScore);
-        editor.commit();
+        //SAVING PREFERENCES (these are saved in onPause in the event the user changes the settings)
+        SharedPreferences.Editor secondEditor = prefs.edit();
+        secondEditor.putBoolean(OLD_PREF_ENABLE_AI,this.enableAI);
+        secondEditor.putInt(OLD_PREF_NUMBER_OF_DIE,this.numberOfDie);
+        secondEditor.putBoolean(ENABLE_CUSTOM_SCORE,this.enableCustomScore);
+        secondEditor.putInt(CUSTOM_SCORE,this.customScore);
+        secondEditor.commit();
+
     }
 
     @Override
     protected void onResume() {
+        super.onResume();
         Log.d("PigGame", "inisde onResume method");
         //GETTING OLD PREFERENCE SETTINGS
         boolean oldEnableAISetting = prefs.getBoolean(OLD_PREF_ENABLE_AI,false);
@@ -312,7 +282,7 @@ public class MainActivity extends AppCompatActivity {
             this.DisableRollButton();
             this.DisableEndTurnButton();
         }
-        super.onResume();
+
     }
 
     //Event Listener Assigner
@@ -640,7 +610,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
             }
             default: {
-                referenceID = 0;
+                referenceID = R.drawable.die8side8;
                 break;
             }
         }
