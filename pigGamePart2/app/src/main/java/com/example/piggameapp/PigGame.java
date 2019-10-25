@@ -8,20 +8,26 @@ public class PigGame {
     private Player player1;
     private Player player2;
     private Die eightSidedDie;
+    private int dieNumber;
     private int currentPlayerTurn;
     private int runningTotal;
     private int lastRolledNumber;
     private boolean playerOneReached100;
 
     //CONSTRUCTOR
-    public PigGame(String playerOneName, String playerTwoName, int dieSize) {
+    public PigGame(String playerOneName, String playerTwoName, int dieSize, int numberOfDie) {
         this.player1 = new Player(playerOneName);
         this.player2 = new Player(playerTwoName);
         this.eightSidedDie = new Die(dieSize);
         this.currentPlayerTurn = 1;
+        this.dieNumber = numberOfDie;
     }
 
     //PROPERTIES
+    public int getNumberOfDie() {
+        return this.dieNumber;
+    }
+
     public String getPlayerName(int playerNumber) {
         if(playerNumber==1) {
             return player1.getName();
@@ -41,6 +47,7 @@ public class PigGame {
         }
     }
 
+
     public int getCurrentPlayerNumber() {
         //this method returns the number of the player that is currently rolling
         return this.currentPlayerTurn;
@@ -49,6 +56,7 @@ public class PigGame {
     public void setCurrentPlayerTurn(int playerNumber) {
         this.currentPlayerTurn = playerNumber;
     }
+
 
     public int getPlayerScore(int playerNumber) {
         int points;
@@ -71,6 +79,7 @@ public class PigGame {
         }
     }
 
+
     public int getPointsForCurrentTurn() {
         return runningTotal;
     }
@@ -79,6 +88,7 @@ public class PigGame {
         this.runningTotal = points;
     }
 
+
     public int getLastRolledNumber() {
         return this.lastRolledNumber;
     }
@@ -86,6 +96,7 @@ public class PigGame {
     public void setLastRolledNumber(int rolledNumber) {
         this.lastRolledNumber = rolledNumber;
     }
+
 
     //METHODS
     public int RollAndCalc() {
