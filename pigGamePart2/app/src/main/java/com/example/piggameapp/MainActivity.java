@@ -57,6 +57,11 @@ public class MainActivity extends AppCompatActivity {
     private String IS_GAME_RUNNING = "IS_GAME_RUNNING";
     private String DIE_IMAGE_NUMBER = "DIE_IMAGE_NUMBER";
 
+    private String OLD_PREF_ENABLE_AI = "OLD_PREF_ENABLE_AI";
+    private String OLD_PREF_NUMBER_OF_DIE = "OLD_PREF_NUMBER_OF_DIE";
+    private String ENABLE_CUSTOM_SCORE = "ENABLE_CUSTOM_SCORE";
+    private String CUSTOM_SCORE = "CUSTOM_SCORE";
+
     //PREFERENCES/SETTINGS VARIABLES
     private SharedPreferences prefs;
     private boolean enableAI;
@@ -124,8 +129,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         Log.d("PigGame", "inisde onPause method");
+        SharedPreferences.Editor editor = savedValues.edit();
         if (this.gameInProgress == true) {
-            SharedPreferences.Editor editor = savedValues.edit();
             //fetching and storing data to be put into saveInstance
             String username1 = pigGame.getPlayerName(1);
             String username2 = pigGame.getPlayerName(2);
@@ -172,18 +177,32 @@ public class MainActivity extends AppCompatActivity {
             editor.putBoolean(this.IS_GAME_RUNNING, gameStatus);
             Log.d("PigGame", "inside onPause, logging is game running key: ");
             Log.d("PigGame", String.valueOf(gameStatus));
-
-            editor.commit();
         }
+
+        //SAVING PREFERENCES
+        editor.putBoolean(OLD_PREF_ENABLE_AI,this.enableAI);
+        editor.putInt(OLD_PREF_NUMBER_OF_DIE,this.numberOfDie);
+        editor.putBoolean(ENABLE_CUSTOM_SCORE,this.enableCustomScore);
+        editor.putInt(CUSTOM_SCORE,this.customScore);
+        editor.commit();
     }
 
     @Override
     protected void onResume() {
-        //GETTING PREFERENCE SETTINGS
+        //GETTING OLD PREFERENCE SETTINGS
+        boolean oldEnableAISetting = prefs.getBoolean(OLD_PREF_ENABLE_AI,false);
+        int oldNumberOfDieSetting = prefs.getInt(OLD_PREF_NUMBER_OF_DIE,1);
+        boolean oldEnableCustomScoreSetting = prefs.getBoolean(ENABLE_CUSTOM_SCORE,false);
+        int oldCustomScoreSetting = prefs.getInt(CUSTOM_SCORE,100);
+
+        //GETTING NEW PREFERENCE SETTINGS
         this.enableAI = prefs.getBoolean("pref_enable_AI",false);
         this.numberOfDie = Integer.parseInt(prefs.getString("pref_number_of_die","1"));
         this.enableCustomScore = prefs.getBoolean("pref_enable_custom_score",false);
-        this.customScore = Integer.parseInt(prefs.getString("pref_max_play_score","100"));
+        //checking customScore for a misbehaved user
+        String customMaxScoreString = prefs.getString("pref_max_play_score","100");
+
+        this.customScore = Integer.parseInt();
 
         Log.d("onResume","inside onResume method, logging enable Ai preference value: " + enableAI );
         Log.d("onResume","inside onResume method, logging enable die # preference value: " + numberOfDie );
@@ -214,8 +233,11 @@ public class MainActivity extends AppCompatActivity {
             Log.d("PigGame","runningPointsTotal " + String.valueOf(runningPointsTotal));
             Log.d("PigGame","lastRolledNumber " + String.valueOf(lastRolledNumber));
 
+            final int tempDieNumber = 1; /* todo: CHANGE THIS LATER */
+
+
             //rebuild game objects and settings
-            pigGame = new PigGame(player1Username,player2Username,8);
+            pigGame = new PigGame(player1Username,player2Username,8,tempDieNumber);
             this.gameInProgress = isGameRunning;
             pigGame.setPlayerScore(1,player1Score);
             pigGame.setPlayerScore(2,player2Score);;
@@ -461,7 +483,8 @@ public class MainActivity extends AppCompatActivity {
                 pigGame.RestartGame(player1Name,player2Name);
             }
             else {
-                pigGame = new PigGame(player1Name,player2Name,8);
+                final int tempNumberOfDie = 1;/* TODO: CHANGE THIS LATER!!!! */
+                pigGame = new PigGame(player1Name,player2Name,8,tempNumberOfDie);
             }
             this.gameInProgress = true;
             this.UpdateCurrentPlayer();
@@ -474,6 +497,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //METHODS
+    private boolean IsCustomScoreValid(String customScore) {
+        String[] acceptableValues = new String[] {"0","1","2","3","4","5","6","7","8","9"};
+        for(int i = 0; i <customScore.length(); i++) {
+            for(int j = 0; j <acceptableValues.length;i++) {
+                if(i != j) {
+                    return false; //returns false if one of the score char does NOT equal the list of acceptable values
+                }
+            }
+        }
+        return true; //returns true under the assumption no illegal values were found
+    }
+
     private void DisplayWinner(int winnerNumber) {
         //set the display points label to the name of the winner
         this.pointsAccumulatorLabel.setText(pigGame.getPlayerName(winnerNumber) + " has won!");
