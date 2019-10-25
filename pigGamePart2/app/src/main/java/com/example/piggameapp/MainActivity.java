@@ -254,6 +254,9 @@ public class MainActivity extends AppCompatActivity {
 
         //executes if there is no save state data to be utilized OR a game restart is requiredx
         if(stateHasBeenRecovered == false || restartGameRequired == true) {
+            //ASSUMPTION:
+            //if the state has been recovered, a game was already running, therefore not requiring the roll and disable buttons to be disabled
+            //these will only be disabled if there was no previously saved state data, because a new game will need to be created first
             Log.d("PigGame","Inside default state setter");
             //setting UI to default state
             this.isWinner = false;
@@ -274,19 +277,13 @@ public class MainActivity extends AppCompatActivity {
             else {
                 this.dieImage2.setVisibility(View.GONE);
             }
-        }
-
-        //Methods calls
-        CreateUIEventListeners();
-        //disable buttons until a new game has been created (or if the state has been recovered for a game that was not in progress)
-        if (stateHasBeenRecovered != true) {
-            //ASSUMPTION:
-            //if the state has been recovered, a game was already running, therefore not requiring the roll and disable buttons to be disabled
-            //these will only be disabled if there was no previously saved state data, because a new game will need to be created first
+            //disable buttons until a new game has been created (or if the state has been recovered for a game that was not in progress)
             this.DisableRollButton();
             this.DisableEndTurnButton();
         }
 
+        //Methods calls
+        CreateUIEventListeners();
     }
 
     //Event Listener Assigner
