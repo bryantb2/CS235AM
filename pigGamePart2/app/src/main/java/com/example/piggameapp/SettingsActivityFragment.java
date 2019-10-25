@@ -9,8 +9,9 @@ import android.preference.PreferenceManager;
 
 public class SettingsActivityFragment extends PreferenceFragment implements OnSharedPreferenceChangeListener {
 
+    //CLASS LEVEL FIELDS
     private SharedPreferences prefs;
-    private boolean rememberPercent;
+    private boolean enableCustomScore;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -38,10 +39,23 @@ public class SettingsActivityFragment extends PreferenceFragment implements OnSh
     @Override
     public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
         //TODO
+        //if user clicks enable custom score pref box
+            //enable the custom score label
+        //else
+            //disable the custom score label
+        if(key.equals("pref_enable_custom_score")) {
+            enableCustomScore = prefs.getBoolean("pref_enable_custom_score",false);
+        }
     }
 
 
-    private void setDefaultPointsThreshold() {
-
+    private void setPointsThresholdUIBox(boolean customScoreEnabled) {
+        Preference customScore = findPreference("pref_enable_custom_score");
+        if(customScoreEnabled == true) {
+            customScore.setEnabled(true);
+        }
+        else {
+            customScore.setEnabled(false);
+        }
     }
 }

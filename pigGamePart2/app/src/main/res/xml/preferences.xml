@@ -9,7 +9,7 @@
         android:key="pref_number_of_die"
         android:title="Number of Die"
         android:summary="Sets the number of die to be used in the game."
-        android:dialogTitle="Rounding?"
+        android:dialogTitle="Select a play die number"
         android:entries="@array/dieList"
         android:entryValues="@array/dieListValues"
         android:defaultValue="@string/defaultPreferenceValue"
@@ -24,6 +24,7 @@
     <EditTextPreference
         android:key="pref_max_play_score"
         android:title="Score Threshold"
+        android:dialogTitle="Enter a score number"
         android:defaultValue="100"
         android:dependency="pref_enable_custom_score"
         />

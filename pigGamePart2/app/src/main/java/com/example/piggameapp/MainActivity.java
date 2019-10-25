@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -56,6 +57,13 @@ public class MainActivity extends AppCompatActivity {
     private String IS_GAME_RUNNING = "IS_GAME_RUNNING";
     private String DIE_IMAGE_NUMBER = "DIE_IMAGE_NUMBER";
 
+    //PREFERENCES/SETTINGS VARIABLES
+    private SharedPreferences prefs;
+    private boolean enableAI;
+    private int numberOfDie;
+    private boolean enableCustomScore;
+    private int customScore;
+
     //LIFECYCLES
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -102,6 +110,15 @@ public class MainActivity extends AppCompatActivity {
 
         //GETS REFERENCE TO SharedPrefs OBJECT
         savedValues = getSharedPreferences("savedValues", MODE_PRIVATE);
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+        //GETTING PREFERENCE SETTINGS
+        this.enableAI = prefs.getBoolean("pref_enable_AI",false);
+        Log.d("PigGame", "inside onCreate, logging enableAI key: " + enableAI);
+        this.numberOfDie = Integer.parseInt(prefs.getString("pref_number_of_die","1"));
+        Log.d("PigGame", "inside onCreate, logging numberOfDie key: " + numberOfDie);
+        this.enableCustomScore = prefs.getBoolean("pref_enable_custom_score",false);
+        this.customScore = Integer.parseInt(prefs.getString("pref_max_play_score","100"));
     }
 
     //TODO: wire onPause and onResume methods to work with settings preferences
