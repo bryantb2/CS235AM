@@ -191,13 +191,13 @@ public class MainActivity extends AppCompatActivity {
         if(oldEnableAISetting != this.enableAI) {
             restartGameRequired = true;
         }
-        else if(oldNumberOfDieSetting != this.numberOfDie){
+        if(oldNumberOfDieSetting != this.numberOfDie){
             restartGameRequired = true;
         }
-        else if(oldEnableCustomScoreSetting != this.enableCustomScore) {
+        if(oldEnableCustomScoreSetting != this.enableCustomScore) {
             restartGameRequired = true;
         }
-        else if(oldCustomScoreSetting != this.customScore) {
+        if(oldCustomScoreSetting != this.customScore) {
             restartGameRequired = true;
         }
 
@@ -457,7 +457,7 @@ public class MainActivity extends AppCompatActivity {
         }
         try {
             //this process is done to slow down the user and prevent spamming
-            Thread.sleep(800);
+            Thread.sleep(200);
         }
         catch (InterruptedException e) {
             Log.d("PigGame","sleep function for roll button was interrupted");
