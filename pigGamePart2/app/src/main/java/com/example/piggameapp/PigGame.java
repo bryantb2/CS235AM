@@ -12,6 +12,7 @@ public class PigGame {
     private int currentPlayerTurn;
     private int runningTotal;
     private int lastRolledNumber;
+    private int lastRolledNumber2;
     private int maxGameScore;
     private boolean playerOneReachedMaxScore;
 
@@ -99,6 +100,13 @@ public class PigGame {
         this.lastRolledNumber = rolledNumber;
     }
 
+    public int getLastRolledNumber2() {
+        return this.lastRolledNumber2;
+    }
+
+    public void setLastRolledNumber2(int rolledNumber) {
+        this.lastRolledNumber2 = rolledNumber;
+    }
 
     //METHODS
     public int RollAndCalc() {

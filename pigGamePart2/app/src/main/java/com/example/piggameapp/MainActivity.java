@@ -25,7 +25,8 @@ public class MainActivity extends AppCompatActivity {
     private EditText player2UsernameTextEntry;
     private TextView player1ScoreLabel;
     private TextView player2ScoreLabel;
-    private ImageView dieImage;
+    private ImageView dieImage1;
+    private ImageView dieImage2;
     private TextView currentPlayerLabel;
     private TextView pointsAccumulatorLabel;
     private Button rollDieButton;
@@ -56,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
     private String CURRENT_PLAYER_KEY = "CURRENT_PLAYER_KEY";
     private String IS_GAME_RUNNING = "IS_GAME_RUNNING";
     private String DIE_IMAGE_NUMBER = "DIE_IMAGE_NUMBER";
+    private String DIE_IMAGE_NUMBER_TWO = "DIE_IMAGE_NUMBER_TWO";
 
     private String OLD_PREF_ENABLE_AI = "OLD_PREF_ENABLE_AI";
     private String OLD_PREF_NUMBER_OF_DIE = "OLD_PREF_NUMBER_OF_DIE";
@@ -106,7 +108,8 @@ public class MainActivity extends AppCompatActivity {
         this.player2ScoreLabel = findViewById(R.id.player2Score_Label);
         this.player2UsernameTextEntry = findViewById(R.id.player2UsernameTextEntry);
         this.currentPlayerLabel = findViewById(R.id.currentPlayer_Label);
-        this.dieImage = findViewById(R.id.dieRollResult_Label);
+        this.dieImage1 = findViewById(R.id.dieRollResult_Label);
+        this.dieImage2 = findViewById(R.id.dieRollResult_Label2);
         this.pointsAccumulatorLabel = findViewById(R.id.runningPointsTotal_Label);
         this.rollDieButton = findViewById(R.id.rollDie_Button);
         this.endTurnButton = findViewById(R.id.endTurn_Button);
@@ -244,6 +247,10 @@ public class MainActivity extends AppCompatActivity {
             int currentPlayerTurn = savedValues.getInt(CURRENT_PLAYER_KEY,0);
             int runningPointsTotal = savedValues.getInt(RUNNING_POINTS_TOTAL,0);
             int lastRolledNumber = savedValues.getInt(DIE_IMAGE_NUMBER,8);
+            int lastRolledNumber2 = 8;
+            if(this.numberOfDie==2) {
+                lastRolledNumber2 = savedValues.getInt(DIE_IMAGE_NUMBER_TWO,8);
+            }
 
             //rebuild game objects and settings
             pigGame = new PigGame(player1Username,player2Username,8,this.numberOfDie,(this.enableCustomScore == true? this.customScore : 100));
@@ -253,6 +260,9 @@ public class MainActivity extends AppCompatActivity {
             pigGame.setCurrentPlayerTurn(currentPlayerTurn);
             pigGame.setPointsForCurrentTurn(runningPointsTotal);
             pigGame.setLastRolledNumber(lastRolledNumber);
+            if(this.numberOfDie == 2) {
+                pigGame.setLastRolledNumber2(lastRolledNumber2);
+            }
 
             //UI preparation and restoration
             this.DisableUsernameEntryFields();
@@ -261,7 +271,14 @@ public class MainActivity extends AppCompatActivity {
             this.UpdatePlayerScore(2,pigGame.getPlayerScore(2));
             this.UpdatePointsRunningTotal(pigGame.getPointsForCurrentTurn());
             this.UpdateCurrentPlayer();
-            this.UpdateDieImage(lastRolledNumber);
+            this.UpdateDieImage(lastRolledNumber,1);
+            if(this.numberOfDie==2) {
+                this.dieImage2.setVisibility(View.VISIBLE);
+                this.UpdateDieImage(lastRolledNumber2,2);
+            }
+            else {
+                this.dieImage2.setVisibility(View.GONE);
+            }
             stateHasBeenRecovered = true;
         }
 
@@ -276,6 +293,13 @@ public class MainActivity extends AppCompatActivity {
             this.ResetCurrrentPlayerLabel();
             this.gameInProgress = false;
             this.EnableUsernameEntryFields();
+            if(this.numberOfDie==2) {
+                this.dieImage2.setVisibility(View.VISIBLE);
+                this.UpdateDieImage(8,2);
+            }
+            else {
+                this.dieImage2.setVisibility(View.GONE);
+            }
         }
 
         //Methods calls
@@ -354,7 +378,7 @@ public class MainActivity extends AppCompatActivity {
             if(numberOfRolls < 4) {
                 int rollResult = pigGame.RollAndCalc();
                 pigGame.setLastRolledNumber(rollResult);
-                this.UpdateDieImage(rollResult);
+                this.UpdateDieImage(rollResult,1);
                 if(rollResult != 8) {
                     this.UpdatePointsRunningTotal(pigGame.getPointsForCurrentTurn());
                 }
@@ -396,17 +420,41 @@ public class MainActivity extends AppCompatActivity {
             //execute endturn methods
 
         this.DisableRollButton();
-        int rollResult = pigGame.RollAndCalc();
-        pigGame.setLastRolledNumber(rollResult);
-        this.UpdateDieImage(rollResult);
-        if(rollResult != 8) {
-            this.UpdatePointsRunningTotal(pigGame.getPointsForCurrentTurn());
+        final int DIE_ONE_UI_POSITION = 1;
+        final int DIE_TWO_UI_POSITION = 2;
+
+        if(this.numberOfDie == 2) {
+            int rollResult1 = pigGame.RollAndCalc();
+            int rollResult2 = pigGame.RollAndCalc();
+
+            pigGame.setLastRolledNumber(rollResult1);
+            pigGame.setLastRolledNumber2(rollResult2);
+            this.UpdateDieImage(rollResult1,DIE_ONE_UI_POSITION);
+            this.UpdateDieImage(rollResult2,DIE_TWO_UI_POSITION);
+
+            if(rollResult1 != 8 && rollResult2 != 8) {
+                this.UpdatePointsRunningTotal(pigGame.getPointsForCurrentTurn());
+            }
+            else {
+                Toast.makeText(this,("Ouch, "+pigGame.getCurrentPlayerName()+" has rolled an 8!"),Toast.LENGTH_SHORT);
+                this.UpdatePlayerScore(pigGame.getCurrentPlayerNumber(),0);
+                this.ResetRunningTotalLabel();
+                this.EndTurn();
+            }
         }
         else {
-            Toast.makeText(this,("Ouch, "+pigGame.getCurrentPlayerName()+" has rolled an 8!"),Toast.LENGTH_SHORT);
-            this.UpdatePlayerScore(pigGame.getCurrentPlayerNumber(),0);
-            this.ResetRunningTotalLabel();
-            this.EndTurn();
+            int rollResult = pigGame.RollAndCalc();
+            pigGame.setLastRolledNumber(rollResult);
+            this.UpdateDieImage(rollResult,DIE_ONE_UI_POSITION);
+            if(rollResult != 8) {
+                this.UpdatePointsRunningTotal(pigGame.getPointsForCurrentTurn());
+            }
+            else {
+                Toast.makeText(this,("Ouch, "+pigGame.getCurrentPlayerName()+" has rolled an 8!"),Toast.LENGTH_SHORT);
+                this.UpdatePlayerScore(pigGame.getCurrentPlayerNumber(),0);
+                this.ResetRunningTotalLabel();
+                this.EndTurn();
+            }
         }
         try {
             //this process is done to slow down the user and prevent spamming
@@ -556,7 +604,7 @@ public class MainActivity extends AppCompatActivity {
         this.player2UsernameTextEntry.setEnabled(false);
     }
 
-    private void UpdateDieImage(int rolledNumber) {
+    private void UpdateDieImage(int rolledNumber,int diePositionInUI) {
         int referenceID = 0;
         switch(rolledNumber) {
             case 1: {
@@ -597,7 +645,13 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         Drawable drawableImage = getResources().getDrawable(referenceID);
-        this.dieImage.setImageDrawable(drawableImage);
+        if(diePositionInUI == 1) {
+            this.dieImage1.setImageDrawable(drawableImage);
+        }
+        else {
+            this.dieImage2.setImageDrawable(drawableImage);
+        }
+
     }
 
     private void UpdatePlayerScore(int playerNumber, int score) {
