@@ -199,10 +199,18 @@ public class MainActivity extends AppCompatActivity {
         this.enableAI = prefs.getBoolean("pref_enable_AI",false);
         this.numberOfDie = Integer.parseInt(prefs.getString("pref_number_of_die","1"));
         this.enableCustomScore = prefs.getBoolean("pref_enable_custom_score",false);
-        //checking customScore for a misbehaved user
         String customMaxScoreString = prefs.getString("pref_max_play_score","100");
+        if(IsCustomScoreValid(customMaxScoreString) == true) {
+            //checking customScore for a misbehaved user
+            //executes if the string version of the user scoreInput is valid
+            this.customScore = Integer.parseInt(customMaxScoreString);
+        }
+        else {
+            //executes if the CustomScore is not valid
+            this.customScore = 100;
+        }
 
-        this.customScore = Integer.parseInt();
+
 
         Log.d("onResume","inside onResume method, logging enable Ai preference value: " + enableAI );
         Log.d("onResume","inside onResume method, logging enable die # preference value: " + numberOfDie );
@@ -234,10 +242,11 @@ public class MainActivity extends AppCompatActivity {
             Log.d("PigGame","lastRolledNumber " + String.valueOf(lastRolledNumber));
 
             final int tempDieNumber = 1; /* todo: CHANGE THIS LATER */
+            final int tempMaxScore = 100; /* todo: CHANGE THIS LATER */
 
 
             //rebuild game objects and settings
-            pigGame = new PigGame(player1Username,player2Username,8,tempDieNumber);
+            pigGame = new PigGame(player1Username,player2Username,8,tempDieNumber,tempMaxScore);
             this.gameInProgress = isGameRunning;
             pigGame.setPlayerScore(1,player1Score);
             pigGame.setPlayerScore(2,player2Score);;
@@ -484,7 +493,8 @@ public class MainActivity extends AppCompatActivity {
             }
             else {
                 final int tempNumberOfDie = 1;/* TODO: CHANGE THIS LATER!!!! */
-                pigGame = new PigGame(player1Name,player2Name,8,tempNumberOfDie);
+                final int tempMaxScore = 100; /* todo: CHANGE THIS LATER */
+                pigGame = new PigGame(player1Name,player2Name,8,tempNumberOfDie,tempMaxScore);
             }
             this.gameInProgress = true;
             this.UpdateCurrentPlayer();

@@ -12,15 +12,17 @@ public class PigGame {
     private int currentPlayerTurn;
     private int runningTotal;
     private int lastRolledNumber;
-    private boolean playerOneReached100;
+    private int maxGameScore;
+    private boolean playerOneReachedMaxScore;
 
     //CONSTRUCTOR
-    public PigGame(String playerOneName, String playerTwoName, int dieSize, int numberOfDie) {
+    public PigGame(String playerOneName, String playerTwoName, int dieSize, int numberOfDie, int maxGameScore) {
         this.player1 = new Player(playerOneName);
         this.player2 = new Player(playerTwoName);
         this.eightSidedDie = new Die(dieSize);
         this.currentPlayerTurn = 1;
         this.dieNumber = numberOfDie;
+        this.maxGameScore = maxGameScore;
     }
 
     //PROPERTIES
@@ -154,17 +156,17 @@ public class PigGame {
         this.resetPlayerScore(2);
         this.resetPlayerTurn();
         this.resetRunningTotal();
-        this.playerOneReached100 = false;
+        this.playerOneReachedMaxScore = false;
     }
 
     public int CalcWinner() {
-        //if player 2 has 100
-            //auto win if reached 100 is false
-            //also wins if reached 100 is on and (player2 > player1)
-        //if player 1 has 100
-            //turn on reached 100
+        //if player 2 has maxPoints
+            //auto win if reached maxPoints is false
+            //also wins if reached maxPoints is on and (player2 > player1)
+        //if player 1 has maxPoints
+            //turn on reached maxPoints
                 //return empty string
-            //if reached 100 is on and (player1>player2)
+            //if reached maxPoints is on and (player1>player2)
                 //return string player1
         final int player1Points = this.player1.getPoints();
         final int player2Point = this.player2.getPoints();
@@ -172,14 +174,14 @@ public class PigGame {
         final int player1 = 1;
         final int player2 = 2;
 
-        if (player2Point >= 100) {
+        if (player2Point >= maxGameScore) {
             return player2;
         }
-        else if(player1Points >= 100) {
-            if(this.playerOneReached100 == true && player1Points > player2Point) {
+        else if(player1Points >= maxGameScore) {
+            if(this.playerOneReachedMaxScore == true && player1Points > player2Point) {
                 return player1;
             }
-            this.playerOneReached100 = true;
+            this.playerOneReachedMaxScore = true;
         }
         //this returns if there are no winners
         return 0;
