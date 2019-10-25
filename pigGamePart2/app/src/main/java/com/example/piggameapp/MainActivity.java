@@ -189,6 +189,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
+        Log.d("PigGame", "inisde onResume method");
         //GETTING OLD PREFERENCE SETTINGS
         boolean oldEnableAISetting = prefs.getBoolean(OLD_PREF_ENABLE_AI,false);
         int oldNumberOfDieSetting = prefs.getInt(OLD_PREF_NUMBER_OF_DIE,1);
@@ -210,18 +211,28 @@ public class MainActivity extends AppCompatActivity {
             this.customScore = 100;
         }
 
+        //CHECKING IF THE USER HAS CHANGED ANY SETTINGS
+        boolean restartGameRequired = false;
+        if(oldEnableAISetting != this.enableAI) {
+            restartGameRequired = true;
+        }
+        else if(oldNumberOfDieSetting != this.numberOfDie){
+            restartGameRequired = true;
+        }
+        else if(oldEnableCustomScoreSetting != this.enableCustomScore) {
+            restartGameRequired = true;
+        }
+        else if(oldCustomScoreSetting != this.customScore) {
+            restartGameRequired = true;
+        }
 
 
-        Log.d("onResume","inside onResume method, logging enable Ai preference value: " + enableAI );
-        Log.d("onResume","inside onResume method, logging enable die # preference value: " + numberOfDie );
-
-        Log.d("PigGame", "inisde onResume method");
         //checks if the game was running before the state change
         //pointless to update and recover state if it was never running in the first place
         //IMPORTANT: onResume only takes effect if saveState is null (otherwise there will be conflicts!!!
             //testing to see if the class-level variable stateHasbeenRecovered is true, meaning that oncreate already restored the state
         boolean isGameRunning = savedValues.getBoolean(IS_GAME_RUNNING,false);
-        if(isGameRunning == true) {
+        if(isGameRunning == true && restartGameRequired == false) {
             Log.d("PigGame","inside onCreate: reinitializing class variables");
             //getting variables from sharedPrefs
             String player1Username = savedValues.getString(PLAYER1_USERNAME_KEY, "");
@@ -232,21 +243,9 @@ public class MainActivity extends AppCompatActivity {
             int currentPlayerTurn = savedValues.getInt(CURRENT_PLAYER_KEY,0);
             int runningPointsTotal = savedValues.getInt(RUNNING_POINTS_TOTAL,0);
             int lastRolledNumber = savedValues.getInt(DIE_IMAGE_NUMBER,8);
-            Log.d("PigGame","player1Username: " + player1Username);
-            Log.d("PigGame","player2Username: " + player2Username);
-            Log.d("PigGame","player1Score: " + String.valueOf(player1Score));
-            Log.d("PigGame","player2Score: " + String.valueOf(player2Score));
-            Log.d("PigGame","isGameRunning: " + String.valueOf(isGameRunning));
-            Log.d("PigGame","currentPlayerTurn: " + String.valueOf(currentPlayerTurn));
-            Log.d("PigGame","runningPointsTotal " + String.valueOf(runningPointsTotal));
-            Log.d("PigGame","lastRolledNumber " + String.valueOf(lastRolledNumber));
-
-            final int tempDieNumber = 1; /* todo: CHANGE THIS LATER */
-            final int tempMaxScore = 100; /* todo: CHANGE THIS LATER */
-
 
             //rebuild game objects and settings
-            pigGame = new PigGame(player1Username,player2Username,8,tempDieNumber,tempMaxScore);
+            pigGame = new PigGame(player1Username,player2Username,8,this.numberOfDie,(this.enableCustomScore == true? this.customScore : 100));
             this.gameInProgress = isGameRunning;
             pigGame.setPlayerScore(1,player1Score);
             pigGame.setPlayerScore(2,player2Score);;
@@ -663,7 +662,4 @@ public class MainActivity extends AppCompatActivity {
         }
         return isValid;
     }
-
-
-
 }
