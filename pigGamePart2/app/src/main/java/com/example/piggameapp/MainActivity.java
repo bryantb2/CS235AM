@@ -263,6 +263,10 @@ public class MainActivity extends AppCompatActivity {
             this.ResetCurrrentPlayerLabel();
             this.gameInProgress = false;
             this.EnableUsernameEntryFields();
+            if(this.enableAI == true) {
+                //ensures that the AI is displayed and the user cannot change it
+                this.SetAndDisableAIUsernameField("Computer");
+            }
             if(this.numberOfDie==2) {
                 this.dieImage2.setVisibility(View.VISIBLE);
                 this.UpdateDieImage(8,2);
@@ -523,11 +527,15 @@ public class MainActivity extends AppCompatActivity {
         if(gameInProgress==true) {
             this.isWinner = false;
             this.ResetUsernameFields(); //this is what prevents the second block in this handler from firing
+            this.EnableUsernameEntryFields();
+            if(this.enableAI == true) {
+                //ensures that the AI is displayed and the user cannot change it
+                this.SetAndDisableAIUsernameField("Computer");
+            }
             this.ResetScoreLabels();
             this.ResetRunningTotalLabel();
             this.ResetCurrrentPlayerLabel();
             this.gameInProgress = false;
-            this.EnableUsernameEntryFields();
             Toast.makeText(getApplicationContext(),"Please enter valid usernames, press new game",Toast.LENGTH_SHORT).show();
         }
         //execute this block if the app was not running
@@ -679,6 +687,12 @@ public class MainActivity extends AppCompatActivity {
 
     private void ResetRunningTotalLabel() {
         this.pointsAccumulatorLabel.setText("0 Points");
+    }
+
+    private void SetAndDisableAIUsernameField(String computerName) {
+        //this sets the AI username in the UI and disables its text entry field
+        this.player2UsernameTextEntry.setText(computerName);
+        this.player2UsernameTextEntry.setEnabled(false);
     }
 
     private void ResetUsernameFields() {
