@@ -322,17 +322,20 @@ public class MainActivity extends AppCompatActivity {
         while(canRoll == true && (pigGame.getPointsForCurrentTurn() < maxComputerTurnPoints)) {
             if(numberOfRolls < 4) {
                 int rollResult = pigGame.RollAndCalc();
+                pigGame.setLastRolledNumber(rollResult);
                 this.UpdateDieImage(rollResult);
                 if(rollResult != 8) {
                     this.UpdatePointsRunningTotal(pigGame.getPointsForCurrentTurn());
-
                 }
                 else {
+                    Toast.makeText(this,("Ouch, "+pigGame.getCurrentPlayerName()+" has rolled an 8!"),Toast.LENGTH_SHORT);
                     this.UpdatePlayerScore(pigGame.getCurrentPlayerNumber(),0);
                     this.ResetRunningTotalLabel();
                     this.EndTurn();
                     canRoll = false;
-                    Toast.makeText(this,("Ouch, "+pigGame.getCurrentPlayerName()+" has rolled an 8!"),Toast.LENGTH_SHORT);
+                    if(this.isWinner == false) {
+                        this.EnableRollButton();
+                    }
                 }
                 //sets delay to allow user to see the UI information regarding the computer's roll
                 try {
@@ -341,10 +344,6 @@ public class MainActivity extends AppCompatActivity {
                 }
                 catch (InterruptedException e) {
                     Log.d("PigGame","sleep function for roll button was interrupted");
-                }
-                pigGame.setLastRolledNumber(rollResult);
-                if(this.isWinner == false) {
-                    this.EnableRollButton();
                 }
             }
             else {
@@ -367,15 +366,19 @@ public class MainActivity extends AppCompatActivity {
 
         this.DisableRollButton();
         int rollResult = pigGame.RollAndCalc();
+        pigGame.setLastRolledNumber(rollResult);
         this.UpdateDieImage(rollResult);
         if(rollResult != 8) {
             this.UpdatePointsRunningTotal(pigGame.getPointsForCurrentTurn());
         }
         else {
+            Toast.makeText(this,("Ouch, "+pigGame.getCurrentPlayerName()+" has rolled an 8!"),Toast.LENGTH_SHORT);
             this.UpdatePlayerScore(pigGame.getCurrentPlayerNumber(),0);
             this.ResetRunningTotalLabel();
             this.EndTurn();
-            Toast.makeText(this,("Ouch, "+pigGame.getCurrentPlayerName()+" has rolled an 8!"),Toast.LENGTH_SHORT);
+            if(this.isWinner == false) {
+                this.EnableRollButton();
+            }
         }
         try {
             //this process is done to slow down the user and prevent spamming
@@ -383,10 +386,6 @@ public class MainActivity extends AppCompatActivity {
         }
         catch (InterruptedException e) {
             Log.d("PigGame","sleep function for roll button was interrupted");
-        }
-        pigGame.setLastRolledNumber(rollResult);
-        if(this.isWinner == false) {
-            this.EnableRollButton();
         }
     }
 
