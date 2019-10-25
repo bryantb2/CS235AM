@@ -201,7 +201,7 @@ public class MainActivity extends AppCompatActivity {
         this.numberOfDie = Integer.parseInt(prefs.getString("pref_number_of_die","1"));
         this.enableCustomScore = prefs.getBoolean("pref_enable_custom_score",false);
         String customMaxScoreString = prefs.getString("pref_max_play_score","100");
-        if(IsCustomScoreValid(customMaxScoreString) == true) {
+        if(IsCustomScoreValid(customMaxScoreString)) {
             //checking customScore for a misbehaved user
             //executes if the string version of the user scoreInput is valid
             this.customScore = Integer.parseInt(customMaxScoreString);
@@ -210,6 +210,8 @@ public class MainActivity extends AppCompatActivity {
             //executes if the CustomScore is not valid
             this.customScore = 100;
         }
+
+        Log.d("PigGame","inside onResume, logging customScoreNumber: " + this.customScore);
 
         //CHECKING IF THE USER HAS CHANGED ANY SETTINGS
         boolean restartGameRequired = false;
@@ -226,14 +228,13 @@ public class MainActivity extends AppCompatActivity {
             restartGameRequired = true;
         }
 
-
         //checks if the game was running before the state change
         //pointless to update and recover state if it was never running in the first place
         //IMPORTANT: onResume only takes effect if saveState is null (otherwise there will be conflicts!!!
             //testing to see if the class-level variable stateHasbeenRecovered is true, meaning that oncreate already restored the state
         boolean isGameRunning = savedValues.getBoolean(IS_GAME_RUNNING,false);
         if(isGameRunning == true && restartGameRequired == false) {
-            Log.d("PigGame","inside onCreate: reinitializing class variables");
+
             //getting variables from sharedPrefs
             String player1Username = savedValues.getString(PLAYER1_USERNAME_KEY, "");
             String player2Username = savedValues.getString(PLAYER2_USERNAME_KEY, "");
@@ -264,8 +265,8 @@ public class MainActivity extends AppCompatActivity {
             stateHasBeenRecovered = true;
         }
 
-        //executes if there is no save state data to be utilized
-        if(stateHasBeenRecovered == false) {
+        //executes if there is no save state data to be utilized OR a game restart is requiredx
+        if(stateHasBeenRecovered == false || restartGameRequired == true) {
             Log.d("PigGame","Inside default state setter");
             //setting UI to default state
             this.isWinner = false;
@@ -491,9 +492,7 @@ public class MainActivity extends AppCompatActivity {
                 pigGame.RestartGame(player1Name,player2Name);
             }
             else {
-                final int tempNumberOfDie = 1;/* TODO: CHANGE THIS LATER!!!! */
-                final int tempMaxScore = 100; /* todo: CHANGE THIS LATER */
-                pigGame = new PigGame(player1Name,player2Name,8,tempNumberOfDie,tempMaxScore);
+                pigGame = new PigGame(player1Name,player2Name,8,this.numberOfDie,(this.enableCustomScore == true? this.customScore : 100));
             }
             this.gameInProgress = true;
             this.UpdateCurrentPlayer();
@@ -507,15 +506,21 @@ public class MainActivity extends AppCompatActivity {
 
     //METHODS
     private boolean IsCustomScoreValid(String customScore) {
-        String[] acceptableValues = new String[] {"0","1","2","3","4","5","6","7","8","9"};
+        Character[] acceptableValues = new Character[] {'0','1','2','3','4','5','6','7','8','9'};
+        int numberOfValidCharacters = 0;
         for(int i = 0; i <customScore.length(); i++) {
-            for(int j = 0; j <acceptableValues.length;i++) {
-                if(i != j) {
-                    return false; //returns false if one of the score char does NOT equal the list of acceptable values
+            for(int j = 0; j <acceptableValues.length;j++) {
+                if(customScore.charAt(i)==(acceptableValues[j])) {
+                    numberOfValidCharacters = numberOfValidCharacters+1;
                 }
             }
         }
-        return true; //returns true under the assumption no illegal values were found
+        if(numberOfValidCharacters == customScore.length()) {
+            return true; //returns true because ALL of the characters in the customScore are valid
+        }
+        else {
+            return false; //returns false because at least one of the characters was not valid
+        }
     }
 
     private void DisplayWinner(int winnerNumber) {
