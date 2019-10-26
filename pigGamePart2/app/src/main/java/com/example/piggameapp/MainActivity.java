@@ -45,7 +45,6 @@ public class MainActivity extends AppCompatActivity {
 
     //Class-level sharedPreferences object and state variables
     private SharedPreferences savedValues;
-    private boolean stateHasBeenRecovered = false;
     private boolean stateHasBeenSaved = false;
 
     //SAVE STATE KEYS
@@ -115,7 +114,6 @@ public class MainActivity extends AppCompatActivity {
         this.endTurnButton = findViewById(R.id.endTurn_Button);
         this.newGameButton = findViewById(R.id.newGame_Button);
 
-
         //GETS REFERENCE TO SharedPrefs OBJECT
         savedValues = getSharedPreferences("savedValues", MODE_PRIVATE);
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -134,18 +132,20 @@ public class MainActivity extends AppCompatActivity {
         Log.d("PigGame", "inisde onPause method");
         SharedPreferences.Editor editor = savedValues.edit();
         //fetching and storing data to be put into saveInstance
-        editor.putString(this.PLAYER1_USERNAME_KEY, pigGame.getPlayerName(1));
-        editor.putString(this.PLAYER2_USERNAME_KEY, pigGame.getPlayerName(2));
-        editor.putInt(this.PLAYER1_SCORE_KEY, pigGame.getPlayerScore(1));
-        editor.putInt(this.PLAYER2_SCORE_KEY, pigGame.getPlayerScore(2));
-        editor.putInt(this.CURRENT_PLAYER_KEY,  pigGame.getCurrentPlayerNumber());
-        editor.putInt(this.RUNNING_POINTS_TOTAL, pigGame.getPointsForCurrentTurn());
-        editor.putInt(this.DIE_IMAGE_NUMBER, pigGame.getLastRolledNumber());
-        if(this.numberOfDie == 2) {
-            editor.putInt(this.DIE_IMAGE_NUMBER_TWO, pigGame.getLastRolledNumber2());
+        if(pigGame != null) {
+            editor.putString(this.PLAYER1_USERNAME_KEY, pigGame.getPlayerName(1));
+            editor.putString(this.PLAYER2_USERNAME_KEY, pigGame.getPlayerName(2));
+            editor.putInt(this.PLAYER1_SCORE_KEY, pigGame.getPlayerScore(1));
+            editor.putInt(this.PLAYER2_SCORE_KEY, pigGame.getPlayerScore(2));
+            editor.putInt(this.CURRENT_PLAYER_KEY,  pigGame.getCurrentPlayerNumber());
+            editor.putInt(this.RUNNING_POINTS_TOTAL, pigGame.getPointsForCurrentTurn());
+            editor.putInt(this.DIE_IMAGE_NUMBER, pigGame.getLastRolledNumber());
+            if(this.numberOfDie == 2) {
+                editor.putInt(this.DIE_IMAGE_NUMBER_TWO, pigGame.getLastRolledNumber2());
+            }
+            editor.putBoolean(this.IS_GAME_RUNNING, this.gameInProgress);
+            editor.commit();
         }
-        editor.putBoolean(this.IS_GAME_RUNNING, this.gameInProgress);
-        editor.commit();
 
         //SAVING PREFERENCES (these are saved in onPause in the event the user changes the settings)
         SharedPreferences.Editor secondEditor = prefs.edit();
@@ -154,7 +154,6 @@ public class MainActivity extends AppCompatActivity {
         secondEditor.putBoolean(ENABLE_CUSTOM_SCORE,this.enableCustomScore);
         secondEditor.putInt(CUSTOM_SCORE,this.customScore);
         secondEditor.commit();
-
     }
 
     @Override
@@ -181,8 +180,6 @@ public class MainActivity extends AppCompatActivity {
             //executes if the CustomScore is not valid
             this.customScore = 100;
         }
-
-        Log.d("PigGame","inside onResume, logging customScoreNumber: " + this.customScore);
 
         //CHECKING IF THE USER HAS CHANGED ANY SETTINGS
         boolean restartGameRequired = false;
@@ -247,12 +244,9 @@ public class MainActivity extends AppCompatActivity {
             else {
                 this.dieImage2.setVisibility(View.GONE);
             }
-            stateHasBeenRecovered = true;
         }
-
-        //executes if there is no save state data to be utilized OR a game restart is requiredx
         else {
-        //if(stateHasBeenRecovered == false || restartGameRequired == true) {
+        //executes if there is no save state data to be utilized OR a game restart is requiredx
             //ASSUMPTION:
             //if the state has been recovered, a game was already running, therefore not requiring the roll and disable buttons to be disabled
             //these will only be disabled if there was no previously saved state data, because a new game will need to be created first
@@ -280,7 +274,6 @@ public class MainActivity extends AppCompatActivity {
             this.DisableRollButton();
             this.DisableEndTurnButton();
         }
-
         //Methods calls
         CreateUIEventListeners();
     }
