@@ -133,21 +133,19 @@ public class MainActivity extends AppCompatActivity {
         super.onPause();
         Log.d("PigGame", "inisde onPause method");
         SharedPreferences.Editor editor = savedValues.edit();
-        if (this.gameInProgress == true) {
-            //fetching and storing data to be put into saveInstance
-            editor.putString(this.PLAYER1_USERNAME_KEY, pigGame.getPlayerName(1));
-            editor.putString(this.PLAYER2_USERNAME_KEY, pigGame.getPlayerName(2));
-            editor.putInt(this.PLAYER1_SCORE_KEY, pigGame.getPlayerScore(1));
-            editor.putInt(this.PLAYER2_SCORE_KEY, pigGame.getPlayerScore(2));
-            editor.putInt(this.CURRENT_PLAYER_KEY,  pigGame.getCurrentPlayerNumber());
-            editor.putInt(this.RUNNING_POINTS_TOTAL, pigGame.getPointsForCurrentTurn());
-            editor.putInt(this.DIE_IMAGE_NUMBER, pigGame.getLastRolledNumber());
-            if(this.numberOfDie == 2) {
-                editor.putInt(this.DIE_IMAGE_NUMBER_TWO, pigGame.getLastRolledNumber2());
-            }
-            editor.putBoolean(this.IS_GAME_RUNNING, this.gameInProgress);
-            editor.commit();
+        //fetching and storing data to be put into saveInstance
+        editor.putString(this.PLAYER1_USERNAME_KEY, pigGame.getPlayerName(1));
+        editor.putString(this.PLAYER2_USERNAME_KEY, pigGame.getPlayerName(2));
+        editor.putInt(this.PLAYER1_SCORE_KEY, pigGame.getPlayerScore(1));
+        editor.putInt(this.PLAYER2_SCORE_KEY, pigGame.getPlayerScore(2));
+        editor.putInt(this.CURRENT_PLAYER_KEY,  pigGame.getCurrentPlayerNumber());
+        editor.putInt(this.RUNNING_POINTS_TOTAL, pigGame.getPointsForCurrentTurn());
+        editor.putInt(this.DIE_IMAGE_NUMBER, pigGame.getLastRolledNumber());
+        if(this.numberOfDie == 2) {
+            editor.putInt(this.DIE_IMAGE_NUMBER_TWO, pigGame.getLastRolledNumber2());
         }
+        editor.putBoolean(this.IS_GAME_RUNNING, this.gameInProgress);
+        editor.commit();
 
         //SAVING PREFERENCES (these are saved in onPause in the event the user changes the settings)
         SharedPreferences.Editor secondEditor = prefs.edit();
@@ -253,7 +251,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
         //executes if there is no save state data to be utilized OR a game restart is requiredx
-        if(stateHasBeenRecovered == false || restartGameRequired == true) {
+        else {
+        //if(stateHasBeenRecovered == false || restartGameRequired == true) {
             //ASSUMPTION:
             //if the state has been recovered, a game was already running, therefore not requiring the roll and disable buttons to be disabled
             //these will only be disabled if there was no previously saved state data, because a new game will need to be created first
