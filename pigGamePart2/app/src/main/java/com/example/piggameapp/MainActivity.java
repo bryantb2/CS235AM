@@ -497,18 +497,18 @@ public class MainActivity extends AppCompatActivity {
         }
         else {
             if(this.enableAI == true && playerThatJustWent == 1) {
-                //this conditional logic preserves the existing code inside endturn but allows for AI turns IF the setting is enabled
+                //show that computer is taking its turn
+                //execute AI logic method
+                this.UpdateCurrentPlayer();
                 this.AITurn(this.numberOfDie);
             }
-            else {
-                //THIS CODE IS MEANT TO PRIME THE UI FOR A HUMAN USER
-                //end turn auto switches the player turn if there is no winner, so all we have to do here reflect the change in the UI
-                //re-enable the endturn button
-                //re-enable the roll button
-                this.UpdateCurrentPlayer();
-                this.EnableEndTurnButton();
-                this.EnableRollButton();
-            }
+            //THIS CODE IS MEANT TO PRIME THE UI FOR A HUMAN USER
+            //end turn auto switches the player turn if there is no winner, so all we have to do here reflect the change in the UI
+            //re-enable the endturn button
+            //re-enable the roll button
+            this.UpdateCurrentPlayer();
+            this.EnableEndTurnButton();
+            this.EnableRollButton();
         }
     }
 
