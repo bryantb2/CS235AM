@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
@@ -332,68 +333,51 @@ public class MainActivity extends AppCompatActivity {
                 //set canRoll to false
                 //reset running total label AND pigGame internal runningTotal
         //end looping <--
-
-        final int maxNumberOfRolls = 4;
-        final int maxComputerTurnPoints;
+        int maxNumberOfRolls = 4;
+        int maxComputerTurnPoints;
         if(this.numberOfDie == 2) {
             maxComputerTurnPoints = 30;
         }
         else {
             maxComputerTurnPoints = 20;
         }
-        boolean canRoll = true;
+        boolean rolledAnEight = false;
         int numberOfRolls = 0;
 
-        while(canRoll == true &&
+        while(rolledAnEight == false &&
                 numberOfRolls < maxNumberOfRolls &&
                 pigGame.getPointsForCurrentTurn() < maxComputerTurnPoints) {
             if(this.numberOfDie == 2) {
+
                 int rollResult = pigGame.RollAndCalc();
                 int rollResult2 = pigGame.RollAndCalc();
                 pigGame.setLastRolledNumber(rollResult);
                 pigGame.setLastRolledNumber2(rollResult2);
-                this.UpdateDieImage(rollResult,1);
-                this.UpdateDieImage(rollResult2,2);
+                UpdateDieImage(rollResult,1);
+                UpdateDieImage(rollResult2,2);
+                UpdatePointsRunningTotal(pigGame.getPointsForCurrentTurn());
 
-                if(rollResult != 8 && rollResult2 != 8) {
-                    this.UpdatePointsRunningTotal(pigGame.getPointsForCurrentTurn());
-                }
-                else {
-                    this.ResetRunningTotalLabel();
-                    canRoll = false;
+                if(rollResult == 8 || rollResult2 == 8) {
+                    rolledAnEight = true;
                 }
             }
             else {
                 int rollResult = pigGame.RollAndCalc();
                 pigGame.setLastRolledNumber(rollResult);
-                this.UpdateDieImage(rollResult,1);
+                UpdateDieImage(rollResult,1);
+                UpdatePointsRunningTotal(pigGame.getPointsForCurrentTurn());
 
-                if(rollResult != 8) {
-                    this.UpdatePointsRunningTotal(pigGame.getPointsForCurrentTurn());
-                }
-                else {
-                    this.ResetRunningTotalLabel();
-                    canRoll = false;
+                if(rollResult == 8) {
+                    rolledAnEight = true;
                 }
             }
-            //sets delay to allow user to see the UI information regarding the computer's roll
-            try {
-                //this process is done to slow down the user and prevent spamming
-                Thread.sleep(1000);
-            }
-            catch (InterruptedException e) {
-                Log.d("PigGame","sleep function for roll button was interrupted");
-            }
-            if(canRoll==false) {
-                Toast.makeText(this,("Ouch, "+pigGame.getCurrentPlayerName()+" has rolled an 8!"),Toast.LENGTH_SHORT);
-                this.UpdatePlayerScore(pigGame.getCurrentPlayerNumber(),0);
-                this.EndTurn();
-            }/*
-            if(this.isWinner == false) {
-                this.EnableRollButton();
-            }*/
             numberOfRolls++;
         }
+        if(rolledAnEight==true) {
+            Toast.makeText(this,("Ouch, "+pigGame.getCurrentPlayerName()+" has rolled an 8!"),Toast.LENGTH_SHORT);
+        }
+        this.UpdatePlayerScore(pigGame.getCurrentPlayerNumber(),0);
+        this.EndTurn();
     }
 
     //EVENT HANDLERS
@@ -491,16 +475,26 @@ public class MainActivity extends AppCompatActivity {
             if(this.enableAI == true && playerThatJustWent == 1) {
                 //show that computer is taking its turn
                 //execute AI logic method
-                this.UpdateCurrentPlayer();
-                this.AITurn(this.numberOfDie);
+                UpdateCurrentPlayer();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        AITurn(numberOfDie);
+                    }
+                }, 500);
             }
             //THIS CODE IS MEANT TO PRIME THE UI FOR A HUMAN USER
             //end turn auto switches the player turn if there is no winner, so all we have to do here reflect the change in the UI
             //re-enable the endturn button
             //re-enable the roll button
-            this.UpdateCurrentPlayer();
-            this.EnableEndTurnButton();
-            this.EnableRollButton();
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    UpdateCurrentPlayer();
+                    EnableEndTurnButton();
+                    EnableRollButton();
+                }
+            }, 500);
         }
     }
 
