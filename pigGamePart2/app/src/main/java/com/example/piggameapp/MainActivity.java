@@ -127,6 +127,7 @@ public class MainActivity extends AppCompatActivity {
     //TODO: modify game logic to accept a changing max game score         --- DONE ----
     //TODO: wire the entire app to dynamically change logic, using bools set at the class level, and display methods based off the user's desired game settings
 
+
     @Override
     protected void onPause() {
         super.onPause();
@@ -200,7 +201,7 @@ public class MainActivity extends AppCompatActivity {
         //checks if the game was running before the state change
         //pointless to update and recover state if it was never running in the first place
         //IMPORTANT: onResume only takes effect if saveState is null (otherwise there will be conflicts!!!
-            //testing to see if the class-level variable stateHasbeenRecovered is true, meaning that oncreate already restored the state
+        //testing to see if the class-level variable stateHasbeenRecovered is true, meaning that oncreate already restored the state
         boolean isGameRunning = savedValues.getBoolean(IS_GAME_RUNNING,false);
         if(isGameRunning == true && restartGameRequired == false) {
 
@@ -247,7 +248,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         else {
-        //executes if there is no save state data to be utilized OR a game restart is requiredx
+            //executes if there is no save state data to be utilized OR a game restart is required
             //ASSUMPTION:
             //if the state has been recovered, a game was already running, therefore not requiring the roll and disable buttons to be disabled
             //these will only be disabled if there was no previously saved state data, because a new game will need to be created first
@@ -303,9 +304,9 @@ public class MainActivity extends AppCompatActivity {
         this.player1UsernameTextEntry.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               if(areEntryFieldsDisabled == false && player1UsernameTextEntry.getText().toString().equals("Enter username")) {
+                if(areEntryFieldsDisabled == false && player1UsernameTextEntry.getText().toString().equals("Enter username")) {
                     player1UsernameTextEntry.setText("");
-               }
+                }
             }
         });
         this.player2UsernameTextEntry.setOnClickListener(new View.OnClickListener() {
@@ -324,14 +325,14 @@ public class MainActivity extends AppCompatActivity {
         //looping -->
         //roll pigGame die
         //set the die image
-            //if rolled number is not 8
-                //update running total label
-                //if running total equals 20
-                    //stop rolling and end turn
-                //else roll a total of 3 times or until an 8 is rolled
-            //else
-                //set canRoll to false
-                //reset running total label AND pigGame internal runningTotal
+        //if rolled number is not 8
+        //update running total label
+        //if running total equals 20
+        //stop rolling and end turn
+        //else roll a total of 3 times or until an 8 is rolled
+        //else
+        //set canRoll to false
+        //reset running total label AND pigGame internal runningTotal
         //end looping <--
         int maxNumberOfRolls = 4;
         int maxComputerTurnPoints;
@@ -386,10 +387,10 @@ public class MainActivity extends AppCompatActivity {
         //lock roll button
         //roll pigGame die
         //if rolled number is not 8
-            //set the die image
-            //update running total label
+        //set the die image
+        //update running total label
         //else reset currentPlayerUI elements
-            //execute endturn methods
+        //execute endturn methods
 
         this.DisableRollButton();
         final int DIE_ONE_UI_POSITION = 1;
@@ -445,10 +446,10 @@ public class MainActivity extends AppCompatActivity {
         //lock roll button
         //move running total to total points label
         //calc winner
-            //if current player is winner, display name in turn label
-                //give toast message saying click newgame to start again
-            //else switch current player to next player
-                //unlock roll button
+        //if current player is winner, display name in turn label
+        //give toast message saying click newgame to start again
+        //else switch current player to next player
+        //unlock roll button
         this.DisableRollButton();
         this.DisableEndTurnButton();
 
