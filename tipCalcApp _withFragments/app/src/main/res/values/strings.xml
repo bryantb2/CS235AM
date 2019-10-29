@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">TipCalculator</string>
+    <string name="tipPercentTag_label">15%</string>
+    <string name="tipTotalOutputTag_label">$0.00</string>
+    <string name="billTotalOutputTag_label">$0.00</string>
+    <string name="billTotalTag_label">Bill Total</string>
+    <string name="totalTipTag_label">Tip Total</string>
+    <string name="percentTag_label">Percent</string>
+    <string name="billAmountTag_label">Bill Amount</string>
+    <string name="subTotalTextInput">Input Meal Sub-total</string>
+
+    <!-- String values for preferences -->
+    <string-array name="preferenceList">
+        <item>None</item>
+        <item>Tip</item>
+        <item>Total</item>
+    </string-array>
+
+    <string-array name="preferenceListValues">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
+    <string name="defaultPreferenceValue">0</string>
+
+
+</resources>
