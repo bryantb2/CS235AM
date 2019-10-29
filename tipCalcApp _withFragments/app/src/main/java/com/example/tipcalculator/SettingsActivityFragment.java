@@ -7,6 +7,10 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 
+import androidx.fragment.app.Fragment;
+
+import java.util.prefs.PreferencesFactory;
+
 public class SettingsActivityFragment extends PreferenceFragment implements OnSharedPreferenceChangeListener {
 
     private SharedPreferences prefs;
@@ -56,5 +60,14 @@ public class SettingsActivityFragment extends PreferenceFragment implements OnSh
             rememberPercent = prefs.getBoolean(key,true);
         }
         //this.setDefaultPercentPreference(rememberPercent);
+        //get the tipFragment
+        PreferenceFragment tipFragment = (PreferenceFragment)
+                getFragmentManager()
+                .findFragmentById(R.id.tip_calc_fragment);
+
+        //check if fragment is NOT null, call method from it
+        if(tipFragment != null) {
+            tipFragment.onResume();
+        }
     }
 }
