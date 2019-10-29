@@ -78,16 +78,22 @@
         app:layout_constraintStart_toEndOf="@+id/totalTipTag"
         app:layout_constraintTop_toBottomOf="@+id/tipPercentOutputTag" />
 
-    <com.google.android.material.textfield.TextInputEditText
+    <EditText
         android:id="@+id/subTotalTextInput"
         android:layout_width="229dp"
         android:layout_height="39dp"
         android:layout_marginStart="21dp"
         android:layout_marginTop="84dp"
         android:hint="@string/subTotalTextInput"
+        android:inputType="numberDecimal"
+        android:imeOptions="actionDone"
         android:selectAllOnFocus="false"
         app:layout_constraintStart_toEndOf="@+id/billAmountTag_label"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" >
+
+        <requestFocus />
+
+    </EditText>
 
     <Button
         android:id="@+id/lowerPercentButton"
