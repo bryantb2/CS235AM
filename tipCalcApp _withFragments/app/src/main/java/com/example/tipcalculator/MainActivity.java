@@ -16,7 +16,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //LIFECYCLE METHODS
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         //mounting the XML to the main activity
