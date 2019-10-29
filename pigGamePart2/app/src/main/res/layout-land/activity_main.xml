@@ -10,6 +10,18 @@
         android:layout_height="match_parent"
         android:background="@drawable/androidwallpaper">
 
+        <ImageView
+            android:id="@+id/dieRollResult_Label2"
+            android:layout_width="109dp"
+            android:layout_height="87dp"
+            android:layout_marginStart="46dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="56dp"
+            app:layout_constraintEnd_toStartOf="@+id/player2UsernameTextEntry"
+            app:layout_constraintStart_toEndOf="@+id/dieRollResult_Label"
+            app:layout_constraintTop_toBottomOf="@+id/currentPlayer_Label"
+            app:srcCompat="@drawable/die8side1" />
+
         <Button
             android:id="@+id/rollDie_Button"
             android:layout_width="153dp"
@@ -34,8 +46,8 @@
             android:id="@+id/newGame_Button"
             android:layout_width="155dp"
             android:layout_height="48dp"
-            android:layout_marginStart="21dp"
-            android:layout_marginTop="110dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="118dp"
             android:text="@string/newGame_Button"
             app:layout_constraintStart_toEndOf="@+id/endTurn_Button"
             app:layout_constraintTop_toBottomOf="@+id/player2Score_Label" />
@@ -44,9 +56,9 @@
             android:id="@+id/dieRollResult_Label"
             android:layout_width="109dp"
             android:layout_height="87dp"
-            android:layout_marginStart="144dp"
-            android:layout_marginTop="13dp"
-            app:layout_constraintStart_toEndOf="@+id/player1Score_Label"
+            android:layout_marginStart="27dp"
+            android:layout_marginTop="20dp"
+            app:layout_constraintStart_toEndOf="@+id/player1UsernameTextEntry"
             app:layout_constraintTop_toBottomOf="@+id/currentPlayer_Label"
             app:srcCompat="@drawable/die8side1" />
 
@@ -140,7 +152,6 @@
             android:layout_width="161dp"
             android:layout_height="41dp"
             android:layout_marginStart="124dp"
-            android:layout_marginEnd="35dp"
             android:background="#CC000000"
             android:ems="10"
             android:inputType="textPersonName"
@@ -151,7 +162,6 @@
             android:text="@string/username_placeholder_text"
             android:textColor="#FFFFFF"
             android:textSize="15sp"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/currentPlayer_Label"
             app:layout_constraintTop_toBottomOf="@+id/player2_Label" />
 
@@ -159,7 +169,7 @@
             android:id="@+id/player2Score_Label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="142dp"
+            android:layout_marginStart="211dp"
             android:background="#CC000000"
             android:paddingLeft="15dp"
             android:paddingTop="10dp"
