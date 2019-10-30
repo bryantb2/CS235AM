@@ -13,7 +13,7 @@
     <string name="username_placeholder_text" >Enter username</string>
     <string name="player1Score_Label">0 Total Points</string>
     <string name="plaer2Score_Label">0 Total Points</string>
-    <string name="app_name_title">Pig Game Build V3</string>
+    <string name="app_name_title">Pig Game Build V4</string>
 
     <!-- String values for preferences -->
     <string-array name="dieList">
