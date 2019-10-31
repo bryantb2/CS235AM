@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 
-public class TitleScreenActivity extends Activity {
+import androidx.appcompat.app.AppCompatActivity;
+
+public class TitleScreenActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
