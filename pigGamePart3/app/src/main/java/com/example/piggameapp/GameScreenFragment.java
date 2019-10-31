@@ -17,8 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.fragment.app.Fragment;
-
+import android.app.Fragment;
 import static android.content.Context.MODE_PRIVATE;
 
 public class GameScreenFragment extends Fragment {
@@ -79,7 +78,8 @@ public class GameScreenFragment extends Fragment {
         //mounting the XML to the main activity
         //will convert the XML items to java objects that can be displayed in the activity
         this.getActivity().getMenuInflater().inflate(R.menu.settings_menu, menu);
-        +
+
+        inflater.inflate(R.menu.settings_menu, menu);
         super.onCreateOptionsMenu(menu,inflater);
     }
 
