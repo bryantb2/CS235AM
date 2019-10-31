@@ -17,8 +17,6 @@ public class GameScreenActivity extends Activity {
             2. replacing the content in the activity with the fragment object
             3. committing those changes to the new activity
          */
-        getFragmentManager().beginTransaction()
-                .replace(android.R.id.content,new GameScreenFragment())
-                .commit();
+        setContentView(R.layout.game_screen);
     }
 }

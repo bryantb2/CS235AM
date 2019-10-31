@@ -7,10 +7,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -18,6 +20,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import android.app.Fragment;
+
+import androidx.annotation.Nullable;
+
 import static android.content.Context.MODE_PRIVATE;
 
 public class GameScreenFragment extends Fragment {
@@ -73,6 +78,15 @@ public class GameScreenFragment extends Fragment {
     private int customScore;
 
     //LIFECYCLES
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+        //inflate layout
+        View view = inflater.inflate(R.layout.game_screen_fragment, container, false);
+        return view;
+    }
+
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         //mounting the XML to the main activity

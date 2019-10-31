@@ -24,6 +24,6 @@ public class TitleScreenActivity extends AppCompatActivity {
                 .replace(android.R.id.content,new TitleScreenFragment())
                 .commit();
         }*/
-        setContentView(R.layout.title_screen);
+        setContentView(R.layout.game_screen);
     }
 }
