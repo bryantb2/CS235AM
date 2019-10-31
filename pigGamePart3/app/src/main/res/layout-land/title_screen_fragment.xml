@@ -110,7 +110,7 @@
         android:layout_width="304dp"
         android:layout_height="123dp"
         android:layout_marginStart="35dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="20dp"
         android:text="This pig game is played using an 8-sided die that can be rolled as many times as you wish. However, if you happen to roll an 8, your turn ends automatically AND you lose all of your accumulated points; the other player would then take their turn. A player wins by reaching the determined points limit."
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView2" />
@@ -134,16 +134,15 @@
         android:layout_width="301dp"
         android:layout_height="72dp"
         android:layout_marginStart="35dp"
-        android:layout_marginEnd="20dp"
+        android:layout_marginTop="25dp"
         android:ems="10"
         android:lineSpacingExtra="5sp"
         android:text="Enter Player Usernames Below to Begin"
         android:textAlignment="textStart"
         android:textColor="#FFFFFF"
         android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/view"
-        tools:layout_editor_absoluteY="25dp" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/textView6"

@@ -39,4 +39,10 @@ public class MainActivity extends AppCompatActivity {
     //TODO:         --move on edit change listener and areUserValid methods into this fragment
     //TODO:         --add code that passes username data to GAME_SCREEN AND forces an onResume of the GAME_SCREEN fragment
 
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.main_activity);
+    }
 }

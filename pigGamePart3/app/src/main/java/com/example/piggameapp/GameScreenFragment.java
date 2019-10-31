@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -17,6 +18,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
+
+import static android.content.Context.MODE_PRIVATE;
 
 public class GameScreenFragment extends Fragment {
     //CLASS UI FIELDS
@@ -72,11 +75,12 @@ public class GameScreenFragment extends Fragment {
 
     //LIFECYCLES
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         //mounting the XML to the main activity
         //will convert the XML items to java objects that can be displayed in the activity
-        getMenuInflater().inflate(R.menu.settings_menu, menu);
-        return true;
+        this.getActivity().getMenuInflater().inflate(R.menu.settings_menu, menu);
+        +
+        super.onCreateOptionsMenu(menu,inflater);
     }
 
     @Override
@@ -84,11 +88,11 @@ public class GameScreenFragment extends Fragment {
         switch(item.getItemId()) {
             //determines which menu item was selected based off element IDs
             case R.id.about:
-                Toast.makeText(this,"About", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(),"About", Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.settings:
-                Toast.makeText(this,"Settings", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(getApplicationContext(),SettingsActivity.class));
+                Toast.makeText(getActivity(),"Settings", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(getActivity(),SettingsActivity.class));
                 return true;
             default:
                 //allows for default OptionsItemSelected behavior from the super class
@@ -97,26 +101,26 @@ public class GameScreenFragment extends Fragment {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.game_screen_fragment);
+        this.getActivity().setContentView(R.layout.game_screen_fragment);
 
         //GETTING UI ELEMENTS
-        this.player1UsernameTextEntry = findViewById(R.id.player1UsernameTextEntry);
-        this.player1ScoreLabel = findViewById(R.id.player1Score_Label);
-        this.player2ScoreLabel = findViewById(R.id.player2Score_Label);
-        this.player2UsernameTextEntry = findViewById(R.id.player2UsernameTextEntry);
-        this.currentPlayerLabel = findViewById(R.id.currentPlayer_Label);
-        this.dieImage1 = findViewById(R.id.dieRollResult_Label);
-        this.dieImage2 = findViewById(R.id.dieRollResult_Label2);
-        this.pointsAccumulatorLabel = findViewById(R.id.runningPointsTotal_Label);
-        this.rollDieButton = findViewById(R.id.rollDie_Button);
-        this.endTurnButton = findViewById(R.id.endTurn_Button);
-        this.newGameButton = findViewById(R.id.newGame_Button);
+        this.player1UsernameTextEntry = this.getActivity().findViewById(R.id.player1UsernameTextEntry);
+        this.player1ScoreLabel = this.getActivity().findViewById(R.id.player1Score_Label);
+        this.player2ScoreLabel = this.getActivity().findViewById(R.id.player2Score_Label);
+        this.player2UsernameTextEntry = this.getActivity().findViewById(R.id.player2UsernameTextEntry);
+        this.currentPlayerLabel = this.getActivity().findViewById(R.id.currentPlayer_Label);
+        this.dieImage1 = this.getActivity().findViewById(R.id.dieRollResult_Label);
+        this.dieImage2 = this.getActivity().findViewById(R.id.dieRollResult_Label2);
+        this.pointsAccumulatorLabel = this.getActivity().findViewById(R.id.runningPointsTotal_Label);
+        this.rollDieButton = this.getActivity().findViewById(R.id.rollDie_Button);
+        this.endTurnButton = this.getActivity().findViewById(R.id.endTurn_Button);
+        this.newGameButton = this.getActivity().findViewById(R.id.newGame_Button);
 
         //GETS REFERENCE TO SharedPrefs OBJECT
-        savedValues = getSharedPreferences("savedValues", MODE_PRIVATE);
-        prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        savedValues = this.getActivity().getSharedPreferences("savedValues", MODE_PRIVATE);
+        prefs = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
     }
 
     //TODO: wire onPause and onResume methods to work with settings preferences
@@ -128,7 +132,7 @@ public class GameScreenFragment extends Fragment {
 
 
     @Override
-    protected void onPause() {
+    public void onPause() {
         super.onPause();
         Log.d("PigGame", "inisde onPause method");
         SharedPreferences.Editor editor = savedValues.edit();
@@ -158,7 +162,7 @@ public class GameScreenFragment extends Fragment {
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
         Log.d("PigGame", "inisde onResume method");
         //GETTING OLD PREFERENCE SETTINGS
@@ -374,7 +378,7 @@ public class GameScreenFragment extends Fragment {
             numberOfRolls++;
         }
         if(rolledAnEight==true) {
-            Toast.makeText(this,("Ouch, "+pigGame.getCurrentPlayerName()+" has rolled an 8!"),Toast.LENGTH_SHORT);
+            Toast.makeText(getActivity(),("Ouch, "+pigGame.getCurrentPlayerName()+" has rolled an 8!"),Toast.LENGTH_SHORT);
         }
         this.UpdatePlayerScore(pigGame.getCurrentPlayerNumber(),0);
         this.EndTurn();
@@ -408,7 +412,7 @@ public class GameScreenFragment extends Fragment {
                 this.UpdatePointsRunningTotal(pigGame.getPointsForCurrentTurn());
             }
             else {
-                Toast.makeText(this,("Ouch, "+pigGame.getCurrentPlayerName()+" has rolled an 8!"),Toast.LENGTH_SHORT);
+                Toast.makeText(getActivity(),("Ouch, "+pigGame.getCurrentPlayerName()+" has rolled an 8!"),Toast.LENGTH_SHORT);
                 this.UpdatePlayerScore(pigGame.getCurrentPlayerNumber(),0);
                 this.ResetRunningTotalLabel();
                 this.EndTurn();
@@ -422,7 +426,7 @@ public class GameScreenFragment extends Fragment {
                 this.UpdatePointsRunningTotal(pigGame.getPointsForCurrentTurn());
             }
             else {
-                Toast.makeText(this,("Ouch, "+pigGame.getCurrentPlayerName()+" has rolled an 8!"),Toast.LENGTH_SHORT);
+                Toast.makeText(getActivity(),("Ouch, "+pigGame.getCurrentPlayerName()+" has rolled an 8!"),Toast.LENGTH_SHORT);
                 this.UpdatePlayerScore(pigGame.getCurrentPlayerNumber(),0);
                 this.ResetRunningTotalLabel();
                 this.EndTurn();
@@ -467,7 +471,7 @@ public class GameScreenFragment extends Fragment {
             this.DisableEndTurnButton();
             this.DisableRollButton();
             //display toast message
-            Toast.makeText(getApplicationContext(), (pigGame.getPlayerName(winnerNumber) + " has won!"),Toast.LENGTH_SHORT);
+            Toast.makeText(getActivity(), (pigGame.getPlayerName(winnerNumber) + " has won!"),Toast.LENGTH_SHORT);
             //turn isWinner to true, preventing the roll die button from activating
             this.isWinner = true;
         }
@@ -519,7 +523,7 @@ public class GameScreenFragment extends Fragment {
             this.ResetRunningTotalLabel();
             this.ResetCurrrentPlayerLabel();
             this.gameInProgress = false;
-            Toast.makeText(getApplicationContext(),"Please enter valid usernames, press new game",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(),"Please enter valid usernames, press new game",Toast.LENGTH_SHORT).show();
         }
         //execute this block if the app was not running
         //get the text from both edit text fields
@@ -542,7 +546,7 @@ public class GameScreenFragment extends Fragment {
             this.UpdateCurrentPlayer();
             this.EnableRollButton();
             this.EnableEndTurnButton();
-            Toast.makeText(getApplicationContext(),"New game started, good luck!",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(),"New game started, good luck!",Toast.LENGTH_SHORT).show();
             Log.d("pigGameUILayer","inside newGameButtonClick method, usernames valid");
         }
         Log.d("pigGameUILayer","inside newGameButtonClick method, usernames NOT valid");
@@ -710,15 +714,15 @@ public class GameScreenFragment extends Fragment {
         boolean isValid = true;
         //validation passes if both players have original names that are not the same
         if(player1Username.length() == 0 || player1Username.equals("Enter username")) {
-            Toast.makeText(this,"Player 1 needs a valid username!",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(),"Player 1 needs a valid username!",Toast.LENGTH_SHORT).show();
             isValid = false;
         }
         if(player2Username.length() == 0 || player2Username.equals("Enter username")) {
-            Toast.makeText(this,"Player 2 needs a valid username!",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(),"Player 2 needs a valid username!",Toast.LENGTH_SHORT).show();
             isValid = false;
         }
         if(player1Username.equals(player2Username)) {
-            Toast.makeText(this,"Players cannot have the same username!",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(),"Players cannot have the same username!",Toast.LENGTH_SHORT).show();
             isValid = false;
         }
         return isValid;

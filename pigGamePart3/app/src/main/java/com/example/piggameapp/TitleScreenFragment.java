@@ -1,4 +1,7 @@
 package com.example.piggameapp;
 
-public class TitleScreenFragment {
+import androidx.fragment.app.Fragment;
+
+public class TitleScreenFragment extends Fragment {
+
 }
