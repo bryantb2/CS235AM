@@ -113,17 +113,16 @@ public class GameScreenFragment extends Fragment {
     // TODO: get the damn action bar to show the back button
     // TODO: migrate getting UI elements to onCreateView
     // TODO: get the intent extraState variables in onResume for implementation in the game object !!!!!!!!!!!!!
-    // TODO: if there is a winner, set the gameInProgress boolean to false
+    //    // TODO: if there is a winner, set the gameInProgress boolean to false
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.getActivity().setContentView(R.layout.game_screen_fragment);
 
 
 
-        //GETS REFERENCE TO SharedPrefs OBJECT
+        // ETS REFERENCE TO SharedPrefs OBJECT
         savedValues = this.getActivity().getSharedPreferences("savedValues", MODE_PRIVATE);
         prefs = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
     }
@@ -134,19 +133,17 @@ public class GameScreenFragment extends Fragment {
         Log.d("PigGame", "inisde onPause method");
         SharedPreferences.Editor editor = savedValues.edit();
         //fetching and storing data to be put into saveInstance
-        if(pigGame != null) {
-            //editor.putString(this.PLAYER1_USERNAME_KEY, pigGame.getPlayerName(1));
-            //editor.putString(this.PLAYER2_USERNAME_KEY, pigGame.getPlayerName(2));
-            editor.putInt(this.PLAYER1_SCORE_KEY, pigGame.getPlayerScore(1));
-            editor.putInt(this.PLAYER2_SCORE_KEY, pigGame.getPlayerScore(2));
-            editor.putInt(this.CURRENT_PLAYER_KEY,  pigGame.getCurrentPlayerNumber());
-            editor.putInt(this.RUNNING_POINTS_TOTAL, pigGame.getPointsForCurrentTurn());
-            editor.putInt(this.DIE_IMAGE_NUMBER, pigGame.getLastRolledNumber());
-            if(this.numberOfDie == 2) {
-                editor.putInt(this.DIE_IMAGE_NUMBER_TWO, pigGame.getLastRolledNumber2());
-            }
-            editor.commit();
+        //editor.putString(this.PLAYER1_USERNAME_KEY, pigGame.getPlayerName(1));
+        //editor.putString(this.PLAYER2_USERNAME_KEY, pigGame.getPlayerName(2));
+        editor.putInt(this.PLAYER1_SCORE_KEY, pigGame.getPlayerScore(1));
+        editor.putInt(this.PLAYER2_SCORE_KEY, pigGame.getPlayerScore(2));
+        editor.putInt(this.CURRENT_PLAYER_KEY,  pigGame.getCurrentPlayerNumber());
+        editor.putInt(this.RUNNING_POINTS_TOTAL, pigGame.getPointsForCurrentTurn());
+        editor.putInt(this.DIE_IMAGE_NUMBER, pigGame.getLastRolledNumber());
+        if(this.numberOfDie == 2) {
+            editor.putInt(this.DIE_IMAGE_NUMBER_TWO, pigGame.getLastRolledNumber2());
         }
+        editor.commit();
     }
 
     @Override
@@ -430,7 +427,27 @@ public class GameScreenFragment extends Fragment {
         }
     }
 
-    public void NewGame() {
+    public void BuildGame() {
+        // THIS METHOD SHOULD BE CALLED WHEN A GAME IS ALREADY SET (AKA NEEDS TO BE RESUMED)
+
+    }
+
+    public void BuildGame(PigGame gameObject) {
+        // THIS METHOD IS CALLED WHEN THE NEW GAME BUTTON IS CLICKED
+        // Scenarios in which this method would be called:
+            // user returns from android home screen
+            // user returns from the title screen
+            // user clicks new game button in title screen
+            // user rotates screen
+        // the point of this method is to handle to creation or rebuilding of the game object, removing excess code from the lifecycle methods
+        // MAJOR ASSUMPTION: this method will work on the assumption that the parent activity is testing to see if a game was already running
+
+        this.pigGame = gameObject;
+
+
+
+
+
         this.DisableRollButton();
         this.DisableEndTurnButton();
         //execute this block if the app was already running
