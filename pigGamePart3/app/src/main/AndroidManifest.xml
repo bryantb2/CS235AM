@@ -16,8 +16,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".GameScreenActivity"> </activity>
-        <activity android:name=".SettingsActivity"> </activity>
+
+        <activity
+            android:name=".GameScreenActivity"
+            android:parentActivityName=".GameScreenActivity">
+        </activity>
+
+        <activity android:name=".SettingsActivity">
+        </activity>
     </application>
 
 </manifest>

@@ -57,7 +57,7 @@
         app:layout_constraintTop_toBottomOf="@+id/player1UsernameTextEntry" />
 
     <EditText
-        android:id="@+id/player2UsernameTextEntry2"
+        android:id="@+id/player2UsernameTextEntry"
         android:layout_width="234dp"
         android:layout_height="40dp"
         android:layout_marginStart="35dp"
@@ -97,14 +97,14 @@
         app:layout_constraintTop_toBottomOf="@+id/textView6" />
 
     <Button
-        android:id="@+id/newGame_Button2"
+        android:id="@+id/newGame_Button"
         android:layout_width="146dp"
         android:layout_height="54dp"
         android:layout_marginStart="110dp"
         android:layout_marginTop="10dp"
         android:text="@string/newGame_Button"
         app:layout_constraintStart_toEndOf="@+id/view"
-        app:layout_constraintTop_toBottomOf="@+id/player2UsernameTextEntry2" />
+        app:layout_constraintTop_toBottomOf="@+id/player2UsernameTextEntry" />
 
     <TextView
         android:id="@+id/textView3"
