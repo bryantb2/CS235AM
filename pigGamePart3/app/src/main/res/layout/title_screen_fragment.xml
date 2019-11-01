@@ -13,29 +13,43 @@
         android:background="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
 
     <View
         android:id="@+id/view"
-        android:layout_width="508dp"
-        android:layout_height="415dp"
-        android:layout_marginTop="12dp"
+        android:layout_width="505dp"
+        android:layout_height="406dp"
+        android:layout_marginTop="130dp"
         android:background="#2196F3"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+        app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
     <Button
         android:id="@+id/newGame_Button"
-        android:layout_width="170dp"
-        android:layout_height="54dp"
-        android:layout_marginStart="120dp"
-        android:layout_marginTop="20dp"
+        android:layout_width="308dp"
+        android:layout_height="43dp"
+        android:layout_marginStart="56dp"
+        android:layout_marginTop="25dp"
         android:background="@android:color/white"
         android:text="@string/newGame_Button"
         android:textColor="#2196F3"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/player2UsernameTextEntry" />
+
+    <Button
+        android:id="@+id/resumeGame_Button"
+        android:layout_width="310dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="56dp"
+        android:layout_marginTop="10dp"
+        android:background="@android:color/white"
+        android:text="Resume Game"
+        android:textColor="#2196F3"
+        app:layout_constraintStart_toStartOf="@+id/view"
+        app:layout_constraintTop_toBottomOf="@+id/newGame_Button" />
 
     <EditText
         android:id="@+id/player1UsernameTextEntry"
@@ -62,7 +76,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="56dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="20dp"
         android:background="#FFFFFF"
         android:paddingLeft="15dp"
         android:paddingTop="10dp"
@@ -75,7 +89,7 @@
         android:textSize="14sp"
         android:visibility="visible"
         app:layout_constraintStart_toStartOf="@+id/view"
-        app:layout_constraintTop_toBottomOf="@+id/textView6" />
+        app:layout_constraintTop_toTopOf="@+id/view" />
 
     <EditText
         android:id="@+id/player2UsernameTextEntry"
@@ -102,7 +116,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="98dp"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="20dp"
         android:background="#FFFFFF"
         android:paddingLeft="15dp"
         android:paddingTop="10dp"
@@ -115,35 +129,22 @@
         android:textSize="14sp"
         android:visibility="visible"
         app:layout_constraintStart_toEndOf="@+id/player1_Label2"
-        app:layout_constraintTop_toBottomOf="@+id/textView6" />
+        app:layout_constraintTop_toTopOf="@+id/view" />
 
     <TextView
         android:id="@+id/textView4"
-        android:layout_width="306dp"
-        android:layout_height="35dp"
-        android:layout_marginStart="56dp"
+        android:layout_width="303dp"
+        android:layout_height="36dp"
+        android:layout_marginStart="58dp"
         android:layout_marginTop="80dp"
-        android:layout_marginBottom="12dp"
         android:ems="10"
         android:lineSpacingExtra="3sp"
         android:text="Enter Player Usernames"
-        android:textAlignment="center"
+        android:textAlignment="textStart"
         android:textColor="#FF2196F3"
         android:textSize="25sp"
-        app:layout_constraintBottom_toTopOf="@+id/view"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView3" />
-
-    <TextView
-        android:id="@+id/textView6"
-        android:layout_width="307dp"
-        android:layout_height="39dp"
-        android:layout_marginStart="55dp"
-        android:layout_marginTop="30dp"
-        android:text="Or, if you are feeling anti-social, enable the AI in settings to play against the computer."
-        android:textColor="@android:color/white"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
     <TextView
         android:id="@+id/textView3"

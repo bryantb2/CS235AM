@@ -26,8 +26,8 @@
             android:id="@+id/rollDie_Button"
             android:layout_width="153dp"
             android:layout_height="46dp"
-            android:layout_marginStart="84dp"
-            android:layout_marginTop="15dp"
+            android:layout_marginStart="156dp"
+            android:layout_marginTop="24dp"
             android:text="@string/rollDie_Button"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/pointsDescription_Label" />
@@ -36,21 +36,11 @@
             android:id="@+id/endTurn_Button"
             android:layout_width="162dp"
             android:layout_height="48dp"
-            android:layout_marginStart="30dp"
-            android:layout_marginTop="15dp"
+            android:layout_marginStart="23dp"
+            android:layout_marginTop="23dp"
             android:text="@string/endTurn_Button"
             app:layout_constraintStart_toEndOf="@+id/rollDie_Button"
             app:layout_constraintTop_toBottomOf="@+id/runningPointsTotal_Label" />
-
-        <Button
-            android:id="@+id/newGame_Button"
-            android:layout_width="155dp"
-            android:layout_height="48dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="118dp"
-            android:text="@string/newGame_Button"
-            app:layout_constraintStart_toEndOf="@+id/endTurn_Button"
-            app:layout_constraintTop_toBottomOf="@+id/player2Score_Label" />
 
         <ImageView
             android:id="@+id/dieRollResult_Label"
