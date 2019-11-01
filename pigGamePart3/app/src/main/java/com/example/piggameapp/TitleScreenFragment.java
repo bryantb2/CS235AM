@@ -2,7 +2,9 @@ package com.example.piggameapp;
 
 import android.app.Fragment;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -16,24 +18,137 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
+import static android.content.Context.MODE_PRIVATE;
+
 public class TitleScreenFragment extends Fragment {
+    //TITLE SCREEN FRAGMENT:
+        //chances and sets game settings
+        //sends player username(s) to game screen
+        //sets the status of the gameProgress bool (is or is not running)
+
+
     //CLASS FIELDS
-    //views
     private EditText player1UsernameTextEntry;
     private EditText player2UsernameTextEntry;
     private Button newGameButton;
+    private Button resumeGameButton;
 
-
-    //tracks if the game is running
+    private String player1Name = "";
+    private String player2Name = "";
     private boolean gameInProgress = false;
+
+    //SAVE STATE KEYS
+    private String PLAYER1_USERNAME_KEY = "PLAYER1_USERNAME_KEY";
+    private String PLAYER2_USERNAME_KEY = "PLAYER2_USERNAME_KEY";
+    private String IS_GAME_RUNNING = "IS_GAME_RUNNING";
+    private String OLD_PREF_ENABLE_AI = "OLD_PREF_ENABLE_AI";
+    private String OLD_PREF_NUMBER_OF_DIE = "OLD_PREF_NUMBER_OF_DIE";
+    private String ENABLE_CUSTOM_SCORE = "ENABLE_CUSTOM_SCORE";
+    private String CUSTOM_SCORE = "CUSTOM_SCORE";
+
+    //PREFERENCES/SETTINGS VARIABLES
+    private SharedPreferences prefs;
+    private SharedPreferences savedValues;
+    private boolean enableAI;
+    private int numberOfDie;
+    private boolean enableCustomScore;
+    private int customScore;
+
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        //inflate layout
+        // References to view elements need to be assigned here because onCreateView is the only place where I have access to fragment's layout
+        // inflate layout (also stores a reference to the fragment's view that can be accessed here)
         View view = inflater.inflate(R.layout.title_screen_fragment, container, false);
+
+        //turns on menu rendering
         setHasOptionsMenu(true);
+
+        //Getting References to UI elements
+        this.player1UsernameTextEntry = view.findViewById(R.id.player1UsernameTextEntry);
+        this.player2UsernameTextEntry = view.findViewById(R.id.player2UsernameTextEntry);
+        this.newGameButton = view.findViewById(R.id.newGame_Button);
+        this.resumeGameButton = view.findViewById(R.id.resumeGame_Button);
+
+        //Getting references to shared preferences objects
+        savedValues = this.getActivity().getSharedPreferences("savedValues", MODE_PRIVATE);
+        prefs = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
+
+        //assigning UI elements to callbacks
+        CreateUIEventListeners();
         return view;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        // Scenarios in which this method is called:
+            // user goes to android home screen
+            // user goes to the settings menu
+            // user goes to the game screen
+            // user rotates screen
+
+        SharedPreferences.Editor editor = savedValues.edit();
+        editor.putBoolean(this.IS_GAME_RUNNING, this.gameInProgress);
+        if(gameInProgress == true) {
+            editor.putString(this.PLAYER1_USERNAME_KEY, player1Name);
+            editor.putString(this.PLAYER2_USERNAME_KEY, player2Name);
+        }
+        editor.commit();
+        //SAVING PREFERENCES (these are saved in onPause in the event the user changes the settings)
+        SharedPreferences.Editor secondEditor = prefs.edit();
+        secondEditor.putBoolean(OLD_PREF_ENABLE_AI,this.enableAI);
+        secondEditor.putInt(OLD_PREF_NUMBER_OF_DIE,this.numberOfDie);
+        secondEditor.putBoolean(ENABLE_CUSTOM_SCORE,this.enableCustomScore);
+        secondEditor.putInt(CUSTOM_SCORE,this.customScore);
+        secondEditor.commit();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Scenarios in which this method is called:
+            // user return from android home screen
+            // user returns from the settings menu
+            // user returns from the game screen
+            // session is restored after screen rotation
+
+        // GETTING OLD PREFERENCE SETTINGS
+        boolean oldEnableAISetting = prefs.getBoolean(OLD_PREF_ENABLE_AI,false);
+        int oldNumberOfDieSetting = prefs.getInt(OLD_PREF_NUMBER_OF_DIE,1);
+        boolean oldEnableCustomScoreSetting = prefs.getBoolean(ENABLE_CUSTOM_SCORE,false);
+        int oldCustomScoreSetting = prefs.getInt(CUSTOM_SCORE,100);
+
+        // CHECKING TO SEE IF PREFERENCES HAVE CHANGED
+        this.enableAI = prefs.getBoolean("pref_enable_AI",false);
+        this.numberOfDie = Integer.parseInt(prefs.getString("pref_number_of_die","1"));
+        this.enableCustomScore = prefs.getBoolean("pref_enable_custom_score",false);
+        String customMaxScoreString = prefs.getString("pref_max_play_score","100");
+        if(IsCustomScoreValid(customMaxScoreString)) {
+            // checking customScore for a misbehaved user
+            // executes if the string version of the user scoreInput is valid
+            this.customScore = Integer.parseInt(customMaxScoreString);
+        }
+        else {
+            // executes if the CustomScore is not valid
+            this.customScore = 100;
+        }
+        // sets the gameInProgress variable to false and forces the user to create a new game
+        if(oldEnableAISetting != this.enableAI) {
+            gameInProgress = false;
+        }
+        if(oldNumberOfDieSetting != this.numberOfDie){
+            gameInProgress = false;
+        }
+        if(oldEnableCustomScoreSetting != this.enableCustomScore) {
+            gameInProgress = false;
+        }
+        if(oldCustomScoreSetting != this.customScore) {
+            gameInProgress = false;
+        }
+
+
     }
 
     @Override
@@ -61,6 +176,8 @@ public class TitleScreenFragment extends Fragment {
         }
     }
 
+
+    //EVENT LISTENERS
     private void CreateUIEventListeners() {
         this.newGameButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -89,58 +206,79 @@ public class TitleScreenFragment extends Fragment {
 
 
     //EVENT CALLBACK METHODS
-    public void NewGame() {startActivity(new Intent(getActivity(),GameScreenActivity.class)); }
-        //this.DisableRollButton();
-        //this.DisableEndTurnButton();
-
+    public void NewGame() {
         //execute this block if the app was already running
-        //delete existing usernames in fields
-        //set game bool to not active
-        //reset score labels to zero
-        //reset runningtotal label to zero
-        //reset current player label
-        /*if(gameInProgress==true) {
-            this.isWinner = false;
+            //delete existing username(s) in fields
+            //set game bool to not active
+        if(gameInProgress==true) {
             this.ResetUsernameFields(); //this is what prevents the second block in this handler from firing
             this.EnableUsernameEntryFields();
             if(this.enableAI == true) {
                 //ensures that the AI is displayed and the user cannot change it
                 this.SetAndDisableAIUsernameField("Computer");
             }
-            this.ResetScoreLabels();
-            this.ResetRunningTotalLabel();
-            this.ResetCurrrentPlayerLabel();
             this.gameInProgress = false;
             Toast.makeText(getActivity(),"Please enter valid usernames, press new game",Toast.LENGTH_SHORT).show();
         }
         //execute this block if the app was not running
-        //get the text from both edit text fields
-        //if data in fields is valid, reset PigGame object
-        //pass in usernames and die size
-        //display current player's turn
-        //unlock the roll and endturn buttons
+            //get the text from both edit text fields
+            //set game status to false
         if(AreUsernamesValid() == true) {
             this.DisableUsernameEntryFields();
             this.player1Name = this.player1UsernameTextEntry.getText().toString();
             this.player2Name = this.player2UsernameTextEntry.getText().toString();
-            if(pigGame != null) {
-                //checking if the object was instantiated
-                pigGame.RestartGame(player1Name,player2Name);
-            }
-            else {
-                pigGame = new PigGame(player1Name,player2Name,8,this.numberOfDie,(this.enableCustomScore == true? this.customScore : 100));
-            }
             this.gameInProgress = true;
-            //UpdateCurrentPlayer();
-            //this.EnableRollButton();
-            //this.EnableEndTurnButton();
             Toast.makeText(getActivity(),"New game started, good luck!",Toast.LENGTH_SHORT).show();
-            Log.d("pigGameUILayer","inside newGameButtonClick method, usernames valid");
         }
-        Log.d("pigGameUILayer","inside newGameButtonClick method, usernames NOT valid");
-    }*/
+
+
+        //TODO: startActivity(new Intent(getActivity(),GameScreenActivity.class));
+    }
 
     //UI-RELATED METHODS
+    private void DisableRollButton() {
+        resumeGameButton.setEnabled(false);
+    }
+
+    private void EnableRollButton() {
+        resumeGameButton.setEnabled(true);
+    }
+
+    private boolean IsCustomScoreValid(String customScore) {
+        Character[] acceptableValues = new Character[] {'0','1','2','3','4','5','6','7','8','9'};
+        int numberOfValidCharacters = 0;
+        for(int i = 0; i <customScore.length(); i++) {
+            for(int j = 0; j <acceptableValues.length;j++) {
+                if(customScore.charAt(i)==(acceptableValues[j])) {
+                    numberOfValidCharacters = numberOfValidCharacters+1;
+                }
+            }
+        }
+        if(numberOfValidCharacters == customScore.length()) {
+            return true; //returns true because ALL of the characters in the customScore are valid
+        }
+        else {
+            return false; //returns false because at least one of the characters was not valid
+        }
+    }
+
+    private void SetAndDisableAIUsernameField(String computerName) {
+        //this sets the AI username in the UI and disables its text entry field
+        this.player2UsernameTextEntry.setText(computerName);
+        this.player2UsernameTextEntry.setEnabled(false);
+    }
+
+    private void EnableUsernameEntryFields() {
+        //this.areEntryFieldsDisabled = false;
+        this.player1UsernameTextEntry.setEnabled(true);
+        this.player2UsernameTextEntry.setEnabled(true);
+    }
+
+    private void DisableUsernameEntryFields() {
+        //this.areEntryFieldsDisabled = true;
+        this.player1UsernameTextEntry.setEnabled(false);
+        this.player2UsernameTextEntry.setEnabled(false);
+    }
 
     private void ResetUsernameFields() {
         final String defaultPlaceHolderText = "Enter username";
