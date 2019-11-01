@@ -85,39 +85,10 @@ public class GameScreenFragment extends Fragment {
         View view = inflater.inflate(R.layout.game_screen_fragment, container, false);
         return view;
     }
-
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        //mounting the XML to the main activity
-        //will convert the XML items to java objects that can be displayed in the activity
-        this.getActivity().getMenuInflater().inflate(R.menu.settings_menu, menu);
-
-        inflater.inflate(R.menu.settings_menu, menu);
-        super.onCreateOptionsMenu(menu,inflater);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()) {
-            //determines which menu item was selected based off element IDs
-            case R.id.about:
-                Toast.makeText(getActivity(),"About", Toast.LENGTH_SHORT).show();
-                return true;
-            case R.id.settings:
-                Toast.makeText(getActivity(),"Settings", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(getActivity(),SettingsActivity.class));
-                return true;
-            default:
-                //allows for default OptionsItemSelected behavior from the super class
-                return super.onOptionsItemSelected((item));
-        }
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.getActivity().setContentView(R.layout.game_screen_fragment);
+        //this.getActivity().setContentView(R.layout.game_screen_fragment);
 
         //GETTING UI ELEMENTS
         this.player1UsernameTextEntry = this.getActivity().findViewById(R.id.player1UsernameTextEntry);
@@ -131,6 +102,8 @@ public class GameScreenFragment extends Fragment {
         this.rollDieButton = this.getActivity().findViewById(R.id.rollDie_Button);
         this.endTurnButton = this.getActivity().findViewById(R.id.endTurn_Button);
         this.newGameButton = this.getActivity().findViewById(R.id.newGame_Button);
+
+        //
 
         //GETS REFERENCE TO SharedPrefs OBJECT
         savedValues = this.getActivity().getSharedPreferences("savedValues", MODE_PRIVATE);
