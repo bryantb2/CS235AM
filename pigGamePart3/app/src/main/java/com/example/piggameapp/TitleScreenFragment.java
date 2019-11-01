@@ -126,7 +126,6 @@ public class TitleScreenFragment extends Fragment {
         this.enableCustomScore = prefs.getBoolean("pref_enable_custom_score",false);
         String customMaxScoreString = prefs.getString("pref_max_play_score","100");
         if(IsCustomScoreValid(customMaxScoreString)) {
-            // checking customScore for a misbehaved user
             // executes if the string version of the user scoreInput is valid
             this.customScore = Integer.parseInt(customMaxScoreString);
         }
@@ -148,7 +147,19 @@ public class TitleScreenFragment extends Fragment {
             gameInProgress = false;
         }
 
-
+        // SETTING TITLE FRAGMENT UI
+        if(gameInProgress == true) {
+            // enable resume button
+            // disable text entry fields for usernames
+            EnableResumeButton();
+            DisableUsernameEntryFields();
+        }
+        else {
+            // disable resume button
+            // enable text entry fields
+            DisableResumeButton();
+            EnableUsernameEntryFields();
+        }
     }
 
     @Override
@@ -236,11 +247,11 @@ public class TitleScreenFragment extends Fragment {
     }
 
     //UI-RELATED METHODS
-    private void DisableRollButton() {
+    private void DisableResumeButton() {
         resumeGameButton.setEnabled(false);
     }
 
-    private void EnableRollButton() {
+    private void EnableResumeButton() {
         resumeGameButton.setEnabled(true);
     }
 

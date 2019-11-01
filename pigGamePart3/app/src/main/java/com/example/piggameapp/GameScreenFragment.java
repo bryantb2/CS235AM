@@ -178,49 +178,12 @@ public class GameScreenFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        Log.d("PigGame", "inisde onResume method");
-        //GETTING OLD PREFERENCE SETTINGS
-        boolean oldEnableAISetting = prefs.getBoolean(OLD_PREF_ENABLE_AI,false);
-        int oldNumberOfDieSetting = prefs.getInt(OLD_PREF_NUMBER_OF_DIE,1);
-        boolean oldEnableCustomScoreSetting = prefs.getBoolean(ENABLE_CUSTOM_SCORE,false);
-        int oldCustomScoreSetting = prefs.getInt(CUSTOM_SCORE,100);
-
-        //GETTING NEW PREFERENCE SETTINGS
-        this.enableAI = prefs.getBoolean("pref_enable_AI",false);
-        this.numberOfDie = Integer.parseInt(prefs.getString("pref_number_of_die","1"));
-        this.enableCustomScore = prefs.getBoolean("pref_enable_custom_score",false);
-        String customMaxScoreString = prefs.getString("pref_max_play_score","100");
-        if(IsCustomScoreValid(customMaxScoreString)) {
-            //checking customScore for a misbehaved user
-            //executes if the string version of the user scoreInput is valid
-            this.customScore = Integer.parseInt(customMaxScoreString);
-        }
-        else {
-            //executes if the CustomScore is not valid
-            this.customScore = 100;
-        }
-
-        //CHECKING IF THE USER HAS CHANGED ANY SETTINGS
-        boolean restartGameRequired = false;
-        if(oldEnableAISetting != this.enableAI) {
-            restartGameRequired = true;
-        }
-        if(oldNumberOfDieSetting != this.numberOfDie){
-            restartGameRequired = true;
-        }
-        if(oldEnableCustomScoreSetting != this.enableCustomScore) {
-            restartGameRequired = true;
-        }
-        if(oldCustomScoreSetting != this.customScore) {
-            restartGameRequired = true;
-        }
-
         //checks if the game was running before the state change
         //pointless to update and recover state if it was never running in the first place
         //IMPORTANT: onResume only takes effect if saveState is null (otherwise there will be conflicts!!!
         //testing to see if the class-level variable stateHasbeenRecovered is true, meaning that oncreate already restored the state
         boolean isGameRunning = savedValues.getBoolean(IS_GAME_RUNNING,false);
-        if(isGameRunning == true && restartGameRequired == false) {
+        if(isGameRunning == true) {
 
             //getting variables from sharedPrefs
             String player1Username = savedValues.getString(PLAYER1_USERNAME_KEY, "");
