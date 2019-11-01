@@ -54,7 +54,6 @@ public class GameScreenFragment extends Fragment {
 
     //Class-level sharedPreferences object and state variables
     private SharedPreferences savedValues;
-    private boolean stateHasBeenSaved = false;
 
     //SAVE STATE KEYS
     private String RUNNING_POINTS_TOTAL = "RUNNING_POINTS_TOTAL";
@@ -67,10 +66,10 @@ public class GameScreenFragment extends Fragment {
     private String DIE_IMAGE_NUMBER = "DIE_IMAGE_NUMBER";
     private String DIE_IMAGE_NUMBER_TWO = "DIE_IMAGE_NUMBER_TWO";
 
-    private String OLD_PREF_ENABLE_AI = "OLD_PREF_ENABLE_AI";
+    /*private String OLD_PREF_ENABLE_AI = "OLD_PREF_ENABLE_AI";
     private String OLD_PREF_NUMBER_OF_DIE = "OLD_PREF_NUMBER_OF_DIE";
     private String ENABLE_CUSTOM_SCORE = "ENABLE_CUSTOM_SCORE";
-    private String CUSTOM_SCORE = "CUSTOM_SCORE";
+    private String CUSTOM_SCORE = "CUSTOM_SCORE"; */
 
     //PREFERENCES/SETTINGS VARIABLES
     private SharedPreferences prefs;
@@ -87,7 +86,21 @@ public class GameScreenFragment extends Fragment {
         View view = inflater.inflate(R.layout.game_screen_fragment, container, false);
 
         //turns on menu rendering
-        //setHasOptionsMenu(true);
+        setHasOptionsMenu(true);
+
+        //GETTING UI ELEMENTS
+        this.player1UsernameTextEntry = view.findViewById(R.id.player1UsernameTextEntry);
+        this.player1ScoreLabel = view.findViewById(R.id.player1Score_Label);
+        this.player2ScoreLabel = view.findViewById(R.id.player2Score_Label);
+        this.player2UsernameTextEntry = view.findViewById(R.id.player2UsernameTextEntry);
+        this.currentPlayerLabel = view.findViewById(R.id.currentPlayer_Label);
+        this.dieImage1 = view.findViewById(R.id.dieRollResult_Label);
+        this.dieImage2 = view.findViewById(R.id.dieRollResult_Label2);
+        this.pointsAccumulatorLabel = view.findViewById(R.id.runningPointsTotal_Label);
+        this.rollDieButton = view.findViewById(R.id.rollDie_Button);
+        this.endTurnButton = view.findViewById(R.id.endTurn_Button);
+        this.newGameButton = view.findViewById(R.id.newGame_Button);
+
 
         return view;
     }
@@ -100,6 +113,7 @@ public class GameScreenFragment extends Fragment {
     // TODO: get the damn action bar to show the back button
     // TODO: migrate getting UI elements to onCreateView
     // TODO: get the intent extraState variables in onResume for implementation in the game object !!!!!!!!!!!!!
+    // TODO: if there is a winner, set the gameInProgress boolean to false
 
 
     @Override
@@ -108,20 +122,6 @@ public class GameScreenFragment extends Fragment {
         this.getActivity().setContentView(R.layout.game_screen_fragment);
 
 
-
-
-        //GETTING UI ELEMENTS
-        this.player1UsernameTextEntry = this.getActivity().findViewById(R.id.player1UsernameTextEntry);
-        this.player1ScoreLabel = this.getActivity().findViewById(R.id.player1Score_Label);
-        this.player2ScoreLabel = this.getActivity().findViewById(R.id.player2Score_Label);
-        this.player2UsernameTextEntry = this.getActivity().findViewById(R.id.player2UsernameTextEntry);
-        this.currentPlayerLabel = this.getActivity().findViewById(R.id.currentPlayer_Label);
-        this.dieImage1 = this.getActivity().findViewById(R.id.dieRollResult_Label);
-        this.dieImage2 = this.getActivity().findViewById(R.id.dieRollResult_Label2);
-        this.pointsAccumulatorLabel = this.getActivity().findViewById(R.id.runningPointsTotal_Label);
-        this.rollDieButton = this.getActivity().findViewById(R.id.rollDie_Button);
-        this.endTurnButton = this.getActivity().findViewById(R.id.endTurn_Button);
-        this.newGameButton = this.getActivity().findViewById(R.id.newGame_Button);
 
         //GETS REFERENCE TO SharedPrefs OBJECT
         savedValues = this.getActivity().getSharedPreferences("savedValues", MODE_PRIVATE);
@@ -135,8 +135,8 @@ public class GameScreenFragment extends Fragment {
         SharedPreferences.Editor editor = savedValues.edit();
         //fetching and storing data to be put into saveInstance
         if(pigGame != null) {
-            editor.putString(this.PLAYER1_USERNAME_KEY, pigGame.getPlayerName(1));
-            editor.putString(this.PLAYER2_USERNAME_KEY, pigGame.getPlayerName(2));
+            //editor.putString(this.PLAYER1_USERNAME_KEY, pigGame.getPlayerName(1));
+            //editor.putString(this.PLAYER2_USERNAME_KEY, pigGame.getPlayerName(2));
             editor.putInt(this.PLAYER1_SCORE_KEY, pigGame.getPlayerScore(1));
             editor.putInt(this.PLAYER2_SCORE_KEY, pigGame.getPlayerScore(2));
             editor.putInt(this.CURRENT_PLAYER_KEY,  pigGame.getCurrentPlayerNumber());
@@ -145,7 +145,6 @@ public class GameScreenFragment extends Fragment {
             if(this.numberOfDie == 2) {
                 editor.putInt(this.DIE_IMAGE_NUMBER_TWO, pigGame.getLastRolledNumber2());
             }
-            editor.putBoolean(this.IS_GAME_RUNNING, this.gameInProgress);
             editor.commit();
         }
     }

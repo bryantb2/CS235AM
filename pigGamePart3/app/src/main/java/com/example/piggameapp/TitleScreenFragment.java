@@ -276,6 +276,7 @@ public class TitleScreenFragment extends Fragment {
         startActivity(intent);
     }
 
+
     //UI-RELATED METHODS
     private void DisableResumeButton() {
         resumeGameButton.setEnabled(false);
