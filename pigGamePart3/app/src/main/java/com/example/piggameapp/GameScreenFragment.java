@@ -165,14 +165,6 @@ public class GameScreenFragment extends Fragment {
             editor.putBoolean(this.IS_GAME_RUNNING, this.gameInProgress);
             editor.commit();
         }
-
-        //SAVING PREFERENCES (these are saved in onPause in the event the user changes the settings)
-        SharedPreferences.Editor secondEditor = prefs.edit();
-        secondEditor.putBoolean(OLD_PREF_ENABLE_AI,this.enableAI);
-        secondEditor.putInt(OLD_PREF_NUMBER_OF_DIE,this.numberOfDie);
-        secondEditor.putBoolean(ENABLE_CUSTOM_SCORE,this.enableCustomScore);
-        secondEditor.putInt(CUSTOM_SCORE,this.customScore);
-        secondEditor.commit();
     }
 
     @Override
@@ -262,12 +254,6 @@ public class GameScreenFragment extends Fragment {
 
     //Event Listener Assigner
     private void CreateUIEventListeners() {
-        this.newGameButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                NewGame();
-            }
-        });
         this.endTurnButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -278,23 +264,6 @@ public class GameScreenFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Roll();
-            }
-        });
-
-        this.player1UsernameTextEntry.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(areEntryFieldsDisabled == false && player1UsernameTextEntry.getText().toString().equals("Enter username")) {
-                    player1UsernameTextEntry.setText("");
-                }
-            }
-        });
-        this.player2UsernameTextEntry.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(areEntryFieldsDisabled == false && player2UsernameTextEntry.getText().toString().equals("Enter username")) {
-                    player2UsernameTextEntry.setText("");
-                }
             }
         });
     }

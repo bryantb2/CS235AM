@@ -235,15 +235,31 @@ public class TitleScreenFragment extends Fragment {
             //get the text from both edit text fields
             //set game status to false
         if(AreUsernamesValid() == true) {
+            String PLAYER_1_NAME = "PLAYER_1_NAME";
+            String PLAYER_2_NAME = "PLAYER_2_NAME";
+            String DIE_SIZE = "DIE_SIZE";
+            String NUMBER_OF_DIE = "NUMBER_OF_DIE";
+            String MAX_GAME_SCORE = "MAX_GAME_SCORE";
+
             this.DisableUsernameEntryFields();
             this.player1Name = this.player1UsernameTextEntry.getText().toString();
             this.player2Name = this.player2UsernameTextEntry.getText().toString();
             this.gameInProgress = true;
+            // create intent (object that contains the activity to be launched)
+            // send variables to intent's state that are required for the pigGame to start
+            Intent intent = new Intent(getActivity(), GameScreenActivity.class);
+            intent.putExtra(PLAYER_1_NAME, this.player1Name);
+            intent.putExtra(PLAYER_2_NAME, this.player2Name);
+            intent.putExtra(DIE_SIZE, 8);
+            intent.putExtra(NUMBER_OF_DIE, this.numberOfDie);
+            intent.putExtra(MAX_GAME_SCORE, this.customScore);
+            startActivity(intent);
             Toast.makeText(getActivity(),"New game started, good luck!",Toast.LENGTH_SHORT).show();
         }
+    }
 
+    public void ResumeGame() {
 
-        //TODO: startActivity(new Intent(getActivity(),GameScreenActivity.class));
     }
 
     //UI-RELATED METHODS
