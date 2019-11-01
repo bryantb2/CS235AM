@@ -38,14 +38,5 @@ public class GameScreenActivity extends Activity {
             gameObject = new PigGame(player1Username,player2Username,dieSize,numberOfDie,maxScore);
             gameFragment.BuildGame(gameObject);
         }
-        else {
-            // this executes if the resume game button was clicked
-            gameFragment.BuildGame();
-        }
-
-
-
-
-
     }
 }

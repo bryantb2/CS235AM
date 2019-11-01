@@ -3,6 +3,7 @@ package com.example.piggameapp;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -28,7 +29,7 @@ import androidx.appcompat.widget.Toolbar;
 import static android.content.Context.MODE_PRIVATE;
 
 public class GameScreenFragment extends Fragment {
-    //CLASS UI FIELDS
+    // CLASS UI FIELDS
     private PigGame pigGame;
     private EditText player1UsernameTextEntry;
     private EditText player2UsernameTextEntry;
@@ -42,20 +43,19 @@ public class GameScreenFragment extends Fragment {
     private Button endTurnButton;
     private Button newGameButton;
 
-    //these string vars are used to store the desired usernames of players that will be passed into the PigGame object
-    //these will not be used after the PigGame object is created
+    // these string vars are used to store the desired usernames of players that will be passed into the PigGame object
+    // these will not be used after the PigGame object is created
     private String player1Name;
     private String player2Name;
-    //tracks if the game is running
+    // tracks if the game is running
     private boolean gameInProgress = false;
-    //conditionally locks the roll die button if there is a winner
+    // conditionally locks the roll die button if there is a winner
     private boolean isWinner =false;
-    private boolean areEntryFieldsDisabled = false;
 
-    //Class-level sharedPreferences object and state variables
+    // Class-level sharedPreferences object and state variables
     private SharedPreferences savedValues;
 
-    //SAVE STATE KEYS
+    // SAVE STATE KEYS
     private String RUNNING_POINTS_TOTAL = "RUNNING_POINTS_TOTAL";
     private String PLAYER1_USERNAME_KEY = "PLAYER1_USERNAME_KEY";
     private String PLAYER2_USERNAME_KEY = "PLAYER2_USERNAME_KEY";
@@ -66,29 +66,35 @@ public class GameScreenFragment extends Fragment {
     private String DIE_IMAGE_NUMBER = "DIE_IMAGE_NUMBER";
     private String DIE_IMAGE_NUMBER_TWO = "DIE_IMAGE_NUMBER_TWO";
 
-    /*private String OLD_PREF_ENABLE_AI = "OLD_PREF_ENABLE_AI";
+    private String OLD_PREF_ENABLE_AI = "OLD_PREF_ENABLE_AI";
     private String OLD_PREF_NUMBER_OF_DIE = "OLD_PREF_NUMBER_OF_DIE";
     private String ENABLE_CUSTOM_SCORE = "ENABLE_CUSTOM_SCORE";
-    private String CUSTOM_SCORE = "CUSTOM_SCORE"; */
+    private String CUSTOM_SCORE = "CUSTOM_SCORE";
 
-    //PREFERENCES/SETTINGS VARIABLES
+
+    //  SAVE STATE KEY SPECIFIC TO THIS CLASS
+    private String NEW_GAME_BEEN_CREATED = "NEW_GAME_BEEN_CREATED";
+
+
+    // PREFERENCES/SETTINGS VARIABLES
     private SharedPreferences prefs;
     private boolean enableAI;
     private int numberOfDie;
     private boolean enableCustomScore;
     private int customScore;
+    private boolean hasNewGameBeenBuilt = false;
 
-    //LIFECYCLES
+    // LIFECYCLES
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        //inflate layout
+        // inflate layout
         View view = inflater.inflate(R.layout.game_screen_fragment, container, false);
 
-        //turns on menu rendering
+        // turns on menu rendering
         setHasOptionsMenu(true);
 
-        //GETTING UI ELEMENTS
+        // GETTING UI ELEMENTS
         this.player1UsernameTextEntry = view.findViewById(R.id.player1UsernameTextEntry);
         this.player1ScoreLabel = view.findViewById(R.id.player1Score_Label);
         this.player2ScoreLabel = view.findViewById(R.id.player2Score_Label);
@@ -105,24 +111,21 @@ public class GameScreenFragment extends Fragment {
         return view;
     }
 
-    // TODO: revise all lifecycle and call back methods, removing unnecessary code such as settings checks
-    // TODO: build a createGame method that is called in onResume that builds the game's backend AND UI
-    // TODO: remove all default else blocks that build the UI or backend on the assumption that the game might not be running
-        // we want to remove these code blocks because the only time that this game screen will
-        // KEEP UI resetting methods, though
-    // TODO: get the damn action bar to show the back button
-    // TODO: migrate getting UI elements to onCreateView
-    // TODO: get the intent extraState variables in onResume for implementation in the game object !!!!!!!!!!!!!
-    //    // TODO: if there is a winner, set the gameInProgress boolean to false
+    //  TODO: revise all lifecycle and call back methods, removing unnecessary code such as settings checks
+    //  TODO: build a createGame method that is called in onResume that builds the game's backend AND UI
+    //  TODO: remove all default else blocks that build the UI or backend on the assumption that the game might not be running
+        //  we want to remove these code blocks because the only time that this game screen will
+        //  KEEP UI resetting methods, though
+    //  TODO: get the damn action bar to show the back button
+    //  TODO: migrate getting UI elements to onCreateView
+    //  TODO: get the intent extraState variables in onResume for implementation in the game object !!!!!!!!!!!!!
+    //     //  TODO: if there is a winner, set the gameInProgress boolean to false
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
-
-        // ETS REFERENCE TO SharedPrefs OBJECT
+        //  ETS REFERENCE TO SharedPrefs OBJECT
         savedValues = this.getActivity().getSharedPreferences("savedValues", MODE_PRIVATE);
         prefs = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
     }
@@ -132,106 +135,36 @@ public class GameScreenFragment extends Fragment {
         super.onPause();
         Log.d("PigGame", "inisde onPause method");
         SharedPreferences.Editor editor = savedValues.edit();
-        //fetching and storing data to be put into saveInstance
-        //editor.putString(this.PLAYER1_USERNAME_KEY, pigGame.getPlayerName(1));
-        //editor.putString(this.PLAYER2_USERNAME_KEY, pigGame.getPlayerName(2));
-        editor.putInt(this.PLAYER1_SCORE_KEY, pigGame.getPlayerScore(1));
-        editor.putInt(this.PLAYER2_SCORE_KEY, pigGame.getPlayerScore(2));
-        editor.putInt(this.CURRENT_PLAYER_KEY,  pigGame.getCurrentPlayerNumber());
-        editor.putInt(this.RUNNING_POINTS_TOTAL, pigGame.getPointsForCurrentTurn());
-        editor.putInt(this.DIE_IMAGE_NUMBER, pigGame.getLastRolledNumber());
-        if(this.numberOfDie == 2) {
-            editor.putInt(this.DIE_IMAGE_NUMBER_TWO, pigGame.getLastRolledNumber2());
+        // fetching and storing data to be put into saveInstance
+        if(pigGame != null) {
+            editor.putInt(this.PLAYER1_SCORE_KEY, pigGame.getPlayerScore(1));
+            editor.putInt(this.PLAYER2_SCORE_KEY, pigGame.getPlayerScore(2));
+            editor.putInt(this.CURRENT_PLAYER_KEY,  pigGame.getCurrentPlayerNumber());
+            editor.putInt(this.RUNNING_POINTS_TOTAL, pigGame.getPointsForCurrentTurn());
+            editor.putInt(this.DIE_IMAGE_NUMBER, pigGame.getLastRolledNumber());
+            if(this.numberOfDie == 2) {
+                editor.putInt(this.DIE_IMAGE_NUMBER_TWO, pigGame.getLastRolledNumber2());
+            }
+            editor.commit();
         }
-        editor.commit();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        //checks if the game was running before the state change
-        //pointless to update and recover state if it was never running in the first place
-        //IMPORTANT: onResume only takes effect if saveState is null (otherwise there will be conflicts!!!
-        //testing to see if the class-level variable stateHasbeenRecovered is true, meaning that oncreate already restored the state
-        boolean isGameRunning = savedValues.getBoolean(IS_GAME_RUNNING,false);
-        if(isGameRunning == true) {
-
-            //getting variables from sharedPrefs
-            String player1Username = savedValues.getString(PLAYER1_USERNAME_KEY, "");
-            String player2Username = savedValues.getString(PLAYER2_USERNAME_KEY, "");
-            int player1Score = savedValues.getInt(PLAYER1_SCORE_KEY,0);
-            int player2Score = savedValues.getInt(PLAYER2_SCORE_KEY,0);
-            //boolean isGameRunning = savedInstanceState.getBoolean(IS_GAME_RUNNING,false);
-            int currentPlayerTurn = savedValues.getInt(CURRENT_PLAYER_KEY,0);
-            int runningPointsTotal = savedValues.getInt(RUNNING_POINTS_TOTAL,0);
-            int lastRolledNumber = savedValues.getInt(DIE_IMAGE_NUMBER,8);
-            int lastRolledNumber2 = 8;
-            if(this.numberOfDie==2) {
-                lastRolledNumber2 = savedValues.getInt(DIE_IMAGE_NUMBER_TWO,8);
-            }
-
-            //rebuild game objects and settings
-            pigGame = new PigGame(player1Username,player2Username,8,this.numberOfDie,(this.enableCustomScore == true? this.customScore : 100));
-            this.gameInProgress = isGameRunning;
-            pigGame.setPlayerScore(1,player1Score);
-            pigGame.setPlayerScore(2,player2Score);;
-            pigGame.setCurrentPlayerTurn(currentPlayerTurn);
-            pigGame.setPointsForCurrentTurn(runningPointsTotal);
-            pigGame.setLastRolledNumber(lastRolledNumber);
-            if(this.numberOfDie == 2) {
-                pigGame.setLastRolledNumber2(lastRolledNumber2);
-            }
-
-            //UI preparation and restoration
-            this.DisableUsernameEntryFields();
-            this.SetUsernameFields(player1Username,player2Username);
-            this.UpdatePlayerScore(1,pigGame.getPlayerScore(1));
-            this.UpdatePlayerScore(2,pigGame.getPlayerScore(2));
-            this.UpdatePointsRunningTotal(pigGame.getPointsForCurrentTurn());
-            this.UpdateCurrentPlayer();
-            this.UpdateDieImage(lastRolledNumber,1);
-            if(this.numberOfDie==2) {
-                this.dieImage2.setVisibility(View.VISIBLE);
-                this.UpdateDieImage(lastRolledNumber2,2);
-            }
-            else {
-                this.dieImage2.setVisibility(View.GONE);
-            }
+        // checks if the game was running before the state change
+        // pointless to update and recover state if it was never running in the first place
+        // IMPORTANT: onResume only takes effect if saveState is null (otherwise there will be conflicts!!!
+        // testing to see if the class-level variable stateHasbeenRecovered is true, meaning that oncreate already restored the state
+        // boolean isGameRunning = savedValues.getBoolean(IS_GAME_RUNNING,false);
+        if(hasNewGameBeenBuilt == false ) {
+            BuildGame();
         }
-        else {
-            //executes if there is no save state data to be utilized OR a game restart is required
-            //ASSUMPTION:
-            //if the state has been recovered, a game was already running, therefore not requiring the roll and disable buttons to be disabled
-            //these will only be disabled if there was no previously saved state data, because a new game will need to be created first
-            Log.d("PigGame","Inside default state setter");
-            //setting UI to default state
-            this.isWinner = false;
-            this.ResetUsernameFields();
-            this.ResetScoreLabels();
-            this.ResetRunningTotalLabel();
-            this.ResetCurrrentPlayerLabel();
-            this.gameInProgress = false;
-            if(this.enableAI == true) {
-                //ensures that the AI is displayed and the user cannot change it
-                //TODO: FIX THIS (GET NAME FROM STATE VARIABLE)
-                this.SetUsernameFields("BOB","Computer");
-            }
-            if(this.numberOfDie==2) {
-                this.dieImage2.setVisibility(View.VISIBLE);
-                this.UpdateDieImage(8,2);
-            }
-            else {
-                this.dieImage2.setVisibility(View.GONE);
-            }
-            //disable buttons until a new game has been created (or if the state has been recovered for a game that was not in progress)
-            this.DisableRollButton();
-            this.DisableEndTurnButton();
-        }
-        //Methods calls
+        // Methods calls
         CreateUIEventListeners();
     }
 
-    //Event Listener Assigner
+    // Event Listener Assigner
     private void CreateUIEventListeners() {
         this.endTurnButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -247,21 +180,21 @@ public class GameScreenFragment extends Fragment {
         });
     }
 
-    //COMPUTER AI
+    // COMPUTER AI
     public void AITurn(int numberOfPlayDie) {
-        //WORKING ASSUMPTION: EXISTING PLAYER 2 LOGIC WILL BE RIGGED TO HOLD COMPUTER ROLL DATA
-        //looping -->
-        //roll pigGame die
-        //set the die image
-        //if rolled number is not 8
-        //update running total label
-        //if running total equals 20
-        //stop rolling and end turn
-        //else roll a total of 3 times or until an 8 is rolled
-        //else
-        //set canRoll to false
-        //reset running total label AND pigGame internal runningTotal
-        //end looping <--
+        // WORKING ASSUMPTION: EXISTING PLAYER 2 LOGIC WILL BE RIGGED TO HOLD COMPUTER ROLL DATA
+        // looping -->
+        // roll pigGame die
+        // set the die image
+        // if rolled number is not 8
+        // update running total label
+        // if running total equals 20
+        // stop rolling and end turn
+        // else roll a total of 3 times or until an 8 is rolled
+        // else
+        // set canRoll to false
+        // reset running total label AND pigGame internal runningTotal
+        // end looping <--
         int maxNumberOfRolls = 4;
         int maxComputerTurnPoints;
         if(this.numberOfDie == 2) {
@@ -309,16 +242,16 @@ public class GameScreenFragment extends Fragment {
         this.EndTurn();
     }
 
-    //EVENT HANDLERS
+    // EVENT HANDLERS
     public void Roll() {
-        //THIS METHOD ADDS TO PLAYER RUNNING TOTAL AND CALCULATES SCORE -------------------------------------
-        //lock roll button
-        //roll pigGame die
-        //if rolled number is not 8
-        //set the die image
-        //update running total label
-        //else reset currentPlayerUI elements
-        //execute endturn methods
+        // THIS METHOD ADDS TO PLAYER RUNNING TOTAL AND CALCULATES SCORE -------------------------------------
+        // lock roll button
+        // roll pigGame die
+        // if rolled number is not 8
+        // set the die image
+        // update running total label
+        // else reset currentPlayerUI elements
+        // execute endturn methods
 
         this.DisableRollButton();
         final int DIE_ONE_UI_POSITION = 1;
@@ -358,7 +291,7 @@ public class GameScreenFragment extends Fragment {
             }
         }
         try {
-            //this process is done to slow down the user and prevent spamming
+            // this process is done to slow down the user and prevent spamming
             Thread.sleep(200);
         }
         catch (InterruptedException e) {
@@ -370,14 +303,14 @@ public class GameScreenFragment extends Fragment {
     }
 
     public void EndTurn() {
-        //THIS METHOD ADDS TO SCORE AND DETERMINES IF THERE IS A WINNER -------------------------------------
-        //lock roll button
-        //move running total to total points label
-        //calc winner
-        //if current player is winner, display name in turn label
-        //give toast message saying click newgame to start again
-        //else switch current player to next player
-        //unlock roll button
+        // THIS METHOD ADDS TO SCORE AND DETERMINES IF THERE IS A WINNER -------------------------------------
+        // lock roll button
+        // move running total to total points label
+        // calc winner
+        // if current player is winner, display name in turn label
+        // give toast message saying click newgame to start again
+        // else switch current player to next player
+        // unlock roll button
         this.DisableRollButton();
         this.DisableEndTurnButton();
 
@@ -388,22 +321,22 @@ public class GameScreenFragment extends Fragment {
         this.ResetRunningTotalLabel();
 
         if(winnerNumber != 0) {
-            //display winner on UI
+            // display winner on UI
             this.DisplayWinner(winnerNumber);
-            //update turn label to reflect end of game
+            // update turn label to reflect end of game
             this.UpdateCurrentPlayer("End of Game!");
-            //disable game buttons
+            // disable game buttons
             this.DisableEndTurnButton();
             this.DisableRollButton();
-            //display toast message
+            // display toast message
             Toast.makeText(getActivity(), (pigGame.getPlayerName(winnerNumber) + " has won!"),Toast.LENGTH_SHORT);
-            //turn isWinner to true, preventing the roll die button from activating
+            // turn isWinner to true, preventing the roll die button from activating
             this.isWinner = true;
         }
         else {
             if(this.enableAI == true && playerThatJustWent == 1) {
-                //show that computer is taking its turn
-                //execute AI logic method
+                // show that computer is taking its turn
+                // execute AI logic method
                 UpdateCurrentPlayer();
                 new Handler().postDelayed(new Runnable() {
                     @Override
@@ -412,10 +345,10 @@ public class GameScreenFragment extends Fragment {
                     }
                 }, 500);
             }
-            //THIS CODE IS MEANT TO PRIME THE UI FOR A HUMAN USER
-            //end turn auto switches the player turn if there is no winner, so all we have to do here reflect the change in the UI
-            //re-enable the endturn button
-            //re-enable the roll button
+            // THIS CODE IS MEANT TO PRIME THE UI FOR A HUMAN USER
+            // end turn auto switches the player turn if there is no winner, so all we have to do here reflect the change in the UI
+            // re-enable the endturn button
+            // re-enable the roll button
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -428,41 +361,72 @@ public class GameScreenFragment extends Fragment {
     }
 
     public void BuildGame() {
-        // THIS METHOD SHOULD BE CALLED WHEN A GAME IS ALREADY SET (AKA NEEDS TO BE RESUMED)
+        //  THIS METHOD SHOULD BE CALLED IF A GAME IS ALREADY SET (AKA NEEDS TO BE RESUMED)
+        //  Scenarios in which this method would be called:
+            //  user returns from android home screen
+            //  user returns from the title screen
+            //  user rotates screen
 
-    }
-
-    public void BuildGame(PigGame gameObject) {
-        // THIS METHOD IS CALLED WHEN THE NEW GAME BUTTON IS CLICKED
-        // Scenarios in which this method would be called:
-            // user returns from android home screen
-            // user returns from the title screen
-            // user clicks new game button in title screen
-            // user rotates screen
-        // the point of this method is to handle to creation or rebuilding of the game object, removing excess code from the lifecycle methods
-        // MAJOR ASSUMPTION: this method will work on the assumption that the parent activity is testing to see if a game was already running
-
-        this.pigGame = gameObject;
-
-
+        //  Getting variables from sharedPrefs
+        String player1Username = savedValues.getString(PLAYER1_USERNAME_KEY, "");
+        String player2Username = savedValues.getString(PLAYER2_USERNAME_KEY, "");
+        int player1Score = savedValues.getInt(PLAYER1_SCORE_KEY,0);
+        int player2Score = savedValues.getInt(PLAYER2_SCORE_KEY,0);
+        boolean isGameRunning = savedValues.getBoolean(IS_GAME_RUNNING,false);
+        int currentPlayerTurn = savedValues.getInt(CURRENT_PLAYER_KEY,0);
+        int runningPointsTotal = savedValues.getInt(RUNNING_POINTS_TOTAL,0);
+        int lastRolledNumber = savedValues.getInt(DIE_IMAGE_NUMBER,8);
+        int lastRolledNumber2 = 8;
+        if(this.numberOfDie==2) {
+            lastRolledNumber2 = savedValues.getInt(DIE_IMAGE_NUMBER_TWO,8);
+        }
 
 
+        // rebuild game objects and settings
+        pigGame = new PigGame(player1Username,player2Username,8,this.numberOfDie,(this.enableCustomScore == true? this.customScore : 100));
+        this.gameInProgress = isGameRunning;
+        pigGame.setPlayerScore(1,player1Score);
+        pigGame.setPlayerScore(2,player2Score);;
+        pigGame.setCurrentPlayerTurn(currentPlayerTurn);
+        pigGame.setPointsForCurrentTurn(runningPointsTotal);
+        pigGame.setLastRolledNumber(lastRolledNumber);
+        if(this.numberOfDie == 2) {
+            pigGame.setLastRolledNumber2(lastRolledNumber2);
+        }
+        if(this.enableAI == true) {
+            // ensures that the AI is displayed and the user cannot change it
+            this.SetUsernameFields(this.pigGame.getPlayerName(1),"Computer");
+        }
+        // UI preparation and restoration
+        this.DisableUsernameEntryFields();
+        this.SetUsernameFields(player1Username,player2Username);
+        this.UpdatePlayerScore(1,pigGame.getPlayerScore(1));
+        this.UpdatePlayerScore(2,pigGame.getPlayerScore(2));
+        this.UpdatePointsRunningTotal(pigGame.getPointsForCurrentTurn());
+        this.UpdateCurrentPlayer();
+        this.UpdateDieImage(lastRolledNumber,1);
+        if(this.numberOfDie==2) {
+            this.dieImage2.setVisibility(View.VISIBLE);
+            this.UpdateDieImage(lastRolledNumber2,2);
+        }
+        else {
+            this.dieImage2.setVisibility(View.GONE);
+        }
 
-        this.DisableRollButton();
-        this.DisableEndTurnButton();
-        //execute this block if the app was already running
-        //delete existing usernames in fields
-        //set game bool to not active
-        //reset score labels to zero
-        //reset runningtotal label to zero
-        //reset current player label
-        if(gameInProgress==true) {
+
+        // execute this block if the app was already running
+        // delete existing usernames in fields
+        // set game bool to not active
+        // reset score labels to zero
+        // reset runningtotal label to zero
+        // reset current player label
+        /*if(gameInProgress==true) {
             this.isWinner = false;
-            this.ResetUsernameFields(); //this is what prevents the second block in this handler from firing
-            //this.EnableUsernameEntryFields();
+            this.ResetUsernameFields(); // this is what prevents the second block in this handler from firing
+            // this.EnableUsernameEntryFields();
             if(this.enableAI == true) {
-                //ensures that the AI is displayed and the user cannot change it
-                //this.SetAndDisableAIUsernameField("Computer");
+                // ensures that the AI is displayed and the user cannot change it
+                // this.SetAndDisableAIUsernameField("Computer");
             }
             this.ResetScoreLabels();
             this.ResetRunningTotalLabel();
@@ -470,36 +434,62 @@ public class GameScreenFragment extends Fragment {
             this.gameInProgress = false;
             Toast.makeText(getActivity(),"Please enter valid usernames, press new game",Toast.LENGTH_SHORT).show();
         }
-        //execute this block if the app was not running
-        //get the text from both edit text fields
-        //if data in fields is valid, reset PigGame object
-        //pass in usernames and die size
-        //display current player's turn
-        //unlock the roll and endturn buttons
-        //if(AreUsernamesValid() == true) {
-            this.DisableUsernameEntryFields();
-            this.player1Name = this.player1UsernameTextEntry.getText().toString();
-            this.player2Name = this.player2UsernameTextEntry.getText().toString();
-            if(pigGame != null) {
-                //checking if the object was instantiated
-                pigGame.RestartGame(player1Name,player2Name);
-            }
-            else {
-                pigGame = new PigGame(player1Name,player2Name,8,this.numberOfDie,(this.enableCustomScore == true? this.customScore : 100));
-            }
-            this.gameInProgress = true;
-            this.UpdateCurrentPlayer();
-            this.EnableRollButton();
-            this.EnableEndTurnButton();
-            Toast.makeText(getActivity(),"New game started, good luck!",Toast.LENGTH_SHORT).show();
-            Log.d("pigGameUILayer","inside newGameButtonClick method, usernames valid");
-        //}
-        Log.d("pigGameUILayer","inside newGameButtonClick method, usernames NOT valid");
+
+        if(pigGame != null) {
+            // checking if the object was instantiated
+            pigGame.RestartGame(player1Name,player2Name);
+        }
+        else {
+
+        }*/
     }
 
-    //METHODS
+    public void BuildGame(PigGame gameObject) {
+        //  THIS METHOD IS CALLED WHEN THE NEW GAME BUTTON IS CLICKED
+        //  SETS A VARIABLE CALLED newGameHasBeenBuilt
+        //  Scenarios in which this method would be called:
+            //  user clicks new game button in title screen
+        //  the point of this method is to handle to creation or rebuilding of the game object, removing excess code from the lifecycle methods
+
+        //  GETTING AND SETTING CLASS PREFERENCE SETTINGS
+        this.enableAI = prefs.getBoolean(OLD_PREF_ENABLE_AI,false);
+        this.numberOfDie = prefs.getInt(OLD_PREF_NUMBER_OF_DIE,1);
+        this.enableCustomScore = prefs.getBoolean(ENABLE_CUSTOM_SCORE,false);
+        this.customScore = prefs.getInt(CUSTOM_SCORE,100);
+
+        this.pigGame = gameObject;
+        this.DisableRollButton();
+        this.DisableEndTurnButton();
+        this.DisableUsernameEntryFields();
+        this.ResetRunningTotalLabel();
+        this.ResetScoreLabels();
+        this.player1Name = savedValues.getString(PLAYER1_USERNAME_KEY, "");
+        this.player2Name = savedValues.getString(PLAYER2_USERNAME_KEY, "");
+        this.gameInProgress = savedValues.getBoolean(IS_GAME_RUNNING, true);
+        this.UpdateCurrentPlayer();
+        // manipulating UI based off preferences set in the main page
+        if(this.enableAI == true) {
+            // ensures that the AI is displayed and the user cannot change it
+            this.SetUsernameFields(this.pigGame.getPlayerName(1),"Computer");
+        }
+        if(this.numberOfDie==2) {
+            this.dieImage2.setVisibility(View.VISIBLE);
+            this.UpdateDieImage(8,2);
+        }
+        else {
+            this.dieImage2.setVisibility(View.GONE);
+        }
+
+        //this value is set to prevent the pigGame object and game screen UI from being set twice
+        this.hasNewGameBeenBuilt = true;
+
+        this.EnableRollButton();
+        this.EnableEndTurnButton();
+    }
+
+    // METHODS
     private void DisplayWinner(int winnerNumber) {
-        //set the display points label to the name of the winner
+        // set the display points label to the name of the winner
         this.pointsAccumulatorLabel.setText(pigGame.getPlayerName(winnerNumber) + " has won!");
     }
 
@@ -520,7 +510,6 @@ public class GameScreenFragment extends Fragment {
     }
 
     private void DisableUsernameEntryFields() {
-        this.areEntryFieldsDisabled = true;
         this.player1UsernameTextEntry.setEnabled(false);
         this.player2UsernameTextEntry.setEnabled(false);
     }
@@ -604,18 +593,18 @@ public class GameScreenFragment extends Fragment {
     }
 
     private void SetUsernameFields(String player1Name, String player2Name) {
-        //this is used when the UI needs to be synced from the inside to out (such as recovering state)
+        // this is used when the UI needs to be synced from the inside to out (such as recovering state)
         this.player1UsernameTextEntry.setText(player1Name);
         this.player2UsernameTextEntry.setText(player2Name);
     }
 
     private void UpdateCurrentPlayer() {
-        //this is the default updateCurrentPlayer method and will automatically set the UI to reflect the currentPlayerName
+        // this is the default updateCurrentPlayer method and will automatically set the UI to reflect the currentPlayerName
         this.currentPlayerLabel.setText(pigGame.getCurrentPlayerName()+"'s turn");
     }
 
     private void UpdateCurrentPlayer(String optionalMessage) {
-        //this is for optional and specific messages that need to be displayed in the UpdateCurrentPlayer UI label
+        // this is for optional and specific messages that need to be displayed in the UpdateCurrentPlayer UI label
         this.currentPlayerLabel.setText(optionalMessage);
     }
 
