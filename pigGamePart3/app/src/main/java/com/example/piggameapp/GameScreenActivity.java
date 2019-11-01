@@ -3,7 +3,9 @@ package com.example.piggameapp;
 import android.app.Activity;
 import android.os.Bundle;
 
-public class GameScreenActivity extends Activity {
+import androidx.appcompat.app.AppCompatActivity;
+
+public class GameScreenActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
