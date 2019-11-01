@@ -22,6 +22,8 @@ import android.widget.Toast;
 import android.app.Fragment;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.widget.Toolbar;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -83,41 +85,30 @@ public class GameScreenFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         //inflate layout
         View view = inflater.inflate(R.layout.game_screen_fragment, container, false);
+
+        //turns on menu rendering
+        //setHasOptionsMenu(true);
+
         return view;
     }
 
+    // TODO: revise all lifecycle and call back methods, removing unnecessary code such as settings checks
+    // TODO: build a createGame method that is called in onResume that builds the game's backend AND UI
+    // TODO: remove all default else blocks that build the UI or backend on the assumption that the game might not be running
+        // we want to remove these code blocks because the only time that this game screen will
+        // KEEP UI resetting methods, though
+    // TODO: get the damn action bar to show the back button
+    // TODO: migrate getting UI elements to onCreateView
+    // TODO: get the intent extraState variables in onResume for implementation in the game object !!!!!!!!!!!!!
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        //mounting the XML to the main activity
-        //will convert the XML items to java objects that can be displayed in the activity
-        this.getActivity().getMenuInflater().inflate(R.menu.settings_menu, menu);
-
-        inflater.inflate(R.menu.settings_menu, menu);
-        super.onCreateOptionsMenu(menu,inflater);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()) {
-            //determines which menu item was selected based off element IDs
-            case R.id.about:
-                Toast.makeText(getActivity(),"About", Toast.LENGTH_SHORT).show();
-                return true;
-            case R.id.settings:
-                Toast.makeText(getActivity(),"Settings", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(getActivity(),SettingsActivity.class));
-                return true;
-            default:
-                //allows for default OptionsItemSelected behavior from the super class
-                return super.onOptionsItemSelected((item));
-        }
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.getActivity().setContentView(R.layout.game_screen_fragment);
+
+
+
 
         //GETTING UI ELEMENTS
         this.player1UsernameTextEntry = this.getActivity().findViewById(R.id.player1UsernameTextEntry);
@@ -136,14 +127,6 @@ public class GameScreenFragment extends Fragment {
         savedValues = this.getActivity().getSharedPreferences("savedValues", MODE_PRIVATE);
         prefs = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
     }
-
-    //TODO: wire onPause and onResume methods to work with settings preferences
-    //TODO: create instance variables at the class level to get and set user's custom settings from the defaultPreferences object       ---DONE---
-    //TODO: add AI rolling logic (calc, roll, display, ect.)
-    //TODO: add functionality for two dice          --- DONE ----
-    //TODO: modify game logic to accept a changing max game score         --- DONE ----
-    //TODO: wire the entire app to dynamically change logic, using bools set at the class level, and display methods based off the user's desired game settings
-
 
     @Override
     public void onPause() {
@@ -232,10 +215,10 @@ public class GameScreenFragment extends Fragment {
             this.ResetRunningTotalLabel();
             this.ResetCurrrentPlayerLabel();
             this.gameInProgress = false;
-            this.EnableUsernameEntryFields();
             if(this.enableAI == true) {
                 //ensures that the AI is displayed and the user cannot change it
-                this.SetAndDisableAIUsernameField("Computer");
+                //TODO: FIX THIS (GET NAME FROM STATE VARIABLE)
+                this.SetUsernameFields("BOB","Computer");
             }
             if(this.numberOfDie==2) {
                 this.dieImage2.setVisibility(View.VISIBLE);
@@ -460,10 +443,10 @@ public class GameScreenFragment extends Fragment {
         if(gameInProgress==true) {
             this.isWinner = false;
             this.ResetUsernameFields(); //this is what prevents the second block in this handler from firing
-            this.EnableUsernameEntryFields();
+            //this.EnableUsernameEntryFields();
             if(this.enableAI == true) {
                 //ensures that the AI is displayed and the user cannot change it
-                this.SetAndDisableAIUsernameField("Computer");
+                //this.SetAndDisableAIUsernameField("Computer");
             }
             this.ResetScoreLabels();
             this.ResetRunningTotalLabel();
@@ -477,7 +460,7 @@ public class GameScreenFragment extends Fragment {
         //pass in usernames and die size
         //display current player's turn
         //unlock the roll and endturn buttons
-        if(AreUsernamesValid() == true) {
+        //if(AreUsernamesValid() == true) {
             this.DisableUsernameEntryFields();
             this.player1Name = this.player1UsernameTextEntry.getText().toString();
             this.player2Name = this.player2UsernameTextEntry.getText().toString();
@@ -494,13 +477,11 @@ public class GameScreenFragment extends Fragment {
             this.EnableEndTurnButton();
             Toast.makeText(getActivity(),"New game started, good luck!",Toast.LENGTH_SHORT).show();
             Log.d("pigGameUILayer","inside newGameButtonClick method, usernames valid");
-        }
+        //}
         Log.d("pigGameUILayer","inside newGameButtonClick method, usernames NOT valid");
     }
 
     //METHODS
-
-
     private void DisplayWinner(int winnerNumber) {
         //set the display points label to the name of the winner
         this.pointsAccumulatorLabel.setText(pigGame.getPlayerName(winnerNumber) + " has won!");
@@ -520,12 +501,6 @@ public class GameScreenFragment extends Fragment {
 
     private void DisableRollButton() {
         this.rollDieButton.setEnabled(false);
-    }
-
-    private void EnableUsernameEntryFields() {
-        this.areEntryFieldsDisabled = false;
-        this.player1UsernameTextEntry.setEnabled(true);
-        this.player2UsernameTextEntry.setEnabled(true);
     }
 
     private void DisableUsernameEntryFields() {
@@ -606,12 +581,6 @@ public class GameScreenFragment extends Fragment {
         this.pointsAccumulatorLabel.setText("0 Points");
     }
 
-    private void SetAndDisableAIUsernameField(String computerName) {
-        //this sets the AI username in the UI and disables its text entry field
-        this.player2UsernameTextEntry.setText(computerName);
-        this.player2UsernameTextEntry.setEnabled(false);
-    }
-
     private void ResetUsernameFields() {
         final String defaultPlaceHolderText = "Enter username";
         this.player1UsernameTextEntry.setText(defaultPlaceHolderText);
@@ -636,25 +605,5 @@ public class GameScreenFragment extends Fragment {
 
     private void ResetCurrrentPlayerLabel() {
         this.currentPlayerLabel.setText("Nobody's turn");
-    }
-
-    private boolean AreUsernamesValid() {
-        String player1Username = this.player1UsernameTextEntry.getText().toString();
-        String player2Username = this.player2UsernameTextEntry.getText().toString();
-        boolean isValid = true;
-        //validation passes if both players have original names that are not the same
-        if(player1Username.length() == 0 || player1Username.equals("Enter username")) {
-            Toast.makeText(getActivity(),"Player 1 needs a valid username!",Toast.LENGTH_SHORT).show();
-            isValid = false;
-        }
-        if(player2Username.length() == 0 || player2Username.equals("Enter username")) {
-            Toast.makeText(getActivity(),"Player 2 needs a valid username!",Toast.LENGTH_SHORT).show();
-            isValid = false;
-        }
-        if(player1Username.equals(player2Username)) {
-            Toast.makeText(getActivity(),"Players cannot have the same username!",Toast.LENGTH_SHORT).show();
-            isValid = false;
-        }
-        return isValid;
     }
 }

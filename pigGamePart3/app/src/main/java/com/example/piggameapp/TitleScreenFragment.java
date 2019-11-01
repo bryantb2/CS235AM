@@ -197,6 +197,13 @@ public class TitleScreenFragment extends Fragment {
             }
         });
 
+        this.resumeGameButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ResumeGame();
+            }
+        });
+
         this.player1UsernameTextEntry.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -259,7 +266,14 @@ public class TitleScreenFragment extends Fragment {
     }
 
     public void ResumeGame() {
-
+        // this callback method will simply launch the game screen
+        // note that there is no passing of state or any variables
+            /*
+               the lack of state is based off the assumption that the resume button is accessible ONLY when the
+               game has ALREADY had data passed into it
+            */
+        Intent intent = new Intent(getActivity(), GameScreenActivity.class);
+        startActivity(intent);
     }
 
     //UI-RELATED METHODS

@@ -19,7 +19,7 @@
 
         <activity
             android:name=".GameScreenActivity"
-            android:parentActivityName=".GameScreenActivity">
+            android:parentActivityName=".TitleScreenActivity">
         </activity>
 
         <activity android:name=".SettingsActivity">
