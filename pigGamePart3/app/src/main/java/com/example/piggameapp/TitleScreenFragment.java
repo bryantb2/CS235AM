@@ -194,7 +194,7 @@ public class TitleScreenFragment extends Fragment {
         }
     }
 
-
+    
     //EVENT LISTENERS
     private void CreateUIEventListeners() {
         this.newGameButton.setOnClickListener(new View.OnClickListener() {
