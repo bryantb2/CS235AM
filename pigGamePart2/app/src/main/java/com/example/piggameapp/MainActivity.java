@@ -321,64 +321,103 @@ public class MainActivity extends AppCompatActivity {
 
     //COMPUTER AI
     public void AITurn(int numberOfPlayDie) {
-        //WORKING ASSUMPTION: EXISTING PLAYER 2 LOGIC WILL BE RIGGED TO HOLD COMPUTER ROLL DATA
-        //looping -->
-        //roll pigGame die
-        //set the die image
-        //if rolled number is not 8
-        //update running total label
-        //if running total equals 20
-        //stop rolling and end turn
-        //else roll a total of 3 times or until an 8 is rolled
-        //else
-        //set canRoll to false
-        //reset running total label AND pigGame internal runningTotal
-        //end looping <--
-        int maxNumberOfRolls = 4;
-        int maxComputerTurnPoints;
-        if(this.numberOfDie == 2) {
-            maxComputerTurnPoints = 30;
+        // WORKING ASSUMPTION: EXISTING PLAYER 2 LOGIC WILL BE RIGGED TO HOLD COMPUTER ROLL DATA
+        // looping -->
+        // roll pigGame die
+        // set the die image
+        // if rolled number is not 8
+        // update running total label
+        // if running total equals 20
+        // stop rolling and end turn
+        // else roll a total of 3 times or until an 8 is rolled
+        // else
+        // set canRoll to false
+        // reset running total label AND pigGame internal runningTotal
+        // end looping <--
+        UpdateCurrentPlayer();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                int maxNumberOfRolls = 4;
+                int maxComputerTurnPoints;
+                if(numberOfDie == 2) {
+                    maxComputerTurnPoints = 30;
+                }
+                else {
+                    maxComputerTurnPoints = 20;
+                }
+                boolean rolledAnEight = false;
+                int numberOfRolls = 0;
+
+                while(rolledAnEight == false &&
+                        numberOfRolls < maxNumberOfRolls &&
+                        pigGame.getPointsForCurrentTurn() < maxComputerTurnPoints) {
+                    if(numberOfDie == 2) {
+
+                        int rollResult = pigGame.RollAndCalc();
+                        int rollResult2 = pigGame.RollAndCalc();
+                        pigGame.setLastRolledNumber(rollResult);
+                        pigGame.setLastRolledNumber2(rollResult2);
+                        UpdateDieImage(rollResult,1);
+                        UpdateDieImage(rollResult2,2);
+                        UpdatePointsRunningTotal(pigGame.getPointsForCurrentTurn());
+
+                        if(rollResult == 8 || rollResult2 == 8) {
+                            rolledAnEight = true;
+                        }
+                    }
+                    else {
+                        int rollResult = pigGame.RollAndCalc();
+                        pigGame.setLastRolledNumber(rollResult);
+                        UpdateDieImage(rollResult,1);
+                        UpdatePointsRunningTotal(pigGame.getPointsForCurrentTurn());
+
+                        if(rollResult == 8) {
+                            rolledAnEight = true;
+                        }
+                    }
+                    numberOfRolls++;
+                }
+                if(rolledAnEight==true) {
+                    Toast.makeText(getApplicationContext(),("Ouch, "+pigGame.getCurrentPlayerName()+" has rolled an 8!"),Toast.LENGTH_SHORT);
+                }
+                UpdatePlayerScore(pigGame.getCurrentPlayerNumber(),0);
+                AIEndTurn();
+            }
+        }, 500);
+
+    }
+
+    public void AIEndTurn() {
+        // THIS CODE IS MEANT TO PRIME THE UI FOR A HUMAN USER
+        // end turn auto switches the player turn if there is no winner, so all we have to do here reflect the change in the UI
+        // re-enable the endturn button
+        // re-enable the roll button
+        int playerThatJustWent = pigGame.getCurrentPlayerNumber();
+        int winnerNumber = pigGame.EndTurn();
+
+        this.UpdatePlayerScore(playerThatJustWent,pigGame.getPlayerScore(playerThatJustWent));
+        this.ResetRunningTotalLabel();
+
+        if(winnerNumber != 0) {
+            // display winner on UI
+            this.DisplayWinner(winnerNumber);
+            // update turn label to reflect end of game
+            this.UpdateCurrentPlayer("End of Game!");
+            // disable game buttons
+            this.DisableEndTurnButton();
+            this.DisableRollButton();
+            // display toast message
+            Toast.makeText(getApplicationContext(), (pigGame.getPlayerName(winnerNumber) + " has won!"),Toast.LENGTH_SHORT);
+            // turn isWinner to true, preventing the roll die button from activating
+            this.isWinner = true;
+            this.gameInProgress = false;
         }
         else {
-            maxComputerTurnPoints = 20;
+            UpdateCurrentPlayer();
+            EnableEndTurnButton();
+            EnableRollButton();
         }
-        boolean rolledAnEight = false;
-        int numberOfRolls = 0;
-
-        while(rolledAnEight == false &&
-                numberOfRolls < maxNumberOfRolls &&
-                pigGame.getPointsForCurrentTurn() < maxComputerTurnPoints) {
-            if(this.numberOfDie == 2) {
-
-                int rollResult = pigGame.RollAndCalc();
-                int rollResult2 = pigGame.RollAndCalc();
-                pigGame.setLastRolledNumber(rollResult);
-                pigGame.setLastRolledNumber2(rollResult2);
-                UpdateDieImage(rollResult,1);
-                UpdateDieImage(rollResult2,2);
-                UpdatePointsRunningTotal(pigGame.getPointsForCurrentTurn());
-
-                if(rollResult == 8 || rollResult2 == 8) {
-                    rolledAnEight = true;
-                }
-            }
-            else {
-                int rollResult = pigGame.RollAndCalc();
-                pigGame.setLastRolledNumber(rollResult);
-                UpdateDieImage(rollResult,1);
-                UpdatePointsRunningTotal(pigGame.getPointsForCurrentTurn());
-
-                if(rollResult == 8) {
-                    rolledAnEight = true;
-                }
-            }
-            numberOfRolls++;
-        }
-        if(rolledAnEight==true) {
-            Toast.makeText(this,("Ouch, "+pigGame.getCurrentPlayerName()+" has rolled an 8!"),Toast.LENGTH_SHORT);
-        }
-        this.UpdatePlayerScore(pigGame.getCurrentPlayerNumber(),0);
-        this.EndTurn();
     }
 
     //EVENT HANDLERS
@@ -442,14 +481,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void EndTurn() {
-        //THIS METHOD ADDS TO SCORE AND DETERMINES IF THERE IS A WINNER -------------------------------------
-        //lock roll button
-        //move running total to total points label
-        //calc winner
-        //if current player is winner, display name in turn label
-        //give toast message saying click newgame to start again
-        //else switch current player to next player
-        //unlock roll button
+        // THIS METHOD ADDS TO SCORE AND DETERMINES IF THERE IS A WINNER -------------------------------------
+        // lock roll button
+        // move running total to total points label
+        // calc winner
+        // if current player is winner, display name in turn label
+        // give toast message saying click newgame to start again
+        // else switch current player to next player
+        // unlock roll button
         this.DisableRollButton();
         this.DisableEndTurnButton();
 
@@ -460,42 +499,25 @@ public class MainActivity extends AppCompatActivity {
         this.ResetRunningTotalLabel();
 
         if(winnerNumber != 0) {
-            //display winner on UI
+            // display winner on UI
             this.DisplayWinner(winnerNumber);
-            //update turn label to reflect end of game
+            // update turn label to reflect end of game
             this.UpdateCurrentPlayer("End of Game!");
-            //disable game buttons
+            // disable game buttons
             this.DisableEndTurnButton();
             this.DisableRollButton();
-            //display toast message
-            Toast.makeText(getApplicationContext(), (pigGame.getPlayerName(winnerNumber) + " has won!"),Toast.LENGTH_SHORT);
-            //turn isWinner to true, preventing the roll die button from activating
+            // display toast message
+            Toast.makeText(getApplication(), (pigGame.getPlayerName(winnerNumber) + " has won!"),Toast.LENGTH_SHORT);
+            // turn isWinner to true, preventing the roll die button from activating
             this.isWinner = true;
+            this.gameInProgress = false;
         }
         else {
             if(this.enableAI == true && playerThatJustWent == 1) {
-                //show that computer is taking its turn
-                //execute AI logic method
-                UpdateCurrentPlayer();
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        AITurn(numberOfDie);
-                    }
-                }, 500);
+                // show that computer is taking its turn
+                // execute AI logic method
+                AITurn(numberOfDie);
             }
-            //THIS CODE IS MEANT TO PRIME THE UI FOR A HUMAN USER
-            //end turn auto switches the player turn if there is no winner, so all we have to do here reflect the change in the UI
-            //re-enable the endturn button
-            //re-enable the roll button
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    UpdateCurrentPlayer();
-                    EnableEndTurnButton();
-                    EnableRollButton();
-                }
-            }, 500);
         }
     }
 
@@ -520,7 +542,7 @@ public class MainActivity extends AppCompatActivity {
             this.ResetRunningTotalLabel();
             this.ResetCurrrentPlayerLabel();
             this.gameInProgress = false;
-            Toast.makeText(getApplicationContext(),"Please enter valid usernames, press new game",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplication(),"Please enter valid usernames, press new game",Toast.LENGTH_SHORT).show();
         }
         //execute this block if the app was not running
         //get the text from both edit text fields
@@ -543,7 +565,7 @@ public class MainActivity extends AppCompatActivity {
             this.UpdateCurrentPlayer();
             this.EnableRollButton();
             this.EnableEndTurnButton();
-            Toast.makeText(getApplicationContext(),"New game started, good luck!",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplication(),"New game started, good luck!",Toast.LENGTH_SHORT).show();
             Log.d("pigGameUILayer","inside newGameButtonClick method, usernames valid");
         }
         Log.d("pigGameUILayer","inside newGameButtonClick method, usernames NOT valid");
