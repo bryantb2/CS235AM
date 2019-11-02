@@ -246,6 +246,9 @@ public class TitleScreenFragment extends Fragment {
         if(gameInProgress==true) {
             this.ResetUsernameFields(); //this is what prevents the second block in this handler from firing
             this.EnableUsernameEntryFields();
+            if(this.enableAI == true) {
+                SetAndDisableAIUsernameField("Computer");
+            }
             this.gameInProgress = false;
             Toast.makeText(getActivity(),"Please enter valid usernames, press new game",Toast.LENGTH_SHORT).show();
         }

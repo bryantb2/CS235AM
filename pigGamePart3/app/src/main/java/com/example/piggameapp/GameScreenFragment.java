@@ -252,7 +252,6 @@ public class GameScreenFragment extends Fragment {
     }
 
     public void AIEndTurn() {
-
         // THIS CODE IS MEANT TO PRIME THE UI FOR A HUMAN USER
         // end turn auto switches the player turn if there is no winner, so all we have to do here reflect the change in the UI
         // re-enable the endturn button
