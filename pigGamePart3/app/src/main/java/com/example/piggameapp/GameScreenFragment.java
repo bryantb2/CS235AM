@@ -38,6 +38,7 @@ public class GameScreenFragment extends Fragment {
     private ImageView dieImage1;
     private ImageView dieImage2;
     private TextView currentPlayerLabel;
+    private TextView pointsForRoundDescriptionLabel;
     private TextView pointsAccumulatorLabel;
     private Button rollDieButton;
     private Button endTurnButton;
@@ -95,6 +96,7 @@ public class GameScreenFragment extends Fragment {
         setHasOptionsMenu(true);
 
         // GETTING UI ELEMENTS
+        this.pointsForRoundDescriptionLabel = view.findViewById(R.id.pointsDescription_Label);
         this.player1UsernameTextEntry = view.findViewById(R.id.player1UsernameTextEntry);
         this.player1ScoreLabel = view.findViewById(R.id.player1Score_Label);
         this.player2ScoreLabel = view.findViewById(R.id.player2Score_Label);
@@ -264,7 +266,9 @@ public class GameScreenFragment extends Fragment {
 
         if(winnerNumber != 0) {
             // display winner on UI
+            // update winner description label
             this.DisplayWinner(winnerNumber);
+            this.SetWinnerDescription();
             // update turn label to reflect end of game
             this.UpdateCurrentPlayer("End of Game!");
             // disable game buttons
@@ -374,7 +378,9 @@ public class GameScreenFragment extends Fragment {
 
         if(winnerNumber != 0) {
             // display winner on UI
+            // update winner description label
             this.DisplayWinner(winnerNumber);
+            this.SetWinnerDescription();
             // update turn label to reflect end of game
             this.UpdateCurrentPlayer("End of Game!");
             // disable game buttons
@@ -440,6 +446,7 @@ public class GameScreenFragment extends Fragment {
 
         // UI preparation and restoration
         this.DisableUsernameEntryFields();
+        this.ResetWinnerDescription();
         this.SetUsernameFields(player1Username,player2Username);
         this.UpdatePlayerScore(1,pigGame.getPlayerScore(1));
         this.UpdatePlayerScore(2,pigGame.getPlayerScore(2));
@@ -474,6 +481,7 @@ public class GameScreenFragment extends Fragment {
         this.DisableUsernameEntryFields();
         this.ResetRunningTotalLabel();
         this.ResetScoreLabels();
+        this.ResetWinnerDescription();
         this.player1Name = savedValues.getString(PLAYER1_USERNAME_KEY, "");
         this.player2Name = savedValues.getString(PLAYER2_USERNAME_KEY, "");
         this.gameInProgress = savedValues.getBoolean(IS_GAME_RUNNING, true);
@@ -502,7 +510,15 @@ public class GameScreenFragment extends Fragment {
     // METHODS
     private void DisplayWinner(int winnerNumber) {
         // set the display points label to the name of the winner
-        this.pointsAccumulatorLabel.setText(pigGame.getPlayerName(winnerNumber) + " has won!");
+        this.pointsAccumulatorLabel.setText(pigGame.getPlayerName(winnerNumber));
+    }
+
+    private void SetWinnerDescription() {
+        this.pointsForRoundDescriptionLabel.setText("Winner for this round is:");
+    }
+
+    private void ResetWinnerDescription() {
+        this.pointsForRoundDescriptionLabel.setText("Points for this round:");
     }
 
     private void EnableEndTurnButton() {
