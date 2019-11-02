@@ -26,9 +26,9 @@ public class GameScreenActivity extends AppCompatActivity {
                 .findFragmentById(R.id.game_fragment);
 
         // Getting intent values that were passed from the first activity
-        boolean hasOnResumeBeenClicked = getIntent().getExtras().getBoolean("ON_RESUME_CLICKED");
+        boolean hasNewGameBeenClicked = getIntent().getExtras().getBoolean("ON_NEW_GAME_CLICKED");
         PigGame gameObject;
-        if(hasOnResumeBeenClicked != true) {
+        if(hasNewGameBeenClicked == true) {
             // if this block executes, the new game button was clicked
             String player1Username = getIntent().getExtras().getString("PLAYER_1_NAME");
             String player2Username = getIntent().getExtras().getString("PLAYER_2_NAME");

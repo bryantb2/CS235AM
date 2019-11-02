@@ -161,6 +161,7 @@ public class GameScreenFragment extends Fragment {
         if(hasNewGameBeenBuilt == false ) {
             BuildGame();
         }
+        hasNewGameBeenBuilt = false;
         // Methods calls
         CreateUIEventListeners();
     }

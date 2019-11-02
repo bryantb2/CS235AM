@@ -283,9 +283,9 @@ public class TitleScreenFragment extends Fragment {
                the lack of state is based off the assumption that the resume button is accessible ONLY when the
                game has ALREADY had data passed into it
             */
-        String ON_RESUME_CLICKED = "ON_RESUME_CLICKED";
+        String ON_NEW_GAME_CLICKED = "ON_NEW_GAME_CLICKED";
         Intent intent = new Intent(getActivity(), GameScreenActivity.class);
-        intent.putExtra(ON_RESUME_CLICKED, true);
+        intent.putExtra(ON_NEW_GAME_CLICKED, true);
         startActivity(intent);
     }
 
