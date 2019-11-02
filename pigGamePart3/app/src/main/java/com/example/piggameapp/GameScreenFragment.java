@@ -398,6 +398,11 @@ public class GameScreenFragment extends Fragment {
                 // execute AI logic method
                 AITurn(numberOfDie);
             }
+            else {
+                UpdateCurrentPlayer();
+                EnableEndTurnButton();
+                EnableRollButton();
+            }
         }
     }
 
