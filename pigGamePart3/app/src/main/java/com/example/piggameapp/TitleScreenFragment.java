@@ -150,22 +150,27 @@ public class TitleScreenFragment extends Fragment {
 
         // SETTING TITLE FRAGMENT UI
         if(gameInProgress == true) {
+            // set username fields and then disable them
+            // disable the text entry fields
             // enable resume button
-            // disable text entry fields for usernames
+            // disable text entry fields for username(s)
+            SetUsernameFields(player1Name,player2Name);
+            DisableUsernameEntryFields();
             EnableResumeButton();
             DisableUsernameEntryFields();
         }
         else {
+            // reset any leftover UI text
+            // enable the text entry fields
             // disable resume button
             // enable text entry fields
+            ResetUsernameFields();
+            EnableUsernameEntryFields();
             DisableResumeButton();
             EnableUsernameEntryFields();
         }
         if(this.enableAI == true) {
             this.SetAndDisableAIUsernameField("Computer");
-        }
-        else {
-            ResetUsernameFields();
         }
     }
 
@@ -193,9 +198,8 @@ public class TitleScreenFragment extends Fragment {
                 return super.onOptionsItemSelected((item));
         }
     }
-
     
-    //EVENT LISTENERS
+    // EVENT LISTENERS
     private void CreateUIEventListeners() {
         this.newGameButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -229,8 +233,7 @@ public class TitleScreenFragment extends Fragment {
         });
     }
 
-
-    //EVENT CALLBACK METHODS
+    // EVENT CALLBACK METHODS
     public void NewGame() {
         //execute this block if the app was already running
             //delete existing username(s) in fields
@@ -281,8 +284,13 @@ public class TitleScreenFragment extends Fragment {
         startActivity(intent);
     }
 
+    // UI-RELATED METHODS
+    private void SetUsernameFields(String player1Name, String player2Name) {
+        // this is used when the UI needs to be synced from the inside to out (such as recovering state)
+        this.player1UsernameTextEntry.setText(player1Name);
+        this.player2UsernameTextEntry.setText(player2Name);
+    }
 
-    //UI-RELATED METHODS
     private void DisableResumeButton() {
         resumeGameButton.setEnabled(false);
     }
