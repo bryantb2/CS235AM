@@ -258,15 +258,26 @@ public class GameScreenFragment extends Fragment {
         final int DIE_TWO_UI_POSITION = 2;
 
         if(this.numberOfDie == 2) {
-            int rollResult1 = pigGame.RollAndCalc();
-            int rollResult2 = pigGame.RollAndCalc();
+            // this block rolls once and checks if the result was not an 8
+                // roll again is the result wasn't 8
+            // block is written to roll one at a time because the pigGame auto switches the player turn if an 8 is rolled
+                // so rolling twice and getting an 8 on the first roll means that the second roll's points would get added to the player that DIDN'T roll
+            int rollResult1;
+            int rollResult2;
+            rollResult1 = pigGame.RollAndCalc();
+            if(rollResult1 != 8 ) {
+                rollResult2 = pigGame.RollAndCalc();
+            }
+            else {
+                rollResult2 = 8;
+            }
 
             pigGame.setLastRolledNumber(rollResult1);
             pigGame.setLastRolledNumber2(rollResult2);
             this.UpdateDieImage(rollResult1,DIE_ONE_UI_POSITION);
             this.UpdateDieImage(rollResult2,DIE_TWO_UI_POSITION);
 
-            if(rollResult1 != 8 && rollResult2 != 8) {
+            if(rollResult2 != 8) {
                 this.UpdatePointsRunningTotal(pigGame.getPointsForCurrentTurn());
             }
             else {
