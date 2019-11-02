@@ -197,51 +197,91 @@ public class GameScreenFragment extends Fragment {
         // set canRoll to false
         // reset running total label AND pigGame internal runningTotal
         // end looping <--
-        int maxNumberOfRolls = 4;
-        int maxComputerTurnPoints;
-        if(this.numberOfDie == 2) {
-            maxComputerTurnPoints = 30;
+        UpdateCurrentPlayer();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                int maxNumberOfRolls = 4;
+                int maxComputerTurnPoints;
+                if(numberOfDie == 2) {
+                    maxComputerTurnPoints = 30;
+                }
+                else {
+                    maxComputerTurnPoints = 20;
+                }
+                boolean rolledAnEight = false;
+                int numberOfRolls = 0;
+
+                while(rolledAnEight == false &&
+                        numberOfRolls < maxNumberOfRolls &&
+                        pigGame.getPointsForCurrentTurn() < maxComputerTurnPoints) {
+                    if(numberOfDie == 2) {
+
+                        int rollResult = pigGame.RollAndCalc();
+                        int rollResult2 = pigGame.RollAndCalc();
+                        pigGame.setLastRolledNumber(rollResult);
+                        pigGame.setLastRolledNumber2(rollResult2);
+                        UpdateDieImage(rollResult,1);
+                        UpdateDieImage(rollResult2,2);
+                        UpdatePointsRunningTotal(pigGame.getPointsForCurrentTurn());
+
+                        if(rollResult == 8 || rollResult2 == 8) {
+                            rolledAnEight = true;
+                        }
+                    }
+                    else {
+                        int rollResult = pigGame.RollAndCalc();
+                        pigGame.setLastRolledNumber(rollResult);
+                        UpdateDieImage(rollResult,1);
+                        UpdatePointsRunningTotal(pigGame.getPointsForCurrentTurn());
+
+                        if(rollResult == 8) {
+                            rolledAnEight = true;
+                        }
+                    }
+                    numberOfRolls++;
+                }
+                if(rolledAnEight==true) {
+                    Toast.makeText(getActivity(),("Ouch, "+pigGame.getCurrentPlayerName()+" has rolled an 8!"),Toast.LENGTH_SHORT);
+                }
+                UpdatePlayerScore(pigGame.getCurrentPlayerNumber(),0);
+                AIEndTurn();
+            }
+        }, 500);
+
+    }
+
+    public void AIEndTurn() {
+
+        // THIS CODE IS MEANT TO PRIME THE UI FOR A HUMAN USER
+        // end turn auto switches the player turn if there is no winner, so all we have to do here reflect the change in the UI
+        // re-enable the endturn button
+        // re-enable the roll button
+        int playerThatJustWent = pigGame.getCurrentPlayerNumber();
+        int winnerNumber = pigGame.EndTurn();
+
+        this.UpdatePlayerScore(playerThatJustWent,pigGame.getPlayerScore(playerThatJustWent));
+        this.ResetRunningTotalLabel();
+
+        if(winnerNumber != 0) {
+            // display winner on UI
+            this.DisplayWinner(winnerNumber);
+            // update turn label to reflect end of game
+            this.UpdateCurrentPlayer("End of Game!");
+            // disable game buttons
+            this.DisableEndTurnButton();
+            this.DisableRollButton();
+            // display toast message
+            Toast.makeText(getActivity(), (pigGame.getPlayerName(winnerNumber) + " has won!"),Toast.LENGTH_SHORT);
+            // turn isWinner to true, preventing the roll die button from activating
+            this.isWinner = true;
+            this.gameInProgress = false;
         }
         else {
-            maxComputerTurnPoints = 20;
+            UpdateCurrentPlayer();
+            EnableEndTurnButton();
+            EnableRollButton();
         }
-        boolean rolledAnEight = false;
-        int numberOfRolls = 0;
-
-        while(rolledAnEight == false &&
-                numberOfRolls < maxNumberOfRolls &&
-                pigGame.getPointsForCurrentTurn() < maxComputerTurnPoints) {
-            if(this.numberOfDie == 2) {
-
-                int rollResult = pigGame.RollAndCalc();
-                int rollResult2 = pigGame.RollAndCalc();
-                pigGame.setLastRolledNumber(rollResult);
-                pigGame.setLastRolledNumber2(rollResult2);
-                UpdateDieImage(rollResult,1);
-                UpdateDieImage(rollResult2,2);
-                UpdatePointsRunningTotal(pigGame.getPointsForCurrentTurn());
-
-                if(rollResult == 8 || rollResult2 == 8) {
-                    rolledAnEight = true;
-                }
-            }
-            else {
-                int rollResult = pigGame.RollAndCalc();
-                pigGame.setLastRolledNumber(rollResult);
-                UpdateDieImage(rollResult,1);
-                UpdatePointsRunningTotal(pigGame.getPointsForCurrentTurn());
-
-                if(rollResult == 8) {
-                    rolledAnEight = true;
-                }
-            }
-            numberOfRolls++;
-        }
-        if(rolledAnEight==true) {
-            Toast.makeText(getActivity(),("Ouch, "+pigGame.getCurrentPlayerName()+" has rolled an 8!"),Toast.LENGTH_SHORT);
-        }
-        this.UpdatePlayerScore(pigGame.getCurrentPlayerNumber(),0);
-        this.EndTurn();
     }
 
     // EVENT HANDLERS
@@ -351,26 +391,8 @@ public class GameScreenFragment extends Fragment {
             if(this.enableAI == true && playerThatJustWent == 1) {
                 // show that computer is taking its turn
                 // execute AI logic method
-                UpdateCurrentPlayer();
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        AITurn(numberOfDie);
-                    }
-                }, 500);
+                AITurn(numberOfDie);
             }
-            // THIS CODE IS MEANT TO PRIME THE UI FOR A HUMAN USER
-            // end turn auto switches the player turn if there is no winner, so all we have to do here reflect the change in the UI
-            // re-enable the endturn button
-            // re-enable the roll button
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    UpdateCurrentPlayer();
-                    EnableEndTurnButton();
-                    EnableRollButton();
-                }
-            }, 500);
         }
     }
 

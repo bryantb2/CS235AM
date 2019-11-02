@@ -258,6 +258,7 @@ public class TitleScreenFragment extends Fragment {
             String DIE_SIZE = "DIE_SIZE";
             String NUMBER_OF_DIE = "NUMBER_OF_DIE";
             String MAX_GAME_SCORE = "MAX_GAME_SCORE";
+            String ON_NEW_GAME_CLICKED = "ON_NEW_GAME_CLICKED";
 
             this.DisableUsernameEntryFields();
             this.player1Name = this.player1UsernameTextEntry.getText().toString();
@@ -271,6 +272,7 @@ public class TitleScreenFragment extends Fragment {
             intent.putExtra(DIE_SIZE, 8);
             intent.putExtra(NUMBER_OF_DIE, this.numberOfDie);
             intent.putExtra(MAX_GAME_SCORE, this.customScore);
+            intent.putExtra(ON_NEW_GAME_CLICKED, true);
             startActivity(intent);
             Toast.makeText(getActivity(),"New game started, good luck!",Toast.LENGTH_SHORT).show();
         }
@@ -283,9 +285,8 @@ public class TitleScreenFragment extends Fragment {
                the lack of state is based off the assumption that the resume button is accessible ONLY when the
                game has ALREADY had data passed into it
             */
-        String ON_NEW_GAME_CLICKED = "ON_NEW_GAME_CLICKED";
+
         Intent intent = new Intent(getActivity(), GameScreenActivity.class);
-        intent.putExtra(ON_NEW_GAME_CLICKED, true);
         startActivity(intent);
     }
 
