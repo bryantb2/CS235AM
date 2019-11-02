@@ -367,12 +367,18 @@ public class GameScreenFragment extends Fragment {
             //  user returns from the title screen
             //  user rotates screen
 
+        //  GETTING AND SETTING CLASS PREFERENCE SETTINGS
+        this.enableAI = prefs.getBoolean(OLD_PREF_ENABLE_AI,false);
+        this.numberOfDie = prefs.getInt(OLD_PREF_NUMBER_OF_DIE,1);
+        this.enableCustomScore = prefs.getBoolean(ENABLE_CUSTOM_SCORE,false);
+        this.customScore = prefs.getInt(CUSTOM_SCORE,100);
+
         //  Getting variables from sharedPrefs
+        boolean isGameRunning = savedValues.getBoolean(IS_GAME_RUNNING,false);
         String player1Username = savedValues.getString(PLAYER1_USERNAME_KEY, "");
         String player2Username = savedValues.getString(PLAYER2_USERNAME_KEY, "");
         int player1Score = savedValues.getInt(PLAYER1_SCORE_KEY,0);
         int player2Score = savedValues.getInt(PLAYER2_SCORE_KEY,0);
-        boolean isGameRunning = savedValues.getBoolean(IS_GAME_RUNNING,false);
         int currentPlayerTurn = savedValues.getInt(CURRENT_PLAYER_KEY,0);
         int runningPointsTotal = savedValues.getInt(RUNNING_POINTS_TOTAL,0);
         int lastRolledNumber = savedValues.getInt(DIE_IMAGE_NUMBER,8);
@@ -381,12 +387,11 @@ public class GameScreenFragment extends Fragment {
             lastRolledNumber2 = savedValues.getInt(DIE_IMAGE_NUMBER_TWO,8);
         }
 
-
         // rebuild game objects and settings
         pigGame = new PigGame(player1Username,player2Username,8,this.numberOfDie,(this.enableCustomScore == true? this.customScore : 100));
         this.gameInProgress = isGameRunning;
         pigGame.setPlayerScore(1,player1Score);
-        pigGame.setPlayerScore(2,player2Score);;
+        pigGame.setPlayerScore(2,player2Score);
         pigGame.setCurrentPlayerTurn(currentPlayerTurn);
         pigGame.setPointsForCurrentTurn(runningPointsTotal);
         pigGame.setLastRolledNumber(lastRolledNumber);
@@ -397,6 +402,7 @@ public class GameScreenFragment extends Fragment {
             // ensures that the AI is displayed and the user cannot change it
             this.SetUsernameFields(this.pigGame.getPlayerName(1),"Computer");
         }
+
         // UI preparation and restoration
         this.DisableUsernameEntryFields();
         this.SetUsernameFields(player1Username,player2Username);
@@ -412,36 +418,6 @@ public class GameScreenFragment extends Fragment {
         else {
             this.dieImage2.setVisibility(View.GONE);
         }
-
-
-        // execute this block if the app was already running
-        // delete existing usernames in fields
-        // set game bool to not active
-        // reset score labels to zero
-        // reset runningtotal label to zero
-        // reset current player label
-        /*if(gameInProgress==true) {
-            this.isWinner = false;
-            this.ResetUsernameFields(); // this is what prevents the second block in this handler from firing
-            // this.EnableUsernameEntryFields();
-            if(this.enableAI == true) {
-                // ensures that the AI is displayed and the user cannot change it
-                // this.SetAndDisableAIUsernameField("Computer");
-            }
-            this.ResetScoreLabels();
-            this.ResetRunningTotalLabel();
-            this.ResetCurrrentPlayerLabel();
-            this.gameInProgress = false;
-            Toast.makeText(getActivity(),"Please enter valid usernames, press new game",Toast.LENGTH_SHORT).show();
-        }
-
-        if(pigGame != null) {
-            // checking if the object was instantiated
-            pigGame.RestartGame(player1Name,player2Name);
-        }
-        else {
-
-        }*/
     }
 
     public void BuildGame(PigGame gameObject) {
@@ -466,6 +442,7 @@ public class GameScreenFragment extends Fragment {
         this.player1Name = savedValues.getString(PLAYER1_USERNAME_KEY, "");
         this.player2Name = savedValues.getString(PLAYER2_USERNAME_KEY, "");
         this.gameInProgress = savedValues.getBoolean(IS_GAME_RUNNING, true);
+        this.SetUsernameFields(player1Name,player2Name);
         this.UpdateCurrentPlayer();
         // manipulating UI based off preferences set in the main page
         if(this.enableAI == true) {
