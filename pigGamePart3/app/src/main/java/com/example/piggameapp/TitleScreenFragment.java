@@ -114,6 +114,11 @@ public class TitleScreenFragment extends Fragment {
             // user returns from the game screen
             // session is restored after screen rotation
 
+        // Getting game status (is or is not running)
+            // note that this could be set to true in this class's newGame method and then set
+            // to false in the actual game itself if a winner is declared
+        this.gameInProgress = savedValues.getBoolean(IS_GAME_RUNNING,false);
+
         // GETTING OLD PREFERENCE SETTINGS
         boolean oldEnableAISetting = prefs.getBoolean(OLD_PREF_ENABLE_AI,false);
         int oldNumberOfDieSetting = prefs.getInt(OLD_PREF_NUMBER_OF_DIE,1);

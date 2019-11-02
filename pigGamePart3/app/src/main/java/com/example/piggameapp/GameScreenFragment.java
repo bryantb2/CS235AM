@@ -137,6 +137,7 @@ public class GameScreenFragment extends Fragment {
         SharedPreferences.Editor editor = savedValues.edit();
         // fetching and storing data to be put into saveInstance
         if(pigGame != null) {
+            editor.putBoolean(this.IS_GAME_RUNNING, this.gameInProgress);
             editor.putInt(this.PLAYER1_SCORE_KEY, pigGame.getPlayerScore(1));
             editor.putInt(this.PLAYER2_SCORE_KEY, pigGame.getPlayerScore(2));
             editor.putInt(this.CURRENT_PLAYER_KEY,  pigGame.getCurrentPlayerNumber());
@@ -343,6 +344,7 @@ public class GameScreenFragment extends Fragment {
             Toast.makeText(getActivity(), (pigGame.getPlayerName(winnerNumber) + " has won!"),Toast.LENGTH_SHORT);
             // turn isWinner to true, preventing the roll die button from activating
             this.isWinner = true;
+            this.gameInProgress = false;
         }
         else {
             if(this.enableAI == true && playerThatJustWent == 1) {
