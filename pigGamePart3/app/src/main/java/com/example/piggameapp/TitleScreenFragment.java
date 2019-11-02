@@ -133,6 +133,7 @@ public class TitleScreenFragment extends Fragment {
             // executes if the CustomScore is not valid
             this.customScore = 100;
         }
+
         // sets the gameInProgress variable to false and forces the user to create a new game
         if(oldEnableAISetting != this.enableAI) {
             gameInProgress = false;
@@ -159,6 +160,12 @@ public class TitleScreenFragment extends Fragment {
             // enable text entry fields
             DisableResumeButton();
             EnableUsernameEntryFields();
+        }
+        if(this.enableAI == true) {
+            this.SetAndDisableAIUsernameField("Computer");
+        }
+        else {
+            ResetUsernameFields();
         }
     }
 
@@ -231,10 +238,6 @@ public class TitleScreenFragment extends Fragment {
         if(gameInProgress==true) {
             this.ResetUsernameFields(); //this is what prevents the second block in this handler from firing
             this.EnableUsernameEntryFields();
-            if(this.enableAI == true) {
-                //ensures that the AI is displayed and the user cannot change it
-                this.SetAndDisableAIUsernameField("Computer");
-            }
             this.gameInProgress = false;
             Toast.makeText(getActivity(),"Please enter valid usernames, press new game",Toast.LENGTH_SHORT).show();
         }
