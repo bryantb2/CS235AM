@@ -14,18 +14,15 @@
             android:id="@+id/dieRollResult_Label2"
             android:layout_width="109dp"
             android:layout_height="87dp"
-            android:layout_marginStart="46dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="56dp"
-            app:layout_constraintEnd_toStartOf="@+id/player2UsernameTextEntry"
+            app:layout_constraintEnd_toStartOf="@+id/player2Score_Label"
             app:layout_constraintStart_toEndOf="@+id/dieRollResult_Label"
-            app:layout_constraintTop_toBottomOf="@+id/currentPlayer_Label"
-            app:srcCompat="@drawable/die8side1" />
+            app:srcCompat="@drawable/die8side1"
+            tools:layout_editor_absoluteY="74dp" />
 
         <Button
             android:id="@+id/rollDie_Button"
-            android:layout_width="153dp"
-            android:layout_height="46dp"
+            android:layout_width="181dp"
+            android:layout_height="43dp"
             android:layout_marginStart="156dp"
             android:layout_marginTop="24dp"
             android:text="@string/rollDie_Button"
@@ -34,23 +31,20 @@
 
         <Button
             android:id="@+id/endTurn_Button"
-            android:layout_width="162dp"
-            android:layout_height="48dp"
-            android:layout_marginStart="23dp"
-            android:layout_marginTop="23dp"
+            android:layout_width="181dp"
+            android:layout_height="44dp"
             android:text="@string/endTurn_Button"
-            app:layout_constraintStart_toEndOf="@+id/rollDie_Button"
-            app:layout_constraintTop_toBottomOf="@+id/runningPointsTotal_Label" />
+            tools:layout_editor_absoluteX="346dp"
+            tools:layout_editor_absoluteY="263dp" />
 
         <ImageView
             android:id="@+id/dieRollResult_Label"
             android:layout_width="109dp"
             android:layout_height="87dp"
             android:layout_marginStart="27dp"
-            android:layout_marginTop="20dp"
             app:layout_constraintStart_toEndOf="@+id/player1UsernameTextEntry"
-            app:layout_constraintTop_toBottomOf="@+id/currentPlayer_Label"
-            app:srcCompat="@drawable/die8side1" />
+            app:srcCompat="@drawable/die8side1"
+            tools:layout_editor_absoluteY="74dp" />
 
         <TextView
             android:id="@+id/player1_Label"
@@ -105,43 +99,42 @@
 
         <TextView
             android:id="@+id/runningPointsTotal_Label"
-            android:layout_width="98dp"
-            android:layout_height="43dp"
-            android:layout_marginStart="28dp"
-            android:layout_marginTop="28dp"
+            android:layout_width="270dp"
+            android:layout_height="49dp"
+            android:layout_marginTop="16dp"
             android:background="#CC000000"
             android:paddingLeft="15dp"
             android:paddingTop="10dp"
             android:paddingRight="15dp"
             android:paddingBottom="10dp"
             android:text="@string/runningPointsTotal_Label"
+            android:textAlignment="center"
             android:textColor="#FFFFFF"
             android:textSize="18sp"
-            app:layout_constraintStart_toEndOf="@+id/pointsDescription_Label"
-            app:layout_constraintTop_toBottomOf="@+id/dieRollResult_Label" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:layout_editor_absoluteX="215dp" />
 
         <TextView
             android:id="@+id/currentPlayer_Label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="79dp"
-            android:layout_marginTop="10dp"
+            android:layout_width="181dp"
+            android:layout_height="52dp"
+            android:layout_marginTop="27dp"
             android:background="#CC000000"
             android:paddingLeft="15dp"
             android:paddingTop="10dp"
             android:paddingRight="15dp"
             android:paddingBottom="10dp"
             android:text="@string/playerTurn_Label"
+            android:textAlignment="center"
             android:textColor="#FFFFFF"
             android:textSize="18sp"
-            app:layout_constraintStart_toEndOf="@+id/player1UsernameTextEntry"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/dieRollResult_Label2"
+            tools:layout_editor_absoluteX="346dp" />
 
         <EditText
             android:id="@+id/player2UsernameTextEntry"
             android:layout_width="161dp"
             android:layout_height="41dp"
-            android:layout_marginStart="124dp"
             android:background="#CC000000"
             android:ems="10"
             android:inputType="textPersonName"
@@ -152,14 +145,13 @@
             android:text="@string/username_placeholder_text"
             android:textColor="#FFFFFF"
             android:textSize="15sp"
-            app:layout_constraintStart_toEndOf="@+id/currentPlayer_Label"
-            app:layout_constraintTop_toBottomOf="@+id/player2_Label" />
+            app:layout_constraintTop_toBottomOf="@+id/player2_Label"
+            tools:layout_editor_absoluteX="533dp" />
 
         <TextView
             android:id="@+id/player2Score_Label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="211dp"
             android:background="#CC000000"
             android:paddingLeft="15dp"
             android:paddingTop="10dp"
@@ -167,14 +159,13 @@
             android:paddingBottom="10dp"
             android:text="@string/plaer2Score_Label"
             android:textColor="#FFFF"
-            app:layout_constraintStart_toEndOf="@+id/dieRollResult_Label"
-            app:layout_constraintTop_toBottomOf="@+id/player2UsernameTextEntry" />
+            app:layout_constraintTop_toBottomOf="@+id/player2UsernameTextEntry"
+            tools:layout_editor_absoluteX="535dp" />
 
         <TextView
             android:id="@+id/player2_Label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="124dp"
             android:layout_marginTop="10dp"
             android:background="#CC000000"
             android:paddingLeft="15dp"
@@ -183,15 +174,15 @@
             android:paddingBottom="10dp"
             android:text="@string/player2_Label"
             android:textColor="#FFFFFF"
-            app:layout_constraintStart_toEndOf="@+id/currentPlayer_Label"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:layout_editor_absoluteX="533dp" />
 
         <TextView
             android:id="@+id/pointsDescription_Label"
-            android:layout_width="166dp"
-            android:layout_height="43dp"
-            android:layout_marginStart="158dp"
-            android:layout_marginTop="28dp"
+            android:layout_width="179dp"
+            android:layout_height="52dp"
+            android:layout_marginStart="156dp"
+            android:layout_marginTop="27dp"
             android:background="#CC000000"
             android:paddingLeft="15dp"
             android:paddingTop="10dp"

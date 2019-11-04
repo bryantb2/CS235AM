@@ -10,7 +10,7 @@
     <View
         android:id="@+id/view"
         android:layout_width="353dp"
-        android:layout_height="408dp"
+        android:layout_height="417dp"
         android:layout_marginStart="20dp"
         android:background="#FFFFFF"
         app:layout_constraintEnd_toEndOf="@+id/textView3"
@@ -41,7 +41,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="35dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="4dp"
         android:background="#FFFFFF"
         android:paddingLeft="15dp"
         android:paddingTop="10dp"
@@ -94,14 +94,14 @@
         android:textSize="14sp"
         android:visibility="visible"
         app:layout_constraintStart_toEndOf="@+id/view"
-        app:layout_constraintTop_toBottomOf="@+id/textView6" />
+        app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
     <Button
         android:id="@+id/newGame_Button"
         android:layout_width="146dp"
         android:layout_height="54dp"
         android:layout_marginStart="30dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="5dp"
         android:text="@string/newGame_Button"
         app:layout_constraintStart_toEndOf="@+id/view"
         app:layout_constraintTop_toBottomOf="@+id/player2UsernameTextEntry" />
@@ -111,7 +111,7 @@
         android:layout_width="146dp"
         android:layout_height="54dp"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="5dp"
         android:text="Resume Game"
         app:layout_constraintStart_toEndOf="@+id/newGame_Button"
         app:layout_constraintTop_toBottomOf="@+id/player2UsernameTextEntry" />
@@ -120,7 +120,7 @@
         android:id="@+id/textView3"
         android:layout_width="304dp"
         android:layout_height="123dp"
-        android:layout_marginStart="20dp"
+        android:layout_marginStart="25dp"
         android:layout_marginTop="20dp"
         android:text="This pig game is played using an 8-sided die that can be rolled as many times as you wish. However, if you happen to roll an 8, your turn ends automatically AND you lose all of your accumulated points; the other player would then take their turn. A player wins by reaching the determined points limit."
         app:layout_constraintStart_toStartOf="parent"
@@ -130,13 +130,13 @@
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="60dp"
         android:ems="10"
         android:text="How to Play"
         android:textAlignment="center"
         android:textColor="#FF2196F3"
         android:textSize="25sp"
+        app:layout_constraintEnd_toEndOf="@+id/view"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -154,15 +154,5 @@
         android:textSize="15sp"
         app:layout_constraintStart_toEndOf="@+id/view"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/textView6"
-        android:layout_width="310dp"
-        android:layout_height="35dp"
-        android:layout_marginStart="35dp"
-        android:text="Or, if you are feeling anti-social, enable the AI in settings to play against the computer."
-        android:textSize="10sp"
-        app:layout_constraintStart_toEndOf="@+id/view"
-        app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
