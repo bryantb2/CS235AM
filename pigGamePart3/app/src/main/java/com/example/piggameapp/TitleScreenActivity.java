@@ -29,4 +29,14 @@ public class TitleScreenActivity extends AppCompatActivity {
         }*/
         setContentView(R.layout.title_screen);
     }
+
+    public void createPigGame(String player1Name, String player2Name, int dieSize, int numberOfDie, int maxGameScore, boolean onNewGameClicked) {
+        // Checks to see if the newGame button was clicked
+            // get a reference to the game fragment and pass in the game parameters/settings
+        if(onNewGameClicked == true) {
+            GameScreenFragment gameFragment = (GameScreenFragment)getFragmentManager()
+                    .findFragmentById(R.id.game_fragment);
+            gameFragment.BuildGame(player1Name,player2Name,dieSize,numberOfDie,maxGameScore);
+        }
+    }
 }

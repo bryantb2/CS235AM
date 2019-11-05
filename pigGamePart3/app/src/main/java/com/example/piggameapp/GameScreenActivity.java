@@ -37,8 +37,7 @@ public class GameScreenActivity extends AppCompatActivity {
             int maxScore = getIntent().getExtras().getInt("MAX_GAME_SCORE");
 
             // Building game object and then passing it to second fragment
-            gameObject = new PigGame(player1Username,player2Username,dieSize,numberOfDie,maxScore);
-            gameFragment.BuildGame(gameObject);
+            gameFragment.BuildGame(player1Username,player2Username,dieSize,numberOfDie,maxScore);
         }
     }
 }

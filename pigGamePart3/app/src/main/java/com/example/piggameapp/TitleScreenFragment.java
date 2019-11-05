@@ -36,6 +36,8 @@ public class TitleScreenFragment extends Fragment {
     private String player1Name = "";
     private String player2Name = "";
     private boolean gameInProgress = false;
+    private boolean twoFragmentLayout = false;
+    private TitleScreenActivity parentActivity;
 
     //SAVE STATE KEYS
     private String PLAYER1_USERNAME_KEY = "PLAYER1_USERNAME_KEY";
@@ -78,6 +80,17 @@ public class TitleScreenFragment extends Fragment {
         //assigning UI elements to callbacks
         CreateUIEventListeners();
         return view;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        // Get reference to parent activity
+        parentActivity = (TitleScreenActivity)getActivity();
+
+        // Determine if the second fragment is being displayed (sets it true if the second frag is found)
+        twoFragmentLayout = parentActivity.findViewById(R.id.game_fragment) != null;
     }
 
     @Override
@@ -256,27 +269,34 @@ public class TitleScreenFragment extends Fragment {
             //get the text from both edit text fields
             //set game status to false
         if(AreUsernamesValid() == true) {
-            String PLAYER_1_NAME = "PLAYER_1_NAME";
-            String PLAYER_2_NAME = "PLAYER_2_NAME";
-            String DIE_SIZE = "DIE_SIZE";
-            String NUMBER_OF_DIE = "NUMBER_OF_DIE";
-            String MAX_GAME_SCORE = "MAX_GAME_SCORE";
-            String ON_NEW_GAME_CLICKED = "ON_NEW_GAME_CLICKED";
-
             this.DisableUsernameEntryFields();
             this.player1Name = this.player1UsernameTextEntry.getText().toString();
             this.player2Name = this.player2UsernameTextEntry.getText().toString();
             this.gameInProgress = true;
-            // create intent (object that contains the activity to be launched)
-            // send variables to intent's state that are required for the pigGame to start
-            Intent intent = new Intent(getActivity(), GameScreenActivity.class);
-            intent.putExtra(PLAYER_1_NAME, this.player1Name);
-            intent.putExtra(PLAYER_2_NAME, this.player2Name);
-            intent.putExtra(DIE_SIZE, 8);
-            intent.putExtra(NUMBER_OF_DIE, this.numberOfDie);
-            intent.putExtra(MAX_GAME_SCORE, this.customScore);
-            intent.putExtra(ON_NEW_GAME_CLICKED, true);
-            startActivity(intent);
+            // if the second fragment is loaded, pass the game settings to the parent activity's createGame method
+            if(twoFragmentLayout == true) {
+                parentActivity.createPigGame(player1Name,player2Name,8, this.numberOfDie, this.customScore, true);
+            }
+            else {
+                String PLAYER_1_NAME = "PLAYER_1_NAME";
+                String PLAYER_2_NAME = "PLAYER_2_NAME";
+                String DIE_SIZE = "DIE_SIZE";
+                String NUMBER_OF_DIE = "NUMBER_OF_DIE";
+                String MAX_GAME_SCORE = "MAX_GAME_SCORE";
+                String ON_NEW_GAME_CLICKED = "ON_NEW_GAME_CLICKED";
+
+
+                // create intent (object that contains the activity to be launched)
+                // send variables to intent's state that are required for the pigGame to start
+                Intent intent = new Intent(getActivity(), GameScreenActivity.class);
+                intent.putExtra(PLAYER_1_NAME, this.player1Name);
+                intent.putExtra(PLAYER_2_NAME, this.player2Name);
+                intent.putExtra(DIE_SIZE, 8);
+                intent.putExtra(NUMBER_OF_DIE, this.numberOfDie);
+                intent.putExtra(MAX_GAME_SCORE, this.customScore);
+                intent.putExtra(ON_NEW_GAME_CLICKED, true);
+                startActivity(intent);
+            }
             Toast.makeText(getActivity(),"New game started, good luck!",Toast.LENGTH_SHORT).show();
         }
     }

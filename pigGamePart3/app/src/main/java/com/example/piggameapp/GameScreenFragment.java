@@ -467,7 +467,7 @@ public class GameScreenFragment extends Fragment {
         }
     }
 
-    public void BuildGame(PigGame gameObject) {
+    public void BuildGame(String player1Name, String player2Name, int dieSize, int numberOfDie, int maxGameScore) {
         //  THIS METHOD IS CALLED WHEN THE NEW GAME BUTTON IS CLICKED
         //  SETS A VARIABLE CALLED newGameHasBeenBuilt
         //  Scenarios in which this method would be called:
@@ -475,6 +475,7 @@ public class GameScreenFragment extends Fragment {
         //  the point of this method is to handle to creation or rebuilding of the game object, removing excess code from the lifecycle methods
 
         //  GETTING AND SETTING CLASS PREFERENCE SETTINGS
+        PigGame gameObject = new PigGame(player1Name,player2Name,dieSize,numberOfDie,maxGameScore);
         this.enableAI = prefs.getBoolean(OLD_PREF_ENABLE_AI,false);
         this.numberOfDie = prefs.getInt(OLD_PREF_NUMBER_OF_DIE,1);
         this.enableCustomScore = prefs.getBoolean(ENABLE_CUSTOM_SCORE,false);
