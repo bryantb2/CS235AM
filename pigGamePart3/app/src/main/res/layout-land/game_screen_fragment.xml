@@ -135,7 +135,7 @@
             android:textColor="#FFFFFF"
             android:textSize="18sp"
             app:layout_constraintStart_toEndOf="@+id/pointsDescription_Label"
-            app:layout_constraintTop_toBottomOf="@+id/dieRollResult_Label2" />
+            app:layout_constraintTop_toBottomOf="@+id/dieRollResult_Label" />
 
         <EditText
             android:id="@+id/player2UsernameTextEntry"

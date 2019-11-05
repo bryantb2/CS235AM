@@ -11,25 +11,23 @@
     <fragment
         android:id="@+id/second_fragment"
         android:name="com.example.piggameapp.GameScreenFragment"
-        android:layout_width="619dp"
-        android:layout_height="657dp"
+        android:layout_width="610dp"
+        android:layout_height="589dp"
         android:layout_weight="1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/first_fragment"
         tools:layout="@layout/game_screen_fragment" />
 
     <fragment
         android:id="@+id/first_fragment"
         android:name="com.example.piggameapp.TitleScreenFragment"
-        android:layout_width="609dp"
-        android:layout_height="569dp"
+        android:layout_width="641dp"
+        android:layout_height="500dp"
         android:layout_weight="1"
+        app:layout_constraintBottom_toTopOf="@+id/second_fragment"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        tools:layout="@layout/title_screen_fragment"
-        tools:layout_editor_absoluteY="-275dp" />
+        tools:layout="@layout/title_screen_fragment" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
