@@ -25,12 +25,13 @@
     <fragment
         android:id="@+id/second_fragment"
         android:name="com.example.piggameapp.GameScreenFragment"
-        android:layout_width="667dp"
-        android:layout_height="666dp"
+        android:layout_width="675dp"
+        android:layout_height="670dp"
         android:layout_marginEnd="360dp"
         android:layout_weight="1"
         app:layout_constraintEnd_toEndOf="parent"
-        tools:layout="@layout/game_screen_fragment"
-        tools:layout_editor_absoluteY="0dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout="@layout/game_screen_fragment" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
