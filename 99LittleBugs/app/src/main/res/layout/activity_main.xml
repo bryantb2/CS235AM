@@ -25,4 +25,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/takeOneDown_Button" />
+
+    <TextView
+        android:id="@+id/messageTextView"
+        android:layout_width="254dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="14dp"
+        android:text="No message yet"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/takeTwoDown_Button" />
 </androidx.constraintlayout.widget.ConstraintLayout>
