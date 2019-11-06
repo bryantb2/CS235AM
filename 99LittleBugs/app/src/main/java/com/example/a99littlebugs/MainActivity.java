@@ -1,5 +1,6 @@
 package com.example.a99littlebugs;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -15,9 +16,14 @@ public class MainActivity extends AppCompatActivity {
     private Button takeTwoDown;
     private TextView messageBox;
 
-    static final int FIRST_REQUEST = 1;
-    //private final int SECOND_REQUEST = 2;
+    private int numberOfBugs = 100;
 
+    static final int MAIN_ACTIVITY_REQUEST = 1;
+    static final String BUG_NUMBER = "BUG_NUMBER";
+    static final String BUTTON_NUMBER = "BUTTON_NUMBER";
+    static final String NEW_BUG_NUMBER = "NEW_BUG_NUMBER";
+
+    // LIFECYCLE METHODS
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,7 +38,10 @@ public class MainActivity extends AppCompatActivity {
         CreateUIEventListeners();
     }
 
-
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 
     // EVENT LISTENERS
     private void CreateUIEventListeners() {
@@ -41,23 +50,36 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // Create intent
                 // Start activity to receive a result back
-                Intent secondActivity = new Intent(getApplicationContext(), SecondActivity.class);
-                startActivityForResult(secondActivity, FIRST_REQUEST);
-                showUIMessage("Take one down");
+                secondActivityLauncher(1);
             }
         });
 
         this.takeTwoDown.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showUIMessage("Take two down");
+                // Create intent
+                // Start activity to receive a result back
+                secondActivityLauncher(2);
             }
         });
+    }
+
+    // ACTIVITY LAUNCHER
+    private void secondActivityLauncher(int buttonNumber) {
+        Intent secondActivity = new Intent(this, TheCode.class);
+        secondActivity.putExtra(BUTTON_NUMBER,buttonNumber);
+        secondActivity.putExtra(BUG_NUMBER,this.numberOfBugs);
+        startActivityForResult(secondActivity, MAIN_ACTIVITY_REQUEST);
+        if(buttonNumber == 1) {
+            showUIMessage("Take one down");
+        }
+        else {
+            showUIMessage("Take two down");
+        }
     }
 
     //UI METHODS
     private void showUIMessage(String messageContent) {
         Toast.makeText(this,messageContent, Toast.LENGTH_LONG).show();
     }
-
 }
