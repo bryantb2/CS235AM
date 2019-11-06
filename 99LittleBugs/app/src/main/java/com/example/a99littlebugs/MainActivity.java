@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
     static final int MAIN_ACTIVITY_REQUEST = 1;
     static final String BUG_NUMBER = "BUG_NUMBER";
     static final String BUTTON_NUMBER = "BUTTON_NUMBER";
-    static final String NEW_BUG_NUMBER = "NEW_BUG_NUMBER";
+    static final String NEW_BUG_FIX_MESSAGE = "NEW_BUG_FIX_MESSAGE";
 
     // LIFECYCLE METHODS
     @Override
@@ -34,13 +34,26 @@ public class MainActivity extends AppCompatActivity {
         this.takeTwoDown = findViewById(R.id.takeTwoDown_Button);
         this.messageBox = findViewById(R.id.messageTextView);
 
+
+        // Display number of bugs
+        String message = String.valueOf(numberOfBugs) + " littlebugs in the code";
+        updateMessageBox(message);
+
         // ASSIGN EVENT LISTENERS
         CreateUIEventListeners();
     }
 
+    // ACTIVITY RESULT RECEIVER
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        // Capture the intent object send back from the result
+        // Get the
+        if(resultCode == MAIN_ACTIVITY_REQUEST) {
+            this.numberOfBugs = data.getExtras().getInt(BUG_NUMBER);
+            String bugFixMessage = data.getExtras().getString(NEW_BUG_FIX_MESSAGE);
+            updateMessageBox(bugFixMessage);
+        }
     }
 
     // EVENT LISTENERS
@@ -81,5 +94,9 @@ public class MainActivity extends AppCompatActivity {
     //UI METHODS
     private void showUIMessage(String messageContent) {
         Toast.makeText(this,messageContent, Toast.LENGTH_LONG).show();
+    }
+
+    private void updateMessageBox(String message) {
+        this.messageBox.setText(message);
     }
 }

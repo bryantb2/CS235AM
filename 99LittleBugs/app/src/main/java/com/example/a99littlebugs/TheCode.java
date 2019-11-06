@@ -54,8 +54,10 @@ public class TheCode extends AppCompatActivity {
     private void firstActivityLauncher(int newBugNumber) {
         // Creating intent result to be sent back to first activity
         Intent result = new Intent(this, MainActivity.class);
-        result.putExtra(MainActivity.NEW_BUG_NUMBER,newBugNumber);
+        result.putExtra(MainActivity.BUG_NUMBER, newBugNumber);
+        result.putExtra(MainActivity.NEW_BUG_FIX_MESSAGE,String.valueOf(newBugNumber) + " little bugs in the code");
         setResult(MainActivity.MAIN_ACTIVITY_REQUEST,result);
+        showUIMessage(String.valueOf(newBugNumber) + " littlebugs in the code");
         finish();
     }
 
