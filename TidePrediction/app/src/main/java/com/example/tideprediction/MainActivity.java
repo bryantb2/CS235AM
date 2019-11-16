@@ -4,11 +4,16 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ListActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class MainActivity extends ListActivity {
+public class MainActivity extends ListActivity implements AdapterView.OnItemClickListener{
 
     // UI ELEMENTS
     private int dayAbbrTextView;
@@ -37,7 +42,22 @@ public class MainActivity extends ListActivity {
         // Creates an Arraylist of HashMap objects that stores key/value pairs for TideItem data
         ArrayList<HashMap<String, String>> hashMap = generateListItemHashMap();
 
+        // Build an adapter object (will transfer the Arraylist hashmap data to the ListView in the layout)
+            // takes in context, data source, the target layout, and two parallel arrays (key/value pairs for the data and target UI elements)
+        SimpleAdapter adapter = new SimpleAdapter(this,
+                hashMap,
+                R.layout.list_layout,
+                new String[]{ABBRV_DAY, Date_Time, TIDE_STATUS, TIDE_TIME},
+                new int[] {
+                        dayAbbrTextView,
+                        dateTimeTextView,
+                        tideStatusTextView,
+                        tideTimeTextView
+                } );
 
+        ListView mainListView = findViewById(android.R.id.list);
+        mainListView.setAdapter(adapter);
+        mainListView.setOnItemClickListener(this);
     }
 
     private ArrayList<HashMap<String, String>> generateListItemHashMap() {
@@ -63,5 +83,11 @@ public class MainActivity extends ListActivity {
             tempHashMapList.add(map);
         }
         return tempHashMapList;
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        Toast.makeText(this, "Row " + i + " was clicked", Toast.LENGTH_SHORT).show();
+
     }
 }
