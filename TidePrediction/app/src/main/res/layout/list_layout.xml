@@ -3,14 +3,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:id="@+id/list_Layout">
 
     <TextView
         android:id="@+id/dayAbbrv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="2"
+        android:layout_weight="1"
+        android:paddingLeft="15dp"
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp"
         android:text="dayAbbrv"
+        android:textSize="20sp"
+        android:textStyle="bold"
         tools:layout_editor_absoluteX="104dp"
         tools:layout_editor_absoluteY="169dp" />
 
@@ -19,6 +25,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:paddingLeft="25dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
         android:text="dateTime"
         tools:layout_editor_absoluteX="38dp"
         tools:layout_editor_absoluteY="106dp" />
@@ -28,6 +37,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:paddingLeft="25dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
         android:text="tideStatus"
         tools:layout_editor_absoluteX="156dp"
         tools:layout_editor_absoluteY="232dp" />
@@ -37,6 +49,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:paddingLeft="25dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
         android:text="tideTime"
         tools:layout_editor_absoluteX="79dp"
         tools:layout_editor_absoluteY="272dp" />

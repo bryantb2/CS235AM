@@ -26,12 +26,13 @@ public class MainActivity extends ListActivity implements AdapterView.OnItemClic
     public static final String Date_Time = "Date_Time";
     public static final String TIDE_STATUS = "TIDE_STATUS";
     public static final String TIDE_TIME = "TIDE_TIME";
+    public static final String TIDE_HEIGHT_CM = "TIDE_HEIGHT_CM";
+
+    ArrayList<HashMap<String, String>> hashMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // set the layout viewa
-        setContentView(R.layout.activity_main);
 
         // Get references to UI objects
         dayAbbrTextView = R.id.dayAbbrv;
@@ -40,7 +41,7 @@ public class MainActivity extends ListActivity implements AdapterView.OnItemClic
         tideTimeTextView = R.id.tideTime;
 
         // Creates an Arraylist of HashMap objects that stores key/value pairs for TideItem data
-        ArrayList<HashMap<String, String>> hashMap = generateListItemHashMap();
+        hashMap = generateListItemHashMap();
 
         // Build an adapter object (will transfer the Arraylist hashmap data to the ListView in the layout)
             // takes in context, data source, the target layout, and two parallel arrays (key/value pairs for the data and target UI elements)
@@ -53,18 +54,19 @@ public class MainActivity extends ListActivity implements AdapterView.OnItemClic
                         dateTimeTextView,
                         tideStatusTextView,
                         tideTimeTextView
-                } );
+                });
 
-        ListView mainListView = findViewById(android.R.id.list);
-        mainListView.setAdapter(adapter);
-        mainListView.setOnItemClickListener(this);
+        // these methods deal with the getting and setting of ListActivity properties and/or listdata
+        setListAdapter(adapter);
+        getListView().setOnItemClickListener(this);
+        getListView().setFastScrollEnabled(true);
     }
 
     private ArrayList<HashMap<String, String>> generateListItemHashMap() {
         // Create a parser object from Brian's Dal java file
         Dal xmlParser = new Dal(this);
         // Create a TideItem object to temporarily store results from parser
-        ArrayList<TideItem> tempTideItemList = xmlParser.parseXmlFile("Florence_2019_tide_predictions.xml");
+        ArrayList<TideItem> tempTideItemList = xmlParser.parseXmlFile("tide_predictions.xml");
 
         // Loop through TideItem ArrayList results and build a HashMap of the data
         ArrayList<HashMap<String, String>> tempHashMapList = new ArrayList<HashMap<String, String>>();
@@ -80,6 +82,7 @@ public class MainActivity extends ListActivity implements AdapterView.OnItemClic
             map.put(Date_Time,tempTideItem.getDate());
             map.put(TIDE_STATUS,tempTideItem.getHighlow());
             map.put(TIDE_TIME,tempTideItem.getTime());
+            map.put(TIDE_HEIGHT_CM,tempTideItem.getPredInCm());
             tempHashMapList.add(map);
         }
         return tempHashMapList;
@@ -87,7 +90,6 @@ public class MainActivity extends ListActivity implements AdapterView.OnItemClic
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        Toast.makeText(this, "Row " + i + " was clicked", Toast.LENGTH_SHORT).show();
-
+        Toast.makeText(this, "Tide will have a peak height of " + hashMap.get(i).get(TIDE_HEIGHT_CM) + "cm", Toast.LENGTH_SHORT).show();
     }
 }
