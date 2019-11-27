@@ -1,8 +1,11 @@
 package com.example.tideprediction;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import java.util.ArrayList;
 
 public class TideSQLiteHelper extends SQLiteOpenHelper {
     // CLASS FIELDS
@@ -14,7 +17,7 @@ public class TideSQLiteHelper extends SQLiteOpenHelper {
     public static final String TIDE_PREDICTIONS = "TIDE_PREDICTIONS";
     public static final String DATE = "DATE";
     public static final String DAY = "DAY";
-    public static final String TIDE_TIME = "DATE";
+    public static final String TIDE_TIME = "TIDE_TIME";
     public static final String WAVE_HEIGHT_CM = "WAVE_HEIGHT_CM";
     public static final String GET_LOW = "GET_LOW";
 
@@ -38,8 +41,7 @@ public class TideSQLiteHelper extends SQLiteOpenHelper {
 
         // INITIALIZE DB
         // ADD IN THE VALUES FROM THE XML FILE
-        Dal dal = new Dal(context);
-        dal.loadDbFromXML();
+        loadDbFromXML(db);
     }
 
     @Override
@@ -47,4 +49,29 @@ public class TideSQLiteHelper extends SQLiteOpenHelper {
 
     }
 
+    // Parse the XML files and put the data in the db
+    public void loadDbFromXML(SQLiteDatabase db) {
+        // PARSE XML FILE (LIKE LAST LAB)
+        Dal dal = new Dal(context);
+        ArrayList<TideItem> items = dal.parseXmlFile("tide_predictions.xml");
+
+        // ALLOWS FOR THE STORAGE OF DB ROW ITEMS
+        ContentValues cv = new ContentValues();
+
+        for(TideItem item : items)
+        {
+            // GET THE ITEMS
+            // SETS THEM TO THEIR APPROPRIATE COLUMNS
+            cv.put(TideSQLiteHelper.DATE, item.getDate());
+            cv.put(TideSQLiteHelper.DAY, item.getDay());
+            cv.put(TideSQLiteHelper.TIDE_TIME, item.getTime());
+            cv.put(TideSQLiteHelper.WAVE_HEIGHT_CM, item.getPredInCm());
+            cv.put(TideSQLiteHelper.GET_LOW, item.getHighlow());
+
+            // BUILDS A ROW IN THE DB
+            db.insert(TideSQLiteHelper.TIDE_PREDICTIONS, null, cv);
+        }
+        // ENDS DB CONNECTION
+        //db.close();
+    }
 }

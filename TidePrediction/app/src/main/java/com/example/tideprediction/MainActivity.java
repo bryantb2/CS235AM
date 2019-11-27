@@ -3,11 +3,14 @@ package com.example.tideprediction;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ListActivity;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -45,7 +48,7 @@ public class MainActivity extends ListActivity implements AdapterView.OnItemClic
 
         // Build an adapter object (will transfer the Arraylist hashmap data to the ListView in the layout)
             // takes in context, data source, the target layout, and two parallel arrays (key/value pairs for the data and target UI elements)
-        SimpleAdapter adapter = new SimpleAdapter(this,
+        /*SimpleAdapter adapter = new SimpleAdapter(this,
                 hashMap,
                 R.layout.list_layout,
                 new String[]{ABBRV_DAY, Date_Time, TIDE_STATUS, TIDE_TIME},
@@ -59,7 +62,31 @@ public class MainActivity extends ListActivity implements AdapterView.OnItemClic
         // these methods deal with the getting and setting of ListActivity properties and/or listdata
         setListAdapter(adapter);
         getListView().setOnItemClickListener(this);
-        getListView().setFastScrollEnabled(true);
+        getListView().setFastScrollEnabled(true);*/
+
+        // Initialize database
+        TideSQLiteHelper helper = new TideSQLiteHelper(this);
+        SQLiteDatabase db = helper.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TideSQLiteHelper.TIDE_PREDICTIONS, null);
+
+        SimpleCursorAdapter adapter = new SimpleCursorAdapter(
+                this,
+                R.layout.list_layout,
+                cursor,
+                new String[]{TideSQLiteHelper.DAY,
+                        TideSQLiteHelper.DATE,
+                        TideSQLiteHelper.GET_LOW,
+                        TideSQLiteHelper.TIDE_TIME,
+                },
+                new int[]{
+                        dayAbbrTextView,
+                        dateTimeTextView,
+                        tideStatusTextView,
+                        tideTimeTextView
+                },
+                0 );	// no flags
+        setListAdapter(adapter);
     }
 
     /*
@@ -91,6 +118,6 @@ public class MainActivity extends ListActivity implements AdapterView.OnItemClic
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        Toast.makeText(this, "Tide will have a peak height of " + hashMap.get(i).get(TIDE_HEIGHT_CM) + "cm", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "Tide will have a peak height of " + cursor.get(i).get(TIDE_HEIGHT_CM) + "cm", Toast.LENGTH_SHORT).show();
     }
 }
