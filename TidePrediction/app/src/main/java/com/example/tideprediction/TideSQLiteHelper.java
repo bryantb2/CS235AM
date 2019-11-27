@@ -27,7 +27,7 @@ public class TideSQLiteHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        // BUILD DATABASE
+        // BUILD DATABASE STRUCTURE
         db.execSQL("CREATE TABLE " + TIDE_PREDICTIONS
                 + "( _id INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + DATE + " TEXT,"
@@ -36,28 +36,15 @@ public class TideSQLiteHelper extends SQLiteOpenHelper {
                 + WAVE_HEIGHT_CM + " TEXT,"
                 + GET_LOW + " TEXT" + ")" );
 
+        // INITIALIZE DB
+        // ADD IN THE VALUES FROM THE XML FILE
+        Dal dal = new Dal(context);
+        dal.loadDbFromXML();
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
-    }
-
-
-    public void loadTestData(String zipCode)
-    {
-        // loads fixed data into DB
-        // Initialize database
-        SQLiteDatabase db = helper.getWritableDatabase();
-        // load the database with test data if it isn't already loaded
-        if (db.rawQuery("SELECT * FROM Forecast WHERE " + ZIP
-                + " = " + zipCode, null).getCount() == 0)
-        {
-            loadDbFromXML("97405");	// Eugene
-            loadDbFromXML("97439"); // Florence
-            loadDbFromXML("99515"); // Anchorage
-        }
-        db.close();
     }
 
 }

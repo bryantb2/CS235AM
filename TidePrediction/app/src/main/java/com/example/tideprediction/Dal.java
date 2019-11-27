@@ -1,6 +1,8 @@
 package com.example.tideprediction;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
@@ -27,11 +29,16 @@ import javax.xml.parsers.SAXParserFactory;
 public class Dal {
 
     private Context context = null;  // Android application context--required to access the Android file system.
+    private SQLiteDatabase db = null;
 
     // A context object should be passed to this constructor from the activity where this class is instantiated.
     public Dal(Context c)
     {
         context = c;
+
+        // Initialize database
+        TideSQLiteHelper helper = new TideSQLiteHelper(context);
+        db = helper.getWritableDatabase();
     }
 
     // This method accepts the name of a file in the assets folder as an argument
@@ -60,6 +67,33 @@ public class Dal {
         }
     }
 
+    // Parse the XML files and put the data in the db
+    public void loadDbFromXML() {
+        // PARSE XML FILE (LIKE LAST LAB)
+        ArrayList<TideItem> items = parseXmlFile("tide_predictions.xml");
 
+        // ALLOWS FOR THE STORAGE OF DB ROW ITEMS
+        ContentValues cv = new ContentValues();
 
+        for(TideItem item : items)
+        {
+            // GET THE ITEMS
+            // SETS THEM TO THEIR APPROPRIATE COLUMNS
+            cv.put(TideSQLiteHelper.DATE, item.getDate());
+            cv.put(TideSQLiteHelper.DAY, item.getDay());
+            cv.put(TideSQLiteHelper.TIDE_TIME, item.getTime());
+            cv.put(TideSQLiteHelper.WAVE_HEIGHT_CM, item.getPredInCm());
+            cv.put(TideSQLiteHelper.GET_LOW, item.getHighlow());
+
+            // BUILDS A ROW IN THE DB
+            db.insert(TideSQLiteHelper.TIDE_PREDICTIONS, null, cv);
+        }
+        // ENDS DB CONNECTION
+        db.close();
+    }
+
+    // Get all rows of tide data in DB
+    public ArrayList<TideItem> getDBTideItems(string ) {
+
+    }
 }

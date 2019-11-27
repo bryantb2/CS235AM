@@ -41,7 +41,7 @@ public class MainActivity extends ListActivity implements AdapterView.OnItemClic
         tideTimeTextView = R.id.tideTime;
 
         // Creates an Arraylist of HashMap objects that stores key/value pairs for TideItem data
-        hashMap = generateListItemHashMap();
+        // hashMap = generateListItemHashMap();
 
         // Build an adapter object (will transfer the Arraylist hashmap data to the ListView in the layout)
             // takes in context, data source, the target layout, and two parallel arrays (key/value pairs for the data and target UI elements)
@@ -62,6 +62,7 @@ public class MainActivity extends ListActivity implements AdapterView.OnItemClic
         getListView().setFastScrollEnabled(true);
     }
 
+    /*
     private ArrayList<HashMap<String, String>> generateListItemHashMap() {
         // Create a parser object from Brian's Dal java file
         Dal xmlParser = new Dal(this);
@@ -86,7 +87,7 @@ public class MainActivity extends ListActivity implements AdapterView.OnItemClic
             tempHashMapList.add(map);
         }
         return tempHashMapList;
-    }
+    }*/
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
