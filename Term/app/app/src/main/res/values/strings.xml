@@ -1,0 +1,107 @@
+<resources>
+    <string name="app_name">TermProject</string>
+
+    <string-array name="general_one">
+        <item>Select One</item>
+        <item>Garage startup or local business</item>
+        <item>Regional or international company</item>
+    </string-array>
+
+    <string-array name="general_two">
+        <item>Select One</item>
+        <item>one to four months</item>
+        <item>three months to a year</item>
+    </string-array>
+
+    <string-array name="general_three">
+        <item>Select One</item>
+        <item>Yes, I want to scale this project</item>
+        <item>No, it is not something I am concerned about</item>
+    </string-array>
+
+    <string-array name="general_four">
+        <item>Select One</item>
+        <item>Javascript</item>
+        <item>Java</item>
+        <item>C#</item>
+        <item>Python</item>
+    </string-array>
+
+    <string-array name="general_five">
+        <item>Select One</item>
+        <item>Average Responsiveness</item>
+        <item>Blazing fast</item>
+    </string-array>
+
+    <string-array name="general_six">
+        <item>Select One</item>
+        <item>Professional environment</item>
+        <item>Pastime activity</item>
+    </string-array>
+
+    <string-array name="frontEnd_one">
+        <item>Select One</item>
+        <item>Tons of structure</item>
+        <item>I plan on structuring the project myself</item>
+    </string-array>
+
+    <string-array name="frontEnd_two">
+        <item>Select One</item>
+        <item>Just desktops is fine</item>
+        <item>My site absolutely need to be scalable</item>
+    </string-array>
+
+    <string-array name="frontEnd_three">
+        <item>Select One</item>
+        <item>Yes</item>
+        <item>Not important</item>
+    </string-array>
+
+    <string-array name="backEnd_one">
+        <item>Select One</item>
+        <item>No</item>
+        <item>Heck yeah!</item>
+    </string-array>
+
+    <string-array name="backEnd_two">
+        <item>Select One</item>
+        <item>Absolutely</item>
+        <item>No</item>
+    </string-array>
+
+    <string-array name="backEnd_three">
+        <item>Select One</item>
+        <item>Yes</item>
+        <item>No</item>
+    </string-array>
+
+    <string-array name="backEnd_four">
+        <item>Select One</item>
+        <item>Yes</item>
+        <item>No</item>
+    </string-array>
+
+    <string-array name="db_one">
+        <item>Select One</item>
+        <item>SQL</item>
+        <item>NoSQL</item>
+    </string-array>
+
+    <string-array name="db_two">
+        <item>Select One</item>
+        <item>Yes</item>
+        <item>No</item>
+    </string-array>
+
+    <string-array name="db_three">
+        <item>Select One</item>
+        <item>Yes</item>
+        <item>No</item>
+    </string-array>
+
+    <string-array name="db_four">
+        <item>Select One</item>
+        <item>Yes</item>
+        <item>No</item>
+    </string-array>
+</resources>
