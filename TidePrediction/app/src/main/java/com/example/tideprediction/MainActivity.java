@@ -3,121 +3,114 @@ package com.example.tideprediction;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ListActivity;
+import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.SimpleCursorAdapter;
+import android.widget.Spinner;
 import android.widget.Toast;
+import android.content.Intent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class MainActivity extends ListActivity implements AdapterView.OnItemClickListener{
+public class MainActivity extends AppCompatActivity {
 
     // UI ELEMENTS
-    private int dayAbbrTextView;
-    private int dateTimeTextView;
-    private int tideStatusTextView;
-    private int tideTimeTextView;
+    Spinner locationDropDown;
+    Button showTideButton;
 
     // STRING CONSTANTS
-    public static final String ABBRV_DAY = "ABBRV_DAY";
-    public static final String Date_Time = "Date_Time";
-    public static final String TIDE_STATUS = "TIDE_STATUS";
-    public static final String TIDE_TIME = "TIDE_TIME";
-    public static final String TIDE_HEIGHT_CM = "TIDE_HEIGHT_CM";
-
-    ArrayList<HashMap<String, String>> hashMap;
+    public final String LOCATION = "LOCATION";
+    public final String FLORENCE = "Florence";
+    public final String NEWPORT = "Newport";
+    public final String ASTORIA = "Astoria";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.main_activity);
 
-        // Get references to UI objects
-        dayAbbrTextView = R.id.dayAbbrv;
-        dateTimeTextView = R.id.dateTime;
-        tideStatusTextView = R.id.tideStatus;
-        tideTimeTextView = R.id.tideTime;
+        // Get UI elements
+        this.locationDropDown = findViewById(R.id.locationSelectorSpinner);
+        this.showTideButton = findViewById(R.id.showTidesButton);
 
-        // Creates an Arraylist of HashMap objects that stores key/value pairs for TideItem data
-        // hashMap = generateListItemHashMap();
+        // Fill spinner content
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+                this, R.array.locationSpinner, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(
+                android.R.layout.simple_spinner_dropdown_item);
+        locationDropDown.setAdapter(adapter);
+        locationDropDown.setSelection(0);
 
-        // Build an adapter object (will transfer the Arraylist hashmap data to the ListView in the layout)
-            // takes in context, data source, the target layout, and two parallel arrays (key/value pairs for the data and target UI elements)
-        /*SimpleAdapter adapter = new SimpleAdapter(this,
-                hashMap,
-                R.layout.list_layout,
-                new String[]{ABBRV_DAY, Date_Time, TIDE_STATUS, TIDE_TIME},
-                new int[] {
-                        dayAbbrTextView,
-                        dateTimeTextView,
-                        tideStatusTextView,
-                        tideTimeTextView
-                });
-
-        // these methods deal with the getting and setting of ListActivity properties and/or listdata
-        setListAdapter(adapter);
-        getListView().setOnItemClickListener(this);
-        getListView().setFastScrollEnabled(true);*/
-
-        // Initialize database
-        TideSQLiteHelper helper = new TideSQLiteHelper(this);
-        SQLiteDatabase db = helper.getReadableDatabase();
-
-        Cursor cursor = db.rawQuery("SELECT * FROM " + TideSQLiteHelper.TIDE_PREDICTIONS, null);
-
-        SimpleCursorAdapter adapter = new SimpleCursorAdapter(
-                this,
-                R.layout.list_layout,
-                cursor,
-                new String[]{TideSQLiteHelper.DAY,
-                        TideSQLiteHelper.DATE,
-                        TideSQLiteHelper.GET_LOW,
-                        TideSQLiteHelper.TIDE_TIME,
-                },
-                new int[]{
-                        dayAbbrTextView,
-                        dateTimeTextView,
-                        tideStatusTextView,
-                        tideTimeTextView
-                },
-                0 );	// no flags
-        setListAdapter(adapter);
+        // Assign button click event
+        assignButtonEventHandlers();
     }
 
-    /*
-    private ArrayList<HashMap<String, String>> generateListItemHashMap() {
-        // Create a parser object from Brian's Dal java file
-        Dal xmlParser = new Dal(this);
-        // Create a TideItem object to temporarily store results from parser
-        ArrayList<TideItem> tempTideItemList = xmlParser.parseXmlFile("tide_predictions.xml");
+    private void assignButtonEventHandlers() {
+        this.showTideButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                // Get the selected spinner value
+                int selectedLocationPosition = locationDropDown.getSelectedItemPosition();
 
-        // Loop through TideItem ArrayList results and build a HashMap of the data
-        ArrayList<HashMap<String, String>> tempHashMapList = new ArrayList<HashMap<String, String>>();
-        for(int i = 0; i <tempTideItemList.size();i++) {
-            // store the currently indexed tide item
-            // create a Hashmap object to store key value pairs
-            // put the tideItem data into the hashmap
-            // add hashmap object to ArrayList
-            TideItem tempTideItem = tempTideItemList.get(i);
-            HashMap<String,String> map = new HashMap<String,String>();
+                // Derive the selection string
+                String locationName = "";
+                if(selectedLocationPosition == 0)
+                    locationName = FLORENCE;
+                else if(selectedLocationPosition == 1)
+                    locationName = NEWPORT;
+                else
+                    locationName = ASTORIA;
 
-            map.put(ABBRV_DAY,tempTideItem.getDate());
-            map.put(Date_Time,tempTideItem.getDate());
-            map.put(TIDE_STATUS,tempTideItem.getHighlow());
-            map.put(TIDE_TIME,tempTideItem.getTime());
-            map.put(TIDE_HEIGHT_CM,tempTideItem.getPredInCm());
-            tempHashMapList.add(map);
-        }
-        return tempHashMapList;
-    }*/
+                // Show toast for selected item
+                Toast.makeText(getApplicationContext(), "You selected " + locationName, Toast.LENGTH_SHORT).show();
 
-    @Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        //Toast.makeText(this, "Tide will have a peak height of " + cursor.get(i).get(TIDE_HEIGHT_CM) + "cm", Toast.LENGTH_SHORT).show();
+                // Send intent for second activity
+                Intent intent = new Intent(getApplicationContext(),TideViewActivity.class);
+                intent.putExtra(LOCATION, locationName);
+
+                startActivity(intent);
+            }
+        });
     }
+
+    /*@Override
+    public void onClick(View v) {
+
+        // Create intent to launch location tideItem activity
+        /*Intent intent = new Intent(this, TideItemActivity.class);
+
+        if (v.getId() == R.id.viewTideButton) {
+            // Send to second activity with intent for city
+            int location = locationSpinner.getSelectedItemPosition();
+            switch (location) {
+                case 0:
+                    locationSelection = "Florence";
+                    break;
+                case 1:
+                    locationSelection = "Cape Disappointment";
+                    break;
+                case 2:
+                    locationSelection = "Yaquina";
+                    break;
+            }
+
+
+            intent.putExtra("locationSelection", locationSelection);
+            startActivity(intent);
+        }*/
+
+
+    //}
+
 }

@@ -71,7 +71,5 @@ public class TideSQLiteHelper extends SQLiteOpenHelper {
             // BUILDS A ROW IN THE DB
             db.insert(TideSQLiteHelper.TIDE_PREDICTIONS, null, cv);
         }
-        // ENDS DB CONNECTION
-        //db.close();
     }
 }
