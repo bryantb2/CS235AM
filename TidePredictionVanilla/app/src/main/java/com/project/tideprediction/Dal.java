@@ -1,16 +1,11 @@
-package com.example.tideprediction;
+package com.project.tideprediction;
 
-import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Date;
-
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
@@ -30,13 +25,13 @@ import javax.xml.parsers.SAXParserFactory;
  */
 
 public class Dal {
+
     private Context context = null;  // Android application context--required to access the Android file system.
 
     // A context object should be passed to this constructor from the activity where this class is instantiated.
     public Dal(Context c)
     {
         context = c;
-
     }
 
     // This method accepts the name of a file in the assets folder as an argument
