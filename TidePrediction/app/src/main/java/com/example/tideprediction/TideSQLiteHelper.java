@@ -11,12 +11,14 @@ public class TideSQLiteHelper extends SQLiteOpenHelper {
     // CLASS FIELDS
     private static final String DB_NAME = "Tide.sqlite";
     private static final int DB_VERSION = 1;
-    private Context context = null;
+    private Context context;
 
-    // PUBLIC CONSTANTS
+    // PUBLIC TABLE ID CONSTANTS
     public static final String TIDE_PREDICTIONS_FLORENCE = "TIDE_PREDICTIONS_FLORENCE";
     public static final String TIDE_PREDICTIONS_NEWPORT = "TIDE_PREDICTIONS_NEWPORT";
     public static final String TIDE_PREDICTIONS_ASTORIA = "TIDE_PREDICTIONS_ASTORIA";
+
+    // PUBLIC TABLE ROW IDs
     public static final String DATE = "DATE";
     public static final String DAY = "DAY";
     public static final String TIDE_TIME = "TIDE_TIME";
@@ -59,11 +61,14 @@ public class TideSQLiteHelper extends SQLiteOpenHelper {
                 + TIDE_TIME + " TEXT,"
                 + WAVE_HEIGHT_CM + " TEXT,"
                 + GET_LOW + " TEXT" + ")" );
-
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
     }
+
+
+
+
 }

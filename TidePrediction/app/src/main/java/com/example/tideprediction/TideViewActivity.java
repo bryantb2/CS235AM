@@ -12,6 +12,7 @@ import android.widget.SimpleCursorAdapter;
 import androidx.annotation.MainThread;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -43,21 +44,14 @@ public class TideViewActivity extends ListActivity {
         int monthOfYear = intent.getExtras().getInt(MainActivity.MONTH);
         String location = intent.getExtras().getString(MainActivity.LOCATION);
 
-        // Determine file name based off location
-        String filename = "";
-        if(location == MainActivity.FLORENCE)
-            filename = "FLORENCE";
-        else if(location == MainActivity.ASTORIA)
-            filename = "ASTORIA";
-        else
-            filename = "NEWPORT";
-
-        // Get access to DB items via Dal
-        // Load DB with values
-        // Retrieve values
+        // Fill DB with tide predictions
         Dal dal = new Dal(this);
-        // TODO: UNCOMMENBT THIS: dal.loadDbFromXML(filename);
-        // TODO: RETRIEVE VALUES FROM DB
+        dal.loadDbFromXML();
+
+        // Build id object
+        // Load table data for select location
+        Date selectedDate = new Date(Calendar.YEAR, monthOfYear, dayOfMonth);
+        cursor = dal.getTideTableByDate(selectedDate, location);
 
         SimpleCursorAdapter adapter = new SimpleCursorAdapter(
                 this,

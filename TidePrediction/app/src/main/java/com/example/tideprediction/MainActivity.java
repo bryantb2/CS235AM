@@ -101,6 +101,8 @@ public class MainActivity extends AppCompatActivity implements DatePicker.OnDate
                 // Show toast for selected item
                 Toast.makeText(getApplicationContext(), "You selected " + locationName, Toast.LENGTH_SHORT).show();
 
+                Log.d("TIDE_LOG",locationName);
+
                 // Send intent for second activity
                 Intent intent = new Intent(getApplicationContext(),TideViewActivity.class);
                 intent.putExtra(LOCATION, locationName);

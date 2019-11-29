@@ -2,12 +2,15 @@ package com.example.tideprediction;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Date;
+
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
@@ -71,24 +74,26 @@ public class Dal {
     public void loadDbFromXML() {
         // PARSE XML FILE (LIKE LAST LAB)
         for(int i = 0; i < MainActivity.NUMBER_OF_LOCATIONS; i++) {
-
+            final String xmlFileStub = "_tide_predictions.xml";
             // Set tide items variable
             // Set tide table string identifier
             ArrayList<TideItem> items;
             String dbTableId;
             if(i == 0) {
-                items = this.parseXmlFile(MainActivity.FLORENCE);
+                items = this.parseXmlFile(MainActivity.FLORENCE + xmlFileStub);
                 dbTableId = TideSQLiteHelper.TIDE_PREDICTIONS_FLORENCE;
             }
-
             else if(i == 1) {
-                items = this.parseXmlFile(MainActivity.NEWPORT);
+                items = this.parseXmlFile(MainActivity.NEWPORT + xmlFileStub);
                 dbTableId = TideSQLiteHelper.TIDE_PREDICTIONS_NEWPORT;
             }
-
-            else {
-                items = this.parseXmlFile(MainActivity.ASTORIA);
+            else if(i == 2){
+                items = this.parseXmlFile(MainActivity.ASTORIA + xmlFileStub);
                 dbTableId = TideSQLiteHelper.TIDE_PREDICTIONS_ASTORIA;
+            }
+            else {
+                items = null;
+                dbTableId = "";
             }
 
             // ALLOWS FOR THE STORAGE OF DB ROW ITEMS
@@ -110,6 +115,23 @@ public class Dal {
         }
         // Close
         db.close();
+    }
+
+    public Cursor getTideTableByDate(Date date, String location) {
+        // TODO: RETRIEVE VALUES FROM DB
+        // Get table id based off location string
+        String dbTableId;
+        if(location == MainActivity.ASTORIA)
+            dbTableId = TideSQLiteHelper.TIDE_PREDICTIONS_ASTORIA;
+        else if(location == MainActivity.FLORENCE)
+            dbTableId = TideSQLiteHelper.TIDE_PREDICTIONS_FLORENCE;
+        else
+            dbTableId = TideSQLiteHelper.TIDE_PREDICTIONS_NEWPORT;
+
+        // Query DB tide items
+            // String query = "SELECT * FROM dbTableId WHERE Zip = ? ORDER BY Date ASC";
+        String query = "SELECT * FROM dbTableId";
+        return db.rawQuery(query, null);
     }
 
 
