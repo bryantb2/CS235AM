@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.SimpleCursorAdapter;
@@ -21,19 +22,30 @@ import android.widget.Toast;
 import android.content.Intent;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements DatePicker.OnDateChangedListener {
 
     // UI ELEMENTS
     Spinner locationDropDown;
     Button showTideButton;
+    DatePicker dateSelector;
 
-    // STRING CONSTANTS
-    public final String LOCATION = "LOCATION";
-    public final String FLORENCE = "Florence";
-    public final String NEWPORT = "Newport";
-    public final String ASTORIA = "Astoria";
+    // STRING INTENT CONSTANTS
+    public static final String LOCATION = "LOCATION";
+    public static final String MONTH = "MONTH";
+    public static final String DAY = "DAY";
+
+    // STRING LOCATION CONSTANTS
+    public static final int NUMBER_OF_LOCATIONS= 3;
+    public static final String FLORENCE = "florence";
+    public static final String NEWPORT = "newport";
+    public static final String ASTORIA = "astoria";
+
+    // DATE FIELDS
+    public int monthSelected;
+    public int daySelected;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
         // Get UI elements
         this.locationDropDown = findViewById(R.id.locationSelectorSpinner);
         this.showTideButton = findViewById(R.id.showTidesButton);
+        this.dateSelector = findViewById(R.id.datePicker);
 
         // Fill spinner content
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
@@ -52,8 +65,21 @@ public class MainActivity extends AppCompatActivity {
         locationDropDown.setAdapter(adapter);
         locationDropDown.setSelection(0);
 
+        // Set date picker UI and event listener
+        Calendar c = Calendar.getInstance();
+        dateSelector.init(c.get(Calendar.YEAR),
+                c.get(Calendar.MONTH),
+                c.get(Calendar.DAY_OF_MONTH), this);
+
         // Assign button click event
         assignButtonEventHandlers();
+    }
+
+    @Override
+    public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+        Toast.makeText(getApplicationContext(),"Whoa, date changed!",Toast.LENGTH_LONG).show();
+        this.monthSelected = monthOfYear;
+        this.daySelected = dayOfMonth;
     }
 
     private void assignButtonEventHandlers() {
@@ -78,39 +104,12 @@ public class MainActivity extends AppCompatActivity {
                 // Send intent for second activity
                 Intent intent = new Intent(getApplicationContext(),TideViewActivity.class);
                 intent.putExtra(LOCATION, locationName);
+                intent.putExtra(MONTH, monthSelected);
+                intent.putExtra(DAY, daySelected);
 
                 startActivity(intent);
             }
         });
     }
-
-    /*@Override
-    public void onClick(View v) {
-
-        // Create intent to launch location tideItem activity
-        /*Intent intent = new Intent(this, TideItemActivity.class);
-
-        if (v.getId() == R.id.viewTideButton) {
-            // Send to second activity with intent for city
-            int location = locationSpinner.getSelectedItemPosition();
-            switch (location) {
-                case 0:
-                    locationSelection = "Florence";
-                    break;
-                case 1:
-                    locationSelection = "Cape Disappointment";
-                    break;
-                case 2:
-                    locationSelection = "Yaquina";
-                    break;
-            }
-
-
-            intent.putExtra("locationSelection", locationSelection);
-            startActivity(intent);
-        }*/
-
-
-    //}
 
 }

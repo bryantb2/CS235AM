@@ -14,7 +14,9 @@ public class TideSQLiteHelper extends SQLiteOpenHelper {
     private Context context = null;
 
     // PUBLIC CONSTANTS
-    public static final String TIDE_PREDICTIONS = "TIDE_PREDICTIONS";
+    public static final String TIDE_PREDICTIONS_FLORENCE = "TIDE_PREDICTIONS_FLORENCE";
+    public static final String TIDE_PREDICTIONS_NEWPORT = "TIDE_PREDICTIONS_NEWPORT";
+    public static final String TIDE_PREDICTIONS_ASTORIA = "TIDE_PREDICTIONS_ASTORIA";
     public static final String DATE = "DATE";
     public static final String DAY = "DAY";
     public static final String TIDE_TIME = "TIDE_TIME";
@@ -31,7 +33,8 @@ public class TideSQLiteHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         // BUILD DATABASE STRUCTURE
-        db.execSQL("CREATE TABLE " + TIDE_PREDICTIONS
+        // DB structure for FLORENCE
+        db.execSQL("CREATE TABLE " + TIDE_PREDICTIONS_FLORENCE
                 + "( _id INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + DATE + " TEXT,"
                 + DAY + " INTEGER,"
@@ -39,37 +42,28 @@ public class TideSQLiteHelper extends SQLiteOpenHelper {
                 + WAVE_HEIGHT_CM + " TEXT,"
                 + GET_LOW + " TEXT" + ")" );
 
-        // INITIALIZE DB
-        // ADD IN THE VALUES FROM THE XML FILE
-        loadDbFromXML(db);
+        // DB structure for NEWPORT
+        db.execSQL("CREATE TABLE " + TIDE_PREDICTIONS_NEWPORT
+                + "( _id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + DATE + " TEXT,"
+                + DAY + " INTEGER,"
+                + TIDE_TIME + " TEXT,"
+                + WAVE_HEIGHT_CM + " TEXT,"
+                + GET_LOW + " TEXT" + ")" );
+
+        // DB structure for ASTORIA
+        db.execSQL("CREATE TABLE " + TIDE_PREDICTIONS_ASTORIA
+                + "( _id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + DATE + " TEXT,"
+                + DAY + " INTEGER,"
+                + TIDE_TIME + " TEXT,"
+                + WAVE_HEIGHT_CM + " TEXT,"
+                + GET_LOW + " TEXT" + ")" );
+
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
-    }
-
-    // Parse the XML files and put the data in the db
-    public void loadDbFromXML(SQLiteDatabase db) {
-        // PARSE XML FILE (LIKE LAST LAB)
-        Dal dal = new Dal(context);
-        ArrayList<TideItem> items = dal.parseXmlFile("tide_predictions.xml");
-
-        // ALLOWS FOR THE STORAGE OF DB ROW ITEMS
-        ContentValues cv = new ContentValues();
-
-        for(TideItem item : items)
-        {
-            // GET THE ITEMS
-            // SETS THEM TO THEIR APPROPRIATE COLUMNS
-            cv.put(TideSQLiteHelper.DATE, item.getDate());
-            cv.put(TideSQLiteHelper.DAY, item.getDay());
-            cv.put(TideSQLiteHelper.TIDE_TIME, item.getTime());
-            cv.put(TideSQLiteHelper.WAVE_HEIGHT_CM, item.getPredInCm());
-            cv.put(TideSQLiteHelper.GET_LOW, item.getHighlow());
-
-            // BUILDS A ROW IN THE DB
-            db.insert(TideSQLiteHelper.TIDE_PREDICTIONS, null, cv);
-        }
     }
 }

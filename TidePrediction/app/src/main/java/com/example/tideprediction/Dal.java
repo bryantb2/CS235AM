@@ -27,13 +27,18 @@ import javax.xml.parsers.SAXParserFactory;
  */
 
 public class Dal {
-
+    // Initialize database
+    TideSQLiteHelper helper;
+    SQLiteDatabase db;
     private Context context = null;  // Android application context--required to access the Android file system.
 
     // A context object should be passed to this constructor from the activity where this class is instantiated.
     public Dal(Context c)
     {
         context = c;
+        // Initialize database
+        TideSQLiteHelper helper = new TideSQLiteHelper(c);
+        db = helper.getReadableDatabase();
     }
 
     // This method accepts the name of a file in the assets folder as an argument
@@ -60,6 +65,51 @@ public class Dal {
             Log.e("Tide Predictions", e.toString());
             return null;
         }
+    }
+
+    // Parse the XML files and put the data in the db
+    public void loadDbFromXML() {
+        // PARSE XML FILE (LIKE LAST LAB)
+        for(int i = 0; i < MainActivity.NUMBER_OF_LOCATIONS; i++) {
+
+            // Set tide items variable
+            // Set tide table string identifier
+            ArrayList<TideItem> items;
+            String dbTableId;
+            if(i == 0) {
+                items = this.parseXmlFile(MainActivity.FLORENCE);
+                dbTableId = TideSQLiteHelper.TIDE_PREDICTIONS_FLORENCE;
+            }
+
+            else if(i == 1) {
+                items = this.parseXmlFile(MainActivity.NEWPORT);
+                dbTableId = TideSQLiteHelper.TIDE_PREDICTIONS_NEWPORT;
+            }
+
+            else {
+                items = this.parseXmlFile(MainActivity.ASTORIA);
+                dbTableId = TideSQLiteHelper.TIDE_PREDICTIONS_ASTORIA;
+            }
+
+            // ALLOWS FOR THE STORAGE OF DB ROW ITEMS
+            ContentValues cv = new ContentValues();
+
+            for(TideItem item : items)
+            {
+                // GET THE ITEMS
+                // SETS THEM TO THEIR APPROPRIATE COLUMNS
+                cv.put(TideSQLiteHelper.DATE, item.getDate());
+                cv.put(TideSQLiteHelper.DAY, item.getDay());
+                cv.put(TideSQLiteHelper.TIDE_TIME, item.getTime());
+                cv.put(TideSQLiteHelper.WAVE_HEIGHT_CM, item.getPredInCm());
+                cv.put(TideSQLiteHelper.GET_LOW, item.getHighlow());
+
+                // BUILDS A ROW IN THE DB (using id)
+                db.insert(dbTableId, null, cv);
+            }
+        }
+        // Close
+        db.close();
     }
 
 
