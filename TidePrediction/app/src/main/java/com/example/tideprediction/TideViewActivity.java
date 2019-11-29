@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.SimpleCursorAdapter;
@@ -27,6 +28,7 @@ public class TideViewActivity extends ListActivity {
 
     // CLASS FIELDS
     Cursor cursor;
+    TideSQLiteHelper sqLiteHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,14 +46,18 @@ public class TideViewActivity extends ListActivity {
         int monthOfYear = intent.getExtras().getInt(MainActivity.MONTH);
         String location = intent.getExtras().getString(MainActivity.LOCATION);
 
-        // Fill DB with tide predictions
-        Dal dal = new Dal(this);
-        dal.loadDbFromXML();
-
+        // Set TideSQLiteHelper object
         // Build id object
         // Load table data for select location
+        this.sqLiteHelper = new TideSQLiteHelper(this);
         Date selectedDate = new Date(Calendar.YEAR, monthOfYear, dayOfMonth);
-        cursor = dal.getTideTableByDate(selectedDate, location);
+        cursor = this.sqLiteHelper.getTideTableByDate(selectedDate, location);
+
+        // TEMP LOGGING
+        if(cursor != null && cursor.getCount() >0) {
+            Log.d("APPLICATION", "the cursor is not empty!");
+        }
+
 
         SimpleCursorAdapter adapter = new SimpleCursorAdapter(
                 this,
