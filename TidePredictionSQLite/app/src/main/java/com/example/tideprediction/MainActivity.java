@@ -90,6 +90,10 @@ public class MainActivity extends ListActivity implements AdapterView.OnItemClic
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        Toast.makeText(this, "Tide will have a peak height of " + hashMap.get(i).get(TIDE_HEIGHT_CM) + "cm", Toast.LENGTH_SHORT).show();
+        // get length in cm
+        int heightInCM = Integer.parseInt(hashMap.get(i).get(TIDE_HEIGHT_CM));
+        // convert to inches
+        int heightInInches = (int)(heightInCM/2.54);
+        Toast.makeText(this, "Tide will have a peak height of " + heightInInches + "in", Toast.LENGTH_SHORT).show();
     }
 }
