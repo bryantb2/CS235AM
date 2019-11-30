@@ -60,7 +60,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/textView3"
+                    android:id="@+id/generalQuestion1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="0dp"
@@ -70,7 +70,7 @@
                     android:text="How big is the project in scope?" />
 
                 <Spinner
-                    android:id="@+id/spinner"
+                    android:id="@+id/generalQuestionSpinner1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="0dp"
@@ -79,7 +79,7 @@
                     android:paddingBottom="5dp" />
 
                 <TextView
-                    android:id="@+id/textView4"
+                    android:id="@+id/generalQuestion2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="0dp"
@@ -89,7 +89,7 @@
                     android:text="How long do you have for development?" />
 
                 <Spinner
-                    android:id="@+id/spinner2"
+                    android:id="@+id/generalQuestionSpinner2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="0dp"
@@ -98,7 +98,7 @@
                     android:paddingBottom="5dp" />
 
                 <TextView
-                    android:id="@+id/textView5"
+                    android:id="@+id/generalQuestion3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="0dp"
@@ -108,7 +108,7 @@
                     android:text="Do you intent for this project to scale as time goes on?" />
 
                 <Spinner
-                    android:id="@+id/spinner3"
+                    android:id="@+id/generalQuestionSpinner3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="0dp"
@@ -117,7 +117,7 @@
                     android:paddingBottom="5dp" />
 
                 <TextView
-                    android:id="@+id/textView6"
+                    android:id="@+id/generalQuestion4"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="0dp"
@@ -127,7 +127,7 @@
                     android:text="Which programming language are you most comfortable with?" />
 
                 <Spinner
-                    android:id="@+id/spinner4"
+                    android:id="@+id/generalQuestionSpinner4"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="0dp"
@@ -136,7 +136,7 @@
                     android:paddingBottom="5dp" />
 
                 <TextView
-                    android:id="@+id/textView7"
+                    android:id="@+id/generalQuestion5"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="0dp"
@@ -146,7 +146,7 @@
                     android:text="How efficient does your final application need to be?" />
 
                 <Spinner
-                    android:id="@+id/spinner5"
+                    android:id="@+id/generalQuestionSpinner5"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="0dp"
@@ -155,7 +155,7 @@
                     android:paddingBottom="5dp" />
 
                 <TextView
-                    android:id="@+id/textView8"
+                    android:id="@+id/generalQuestion6"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="0dp"
@@ -165,7 +165,7 @@
                     android:text="Is this project being developed in a professional or non-professional environment? " />
 
                 <Spinner
-                    android:id="@+id/spinner6"
+                    android:id="@+id/generalQuestionSpinner6"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="0dp"
@@ -174,7 +174,7 @@
                     android:paddingBottom="5dp" />
 
                 <TextView
-                    android:id="@+id/textView16"
+                    android:id="@+id/generalQuestion7"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="0dp"
@@ -184,7 +184,7 @@
                     android:text="Is this project being developed in a professional or non-professional environment? " />
 
                 <Spinner
-                    android:id="@+id/spinner7"
+                    android:id="@+id/generalQuestionSpinner7"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="0dp"
@@ -206,7 +206,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/textView21"
+                    android:id="@+id/frontendQuestion1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="0dp"
@@ -216,7 +216,7 @@
                     android:text="How much structure does your project require?" />
 
                 <Spinner
-                    android:id="@+id/spinner8"
+                    android:id="@+id/frontendQuestionSpinner1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="0dp"
@@ -225,7 +225,7 @@
                     android:paddingBottom="5dp" />
 
                 <TextView
-                    android:id="@+id/textView22"
+                    android:id="@+id/frontendQuestion2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="0dp"
@@ -235,7 +235,7 @@
                     android:text="Should your UI scale for all devices or just desktops?" />
 
                 <Spinner
-                    android:id="@+id/spinner9"
+                    android:id="@+id/frontendQuestionSpinner2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="0dp"
@@ -244,7 +244,7 @@
                     android:paddingBottom="5dp" />
 
                 <TextView
-                    android:id="@+id/textView23"
+                    android:id="@+id/frontendQuestion3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="0dp"
@@ -254,7 +254,7 @@
                     android:text="Do you plan on building a series of custom UI components for reuse?" />
 
                 <Spinner
-                    android:id="@+id/spinner10"
+                    android:id="@+id/frontendQuestionSpinner3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="0dp"
@@ -276,7 +276,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/textView24"
+                    android:id="@+id/backendQuestion1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="0dp"
@@ -286,7 +286,7 @@
                     android:text="Are you building real-time services like facetime?" />
 
                 <Spinner
-                    android:id="@+id/spinner11"
+                    android:id="@+id/backendQuestionSpinner1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="0dp"
@@ -295,7 +295,7 @@
                     android:paddingBottom="5dp" />
 
                 <TextView
-                    android:id="@+id/textView25"
+                    android:id="@+id/backendQuestion2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="0dp"
@@ -305,7 +305,7 @@
                     android:text="Do you expect your finished product to deal with high levels of traffic?" />
 
                 <Spinner
-                    android:id="@+id/spinner12"
+                    android:id="@+id/backendQuestionSpinner2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="0dp"
@@ -314,7 +314,7 @@
                     android:paddingBottom="5dp" />
 
                 <TextView
-                    android:id="@+id/textView26"
+                    android:id="@+id/backendQuestion3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="0dp"
@@ -324,7 +324,7 @@
                     android:text="Are you more concerned about platform maturity?" />
 
                 <Spinner
-                    android:id="@+id/spinner13"
+                    android:id="@+id/backendQuestionSpinner3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="0dp"
@@ -333,7 +333,7 @@
                     android:paddingBottom="5dp" />
 
                 <TextView
-                    android:id="@+id/textView27"
+                    android:id="@+id/backendQuestion4"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="0dp"
@@ -343,7 +343,7 @@
                     android:text="Is ease of use and solid documentation a core requirement?" />
 
                 <Spinner
-                    android:id="@+id/spinner14"
+                    android:id="@+id/backendQuestionSpinner4"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="0dp"
@@ -365,7 +365,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/textView28"
+                    android:id="@+id/dbQuestion1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="0dp"
@@ -375,7 +375,7 @@
                     android:text="Which DB structure is required?" />
 
                 <Spinner
-                    android:id="@+id/spinner15"
+                    android:id="@+id/dbQuestionSpinner1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="0dp"
@@ -384,7 +384,7 @@
                     android:paddingBottom="5dp" />
 
                 <TextView
-                    android:id="@+id/textView29"
+                    android:id="@+id/dbQuestion2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="0dp"
@@ -394,7 +394,7 @@
                     android:text="Do you want access to mature, code-first, ORM software?" />
 
                 <Spinner
-                    android:id="@+id/spinner16"
+                    android:id="@+id/dbQuestionSpinner2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="0dp"
@@ -403,7 +403,7 @@
                     android:paddingBottom="5dp" />
 
                 <TextView
-                    android:id="@+id/textView30"
+                    android:id="@+id/dbQuestion3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="0dp"
@@ -413,7 +413,7 @@
                     android:text="WIll you be administering the DB and does it need to be flexible?" />
 
                 <Spinner
-                    android:id="@+id/spinner17"
+                    android:id="@+id/dbQuestionSpinner3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="0dp"
@@ -422,7 +422,7 @@
                     android:paddingBottom="5dp" />
 
                 <TextView
-                    android:id="@+id/textView31"
+                    android:id="@+id/dbQuestion4"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="0dp"
@@ -432,7 +432,7 @@
                     android:text="Do you plan to change your schema, or the data stored in your DB, as time goes on to support more app features?" />
 
                 <Spinner
-                    android:id="@+id/spinner18"
+                    android:id="@+id/dbQuestionSpinner4"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="0dp"
