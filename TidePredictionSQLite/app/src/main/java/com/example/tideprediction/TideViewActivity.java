@@ -44,14 +44,19 @@ public class TideViewActivity extends ListActivity {
         Intent intent = getIntent();
         int dayOfMonth = intent.getExtras().getInt(MainActivity.DAY);
         int monthOfYear = intent.getExtras().getInt(MainActivity.MONTH);
+        int year = intent.getExtras().getInt(MainActivity.YEAR);
         String location = intent.getExtras().getString(MainActivity.LOCATION);
 
-        // Set TideSQLiteHelper object
-        // Build id object
+        // Set DB helper object
         // Load table data for select location
         this.sqLiteHelper = new TideSQLiteHelper(this);
-        Date selectedDate = new Date(Calendar.YEAR, monthOfYear, dayOfMonth);
-        cursor = this.sqLiteHelper.getTideTableByDate(selectedDate, location);
+        if(sqLiteHelper.isDBEmpty() == false)
+            sqLiteHelper.loadDbFromXML();
+
+        // Build date string that will get passed into getTideItems method
+        String dateString = String.valueOf(year) + "/" + String.valueOf(monthOfYear) + "/" + String.valueOf(dayOfMonth);
+
+        cursor = this.sqLiteHelper.getTidePredictionsByDate(dateString, location);
 
         // TEMP LOGGING
         if(cursor != null && cursor.getCount() >0) {
@@ -78,6 +83,70 @@ public class TideViewActivity extends ListActivity {
         setListAdapter(adapter);
     }
 
+/*
+PREVIOUSLY WORKING DB
+public class TideViewActivity extends ListActivity {
+
+    // UI ELEMENTS
+    private int dayAbbrTextView;
+    private int dateTimeTextView;
+    private int tideStatusTextView;
+    private int tideTimeTextView;
+
+    // CLASS FIELDS
+    Cursor cursor;
+    TideSQLiteHelper sqLiteHelper;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        // Get references to UI objects
+        dayAbbrTextView = R.id.dayAbbrv;
+        dateTimeTextView = R.id.dateTime;
+        tideStatusTextView = R.id.tideStatus;
+        tideTimeTextView = R.id.tideTime;
+
+        // Get intent sent from main activity
+        Intent intent = getIntent();
+        int dayOfMonth = intent.getExtras().getInt(MainActivity.DAY);
+        int monthOfYear = intent.getExtras().getInt(MainActivity.MONTH);
+        String location = intent.getExtras().getString(MainActivity.LOCATION);
+
+        // Set TideSQLiteHelper object
+        // Build id object
+        // Load table data for select location
+        this.sqLiteHelper = new TideSQLiteHelper(this);
+        SQLiteDatabase db = sqLiteHelper.getReadableDatabase();
+        sqLiteHelper.loadDbFromXML(db);
+        Date selectedDate = new Date(Calendar.YEAR, monthOfYear, dayOfMonth);
+        cursor = this.sqLiteHelper.getTideTableByDate(db, selectedDate, location);
+
+        // TEMP LOGGING
+        if(cursor != null && cursor.getCount() >0) {
+            Log.d("APPLICATION", "the cursor is not empty!");
+        }
+
+
+        SimpleCursorAdapter adapter = new SimpleCursorAdapter(
+                this,
+                R.layout.list_layout,
+                cursor,
+                new String[]{TideSQLiteHelper.DAY,
+                        TideSQLiteHelper.DATE,
+                        TideSQLiteHelper.GET_LOW,
+                        TideSQLiteHelper.TIDE_TIME,
+                },
+                new int[]{
+                        dayAbbrTextView,
+                        dateTimeTextView,
+                        tideStatusTextView,
+                        tideTimeTextView
+                },
+                0 );	// no flags
+        setListAdapter(adapter);
+    }
+ */
 
 
 

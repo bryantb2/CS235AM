@@ -34,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements DatePicker.OnDate
 
     // STRING INTENT CONSTANTS
     public static final String LOCATION = "LOCATION";
+    public static final String YEAR = "YEAR";
     public static final String MONTH = "MONTH";
     public static final String DAY = "DAY";
 
@@ -44,8 +45,9 @@ public class MainActivity extends AppCompatActivity implements DatePicker.OnDate
     public static final String ASTORIA = "astoria";
 
     // DATE FIELDS
-    public int monthSelected;
-    public int daySelected;
+    private int monthSelected;
+    private int daySelected;
+    private int yearSelected;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,10 +68,17 @@ public class MainActivity extends AppCompatActivity implements DatePicker.OnDate
         locationDropDown.setSelection(0);
 
         // Set date picker UI and event listener
+        // then initialize the class-level date-selected fields
         Calendar c = Calendar.getInstance();
-        dateSelector.init(c.get(Calendar.YEAR),
-                c.get(Calendar.MONTH),
-                c.get(Calendar.DAY_OF_MONTH), this);
+        int calendarYear = c.get(Calendar.YEAR);
+        int calendarMonth = c.get(Calendar.MONTH);
+        int calendarDay = c.get(Calendar.DAY_OF_MONTH);
+        dateSelector.init(calendarYear,
+                calendarMonth,
+                calendarDay, this);
+        this.monthSelected = calendarMonth;
+        this.daySelected = calendarDay;
+        this.yearSelected = calendarYear;
 
         // Assign button click event
         assignButtonEventHandlers();
@@ -80,6 +89,7 @@ public class MainActivity extends AppCompatActivity implements DatePicker.OnDate
         Toast.makeText(getApplicationContext(),"Whoa, date changed!",Toast.LENGTH_LONG).show();
         this.monthSelected = monthOfYear;
         this.daySelected = dayOfMonth;
+        this.yearSelected = year;
     }
 
     private void assignButtonEventHandlers() {
@@ -106,6 +116,7 @@ public class MainActivity extends AppCompatActivity implements DatePicker.OnDate
                 // Send intent for second activity
                 Intent intent = new Intent(getApplicationContext(),TideViewActivity.class);
                 intent.putExtra(LOCATION, locationName);
+                intent.putExtra(YEAR, yearSelected);
                 intent.putExtra(MONTH, monthSelected);
                 intent.putExtra(DAY, daySelected);
 
