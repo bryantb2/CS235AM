@@ -44,6 +44,23 @@ public class MainActivity extends AppCompatActivity {
         AssignButtonEventHandlers();
     }
 
+    // EVENT LISTENER ASSIGNMENT
+    private void AssignButtonEventHandlers() {
+        this.calculateButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                Toast message = Toast.makeText(getApplication(), "Please make sure to answer all questions!", Toast.LENGTH_SHORT);
+                if(AreSpinnerAnswersValid() != true)
+                    message.show();
+                else {
+                    // calculate test results
+                    // open up second activity
+                    CalculateResults();
+                    LaunchResultsActivity();
+                }
+            }
+        });
+    }
 
     // ADAPTER GENERATOR METHODS
     private void BuildLayoutSpinners() {
@@ -189,21 +206,9 @@ public class MainActivity extends AppCompatActivity {
         return true; // if loop has been broken out of, then all questions are valid
     }
 
-    private void AssignButtonEventHandlers() {
-        this.calculateButton.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                Toast message = Toast.makeText(getApplication(), "Please make sure to answer all questions!", Toast.LENGTH_SHORT);
-                if(AreSpinnerAnswersValid() != true)
-                    message.show();
-                else {
-                    // calculate test results
-                    // open up second activity
-                    CalculateResults();
-                    LaunchResultsActivity();
-                }
-            }
-        });
+    // QUIZ LOGIC METHODS
+    private void ParseQuizResults() {
+
     }
 
     private void LaunchResultsActivity() {

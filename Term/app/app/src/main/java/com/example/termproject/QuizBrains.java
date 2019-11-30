@@ -1,4 +1,8 @@
 package com.example.termproject;
 
-public class QuizBrains {
+import java.io.Serializable;
+
+public class QuizBrains implements Serializable {
+    //
+
 }
