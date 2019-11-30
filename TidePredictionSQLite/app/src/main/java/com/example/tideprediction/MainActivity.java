@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements DatePicker.OnDate
     @Override
     public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
         Toast.makeText(getApplicationContext(),"Whoa, date changed!",Toast.LENGTH_LONG).show();
-        this.monthSelected = monthOfYear;
+        this.monthSelected = monthOfYear + 1;
         this.daySelected = dayOfMonth;
         this.yearSelected = year;
     }
