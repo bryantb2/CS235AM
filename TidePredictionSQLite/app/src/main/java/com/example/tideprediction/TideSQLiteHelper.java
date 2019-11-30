@@ -137,9 +137,7 @@ public class TideSQLiteHelper extends SQLiteOpenHelper {
     }
 
     public Cursor getTidePredictionsByDate(String date, String location) {
-        // get readable DB in this method because this is where data is retrieved
-        //this.db = this.getReadableDatabase();
-        // TODO: RETRIEVE VALUES FROM DB
+        String DATE = date;
         // Get table id based off location string
         String dbTableId;
         if(location.equals(MainActivity.ASTORIA))
@@ -152,7 +150,8 @@ public class TideSQLiteHelper extends SQLiteOpenHelper {
         // Query DB tide items
         // String String query = "SELECT * FROM "+ dbTableId + " WHERE DATE = " + date;
         // BEST ATTEMPT AT QUERYING: query = "SELECT DATE, DAY, TIDE_TIME, WAVE_HEIGHT_CM, GET_LOW FROM "+ dbTableId + " WHERE DATE =" + date;
-        String query = "SELECT * FROM "+ dbTableId;
+        String query = "SELECT * FROM "+ dbTableId + " WHERE DATE = ?";
+        String[] variables = new String[]{DATE};
         Cursor tempCursorObj = db.rawQuery(query, null);
         return tempCursorObj;
 
