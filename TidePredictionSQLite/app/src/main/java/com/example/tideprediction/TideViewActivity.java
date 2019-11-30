@@ -50,7 +50,7 @@ public class TideViewActivity extends ListActivity {
         // Set DB helper object
         // Load table data for select location
         this.sqLiteHelper = new TideSQLiteHelper(this);
-        if(sqLiteHelper.isDBEmpty() == false)
+        if(sqLiteHelper.isDBEmpty() == true)
             sqLiteHelper.loadDbFromXML();
 
         // Build date string that will get passed into getTideItems method
@@ -81,6 +81,7 @@ public class TideViewActivity extends ListActivity {
                 },
                 0 );	// no flags
         setListAdapter(adapter);
+        getListView().setFastScrollEnabled(true);
     }
 
 /*

@@ -97,14 +97,17 @@ public class TideSQLiteHelper extends SQLiteOpenHelper {
             if(i == 0) {
                 items = dal.parseXmlFile(MainActivity.FLORENCE + xmlFileStub);
                 dbTableId = TideSQLiteHelper.TIDE_PREDICTIONS_FLORENCE;
+                Log.d("DB_TABLES", "florence loaded");
             }
             else if(i == 1) {
                 items = dal.parseXmlFile(MainActivity.NEWPORT + xmlFileStub);
                 dbTableId = TideSQLiteHelper.TIDE_PREDICTIONS_NEWPORT;
+                Log.d("DB_TABLES", "newport loaded");
             }
             else if(i == 2){
                 items = dal.parseXmlFile(MainActivity.ASTORIA + xmlFileStub);
                 dbTableId = TideSQLiteHelper.TIDE_PREDICTIONS_ASTORIA;
+                Log.d("DB_TABLES", "astoria loaded");
             }
             else {
                 items = null;
@@ -139,16 +142,16 @@ public class TideSQLiteHelper extends SQLiteOpenHelper {
         // TODO: RETRIEVE VALUES FROM DB
         // Get table id based off location string
         String dbTableId;
-        if(location == MainActivity.ASTORIA)
+        if(location.equals(MainActivity.ASTORIA))
             dbTableId = TideSQLiteHelper.TIDE_PREDICTIONS_ASTORIA;
-        else if(location == MainActivity.FLORENCE)
+        else if(location.equals(MainActivity.FLORENCE))
             dbTableId = TideSQLiteHelper.TIDE_PREDICTIONS_FLORENCE;
         else
             dbTableId = TideSQLiteHelper.TIDE_PREDICTIONS_NEWPORT;
 
         // Query DB tide items
-        // String query = "SELECT * FROM "+ dbTableId + "WHERE DATE = " + date.toString();
-        String query = "SELECT * FROM "+ dbTableId + " WHERE DATE = " + date;
+        // String String query = "SELECT * FROM "+ dbTableId + " WHERE DATE = " + date;
+        String query = "SELECT * FROM "+ dbTableId;
         Cursor tempCursorObj = db.rawQuery(query, null);
         return tempCursorObj;
     }
@@ -160,13 +163,12 @@ public class TideSQLiteHelper extends SQLiteOpenHelper {
 
         if (mCursor.moveToFirst())
         {
-            // DO SOMETHING WITH CURSOR
-            rowExists = true;
+            rowExists = false;
 
         } else
         {
             // I AM EMPTY
-            rowExists = false;
+            rowExists = true;
         }
 
         return rowExists;
