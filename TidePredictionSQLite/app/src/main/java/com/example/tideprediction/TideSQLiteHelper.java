@@ -151,9 +151,12 @@ public class TideSQLiteHelper extends SQLiteOpenHelper {
 
         // Query DB tide items
         // String String query = "SELECT * FROM "+ dbTableId + " WHERE DATE = " + date;
+        // BEST ATTEMPT AT QUERYING: query = "SELECT DATE, DAY, TIDE_TIME, WAVE_HEIGHT_CM, GET_LOW FROM "+ dbTableId + " WHERE DATE =" + date;
         String query = "SELECT * FROM "+ dbTableId;
         Cursor tempCursorObj = db.rawQuery(query, null);
         return tempCursorObj;
+
+
     }
 
     public Boolean isDBEmpty() {
