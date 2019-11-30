@@ -42,61 +42,69 @@ public class MainActivity extends AppCompatActivity {
         final String generalArrayPrefix = "general_";
 
         // Build adapter from XML array and set to UI element
-        /*boolean stillDBQuestions = true;
+        boolean stillDBQuestions = true;
         boolean stillBackendQuestions = true;
-        boolean stillFrontendQuestions = true;*/
+        boolean stillFrontendQuestions = true;
         boolean stillGeneralQuestions = true;
-        while(stillGeneralQuestions == true /*|| stillBackendQuestions == true || stillDBQuestions ==true
-                || stillFrontendQuestions == true*/) {
-            int counter = 1;
+        while(stillGeneralQuestions == true || stillBackendQuestions == true || stillDBQuestions ==true
+                || stillFrontendQuestions == true) {
+            final int counterStartingPosition = 1;
             // Set general questions first
             if(stillGeneralQuestions != false) {
-                // check to see if first question in array XML exists
-                    // if not null
-                        // increment counter
-                        // set resource id
-                        // get UI spinner id and set adapter
-                // continue this process until null, then set stillGeneralQuestions to false
-                while(stillGeneralQuestions == true) {
-                    String arrayName = generalArrayPrefix + Integer.toString(counter);
-                    int id = getResources().getIdentifier(arrayName,"array", getPackageName());
-                    if(id == 0) {
-                        // id of zero means that the resource does not exist
-                        // sets the generalQuestions bool to false
-                        // breaks out of this inner loop
-                        stillGeneralQuestions = false;
-                        break;
-                    }
-                    // Get UI spinner element
-                    String spinnerName = spinnerIdGeneralPrefix + spinnerIdMiddle+ Integer.toString(counter);
-                    Spinner UISpinner = (Spinner)findViewById(getResources().getIdentifier(spinnerName, "id", getPackageName()));
-
-                    // Fill spinner content
-                    ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-                            this, id, android.R.layout.simple_spinner_item);
-                    adapter.setDropDownViewResource(
-                            android.R.layout.simple_spinner_dropdown_item);
-                    UISpinner.setAdapter(adapter);
-                    UISpinner.setSelection(0);
-
-                    // increment resource counter
-                    counter+= 1;
-                }
-            }/*
+                GenerateAdapter(counterStartingPosition,generalArrayPrefix,spinnerIdGeneralPrefix,spinnerIdMiddle);
+                stillGeneralQuestions = false;
+            }
             // Set frontend questions second
             else if(stillFrontendQuestions != false) {
-
+                GenerateAdapter(counterStartingPosition,frontendArrayPrefix,spinnerIdFrontendPrefix,spinnerIdMiddle);
+                stillFrontendQuestions = false;
             }
             // Set backend questions third
             else if(stillBackendQuestions != false) {
-
+                GenerateAdapter(counterStartingPosition,backendArrayPrefix,spinnerIdBackendPrefix,spinnerIdMiddle);
+                stillBackendQuestions = false;
             }
             // Set DB questions fourth
             else {
-
-            }*/
+                GenerateAdapter(counterStartingPosition,dbArrayPrefix,spinnerIdDbPrefix,spinnerIdMiddle);
+                stillDBQuestions = false;
+            }
 
         }
 
+    }
+
+    private void GenerateAdapter(int initialCounterValue, String arrayPrefix, String spinnerIdPrefix, String spinnerIdMiddle) {
+        // check to see if first question in array XML exists
+        // if not null
+            // increment counter
+            // set resource id
+            // get UI spinner id and set adapter
+        boolean areThereStillAQuestions = true;
+        int counter = initialCounterValue;
+        while(areThereStillAQuestions == true) {
+            String arrayName = arrayPrefix + Integer.toString(counter);
+            int id = getResources().getIdentifier(arrayName,"array", getPackageName());
+            if(id == 0) {
+                // id of zero means that the resource does not exist
+                // breaks out of this function (since it has done all that it can
+                return;
+            }
+            // Get UI spinner element
+            String spinnerName = spinnerIdPrefix + spinnerIdMiddle+ Integer.toString(counter);
+            Spinner UISpinner = (Spinner)findViewById(getResources().getIdentifier(spinnerName, "id", getPackageName()));
+
+            // Fill spinner content
+            ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+                    this, id, android.R.layout.simple_spinner_item);
+            adapter.setDropDownViewResource(
+                    android.R.layout.simple_spinner_dropdown_item);
+            UISpinner.setAdapter(adapter);
+            UISpinner.setSelection(0);
+
+            // increment resource counter
+            counter+= 1;
+        }
+        return; // this is just for java, will never be returned from here
     }
 }
