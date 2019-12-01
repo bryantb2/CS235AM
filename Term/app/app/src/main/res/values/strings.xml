@@ -21,10 +21,8 @@
 
     <string-array name="general_4">
         <item>Select One</item>
-        <item>Javascript</item>
-        <item>Java</item>
-        <item>C#</item>
-        <item>Python</item>
+        <item>Javascript or Python</item>
+        <item>C# or Java</item>
     </string-array>
 
     <string-array name="general_5">
