@@ -54,7 +54,7 @@ public class AnswerConverter {
                     case 1: // amount of structure
                         if(questionAnswerPosition == 1){
                             tempArr.add(QuizLogic.ANGULAR);
-                            tempArr.add(QuizLogic.VUE);
+                            //tempArr.add(QuizLogic.VUE);
                             tempArr.add(QuizLogic.ASP_DOTNET);
                             return tempArr; // structure is most important aspect
                         }

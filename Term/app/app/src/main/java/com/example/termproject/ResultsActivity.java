@@ -16,4 +16,6 @@ public class ResultsActivity extends AppCompatActivity {
         Intent intent = getIntent();
         QuizLogic quiz = (QuizLogic)intent.getSerializableExtra(MainActivity.QUIZ_LOGIC); // get obj using serializable interface (cast to proper type)
     }
+
+    //TODO: build a series of methods that get the recommendations from the quiz logic AND THEN display in a list on the results activity
 }

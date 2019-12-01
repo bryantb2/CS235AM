@@ -91,18 +91,19 @@ public class QuizLogic implements Serializable {
         recommendation = new QuizRecommendation((BOOTSTRAP + " OR "+ MATERIAL_UI), CSS_FRAMEWORK, FRONT_END_SECTION,categoryTags);
         this.preGeneratedRecommendations.add(recommendation);
 
+        //TODO: finish this
     }
 
     private void CalcPrefTechnologyBySection(ArrayList<String> testResults, String sectionTag) {
-
+        //TODO: finish this
     }
 
     private void BuildAndAddRecommendations() {
-        // l
+        //TODO: finish this
     }
 
     private void CalcGeneralLean() {
-
+        //TODO: finish this
     }
 
 
