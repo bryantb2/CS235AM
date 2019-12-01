@@ -16,7 +16,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     // PUBLIC STATIC CONSTANTS
-    public final String QUIZ_LOGIC = "QUIZ_LOGIC";
+    public static final String QUIZ_LOGIC = "QUIZ_LOGIC";
 
     // UI property constants
     private final String spinnerIdDbPrefix = "db";
@@ -72,11 +72,6 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(getApplication(), "Answers have been reset!", Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-    // UI METHOD
-    private void ResetAnswers() {
-
     }
 
     // ADAPTER GENERATOR METHODS

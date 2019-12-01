@@ -16,7 +16,7 @@ public class QuizLogic implements Serializable {
     // RECOMMENDED TECH STATIC TAGS
     public static final String REACT_JS = "REACT_JS";
     public static final String ANGULAR = "ANGULAR";
-    public static final String VUE = "VUE";
+    //public static final String VUE = "VUE";
     public static final String REDUX = "REDUX";
     public static final String BOOTSTRAP = "BOOTSTRAP";
     public static final String STYLED_COMPONENTS = "STYLED_COMPONENTS";
@@ -30,6 +30,18 @@ public class QuizLogic implements Serializable {
     public static final String MYSQL = "MYSQL";
     public static final String POSTGRESQL = "POSTGRESQL";
 
+    // PRIVATE TECH TYPE CONSTANT TAGS
+    private final String JS_FRAMEWORK="JS_FRAMEWORK";
+    private final String DOTNET_FRAMEWORK="DOTNET_FRAMEWORK";
+    private final String PYTHON_WEB_FRAMEWORK="DOTNET_FRAMEWORK";
+    private final String CSS_FRAMEWORK="CSS_FRAMEWORK";
+    private final String CSS_MODULE="CSS_MODULE";
+    private final String STATE_MANAGEMENT="STATE_MANAGEMENT";
+    private final String JS_SERVER_FRAMEWORK="JS_SERVER_FRAMEWORK";
+    private final String DOTENET_SERVER_FRAMEWORK="DOTENET_SERVER_FRAMEWORK";
+    private final String NON_RELATIONAL_DB="NON_RELATIONAL_DB";
+    private final String RELATIONAL_DB="RELATIONAL_DB";
+
     // STATIC SECTION TAGS
     public static final String GENERAL_SECTION = "GENERAL_SECTION";
     public static final String FRONT_END_SECTION = "FRONT_END_SECTION";
@@ -42,7 +54,8 @@ public class QuizLogic implements Serializable {
     private String PreferedFrontEndTech;
     private String PreferedCSSFramework;
 
-    private ArrayList<QuizRecommendation> finalRecommendations = new ArrayList<QuizRecommendation>();
+    private ArrayList<QuizRecommendation> finalRecommendations = new ArrayList<QuizRecommendation>(); // stores the recommendations that will be returned and shown in the UI
+    private ArrayList<QuizRecommendation> preGeneratedRecommendations = new ArrayList<QuizRecommendation>(); // this just stores all of the possible recommendations that are generated
 
     public QuizLogic() {
         // Pre-fill quiz recommendation list with recommendation objects
@@ -50,11 +63,33 @@ public class QuizLogic implements Serializable {
     }
 
     // METHODS
-    public ArrayList<QuizRecommendation> GenerateRecommendations() {
+    public ArrayList<QuizRecommendation> GetRecommendations() {
         return this.finalRecommendations;
     }
 
     public void PassNCalcTestResults(ArrayList<ArrayList<String>> testResults) {
+        // FRONTEND RECOMMENDATIONS
+        // react js recommendation object
+        ArrayList<String> categoryTags = new ArrayList<>();
+        categoryTags.add(FAST_DEV_TIME);
+        categoryTags.add(SCRIPTING_LANGUAGE);
+        QuizRecommendation recommendation = new QuizRecommendation(REACT_JS, JS_FRAMEWORK, FRONT_END_SECTION,categoryTags);
+        this.preGeneratedRecommendations.add(recommendation);
+
+        // angular js recommendation object
+        categoryTags = new ArrayList<>();
+        categoryTags.add(MAINTAINABILITY);
+        categoryTags.add(STRUCTURE);
+        categoryTags.add(SCRIPTING_LANGUAGE);
+        recommendation = new QuizRecommendation(ANGULAR, JS_FRAMEWORK, FRONT_END_SECTION,categoryTags);
+        this.preGeneratedRecommendations.add(recommendation);
+
+        // bootstrap AND material css recommendation object
+        categoryTags = new ArrayList<>();
+        categoryTags.add(FAST_DEV_TIME);
+        categoryTags.add(STRUCTURE);
+        recommendation = new QuizRecommendation((BOOTSTRAP + " OR "+ MATERIAL_UI), CSS_FRAMEWORK, FRONT_END_SECTION,categoryTags);
+        this.preGeneratedRecommendations.add(recommendation);
 
     }
 
@@ -63,7 +98,7 @@ public class QuizLogic implements Serializable {
     }
 
     private void BuildAndAddRecommendations() {
-
+        // l
     }
 
     private void CalcGeneralLean() {
