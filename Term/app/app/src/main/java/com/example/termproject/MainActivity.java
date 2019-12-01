@@ -2,7 +2,9 @@ package com.example.termproject;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -10,8 +12,12 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
+    // PUBLIC STATIC CONSTANTS
+    public final String QUIZ_LOGIC = "QUIZ_LOGIC";
+
     // UI property constants
     private final String spinnerIdDbPrefix = "db";
     private final String spinnerIdBackendPrefix = "backend";
@@ -53,9 +59,7 @@ public class MainActivity extends AppCompatActivity {
                 if(AreSpinnerAnswersValid() != true)
                     message.show();
                 else {
-                    // calculate test results
                     // open up second activity
-                    CalculateResults();
                     LaunchResultsActivity();
                 }
             }
@@ -206,16 +210,94 @@ public class MainActivity extends AppCompatActivity {
         return true; // if loop has been broken out of, then all questions are valid
     }
 
-    // QUIZ LOGIC METHODS
-    private void ParseQuizResults() {
-
-    }
-
+    // QUIZ METHODS
     private void LaunchResultsActivity() {
+        // instantiate quiz object
+            // parse and pass in results
+        // create intent and add the quiz object as an extra
+        // start second activity
+        ArrayList<ArrayList<String>> parsedQuizAnswers = ParseQuizResults();
+        QuizLogic quiz = new QuizLogic();
+        quiz.PassNCalcTestResults(parsedQuizAnswers);
 
+        Toast.makeText(getApplicationContext(),"Second activity would have launched successfully!",Toast.LENGTH_LONG);
+        /*Intent intent = new Intent(getApplicationContext(),ResultsActivity.class);
+        intent.putExtra(QUIZ_LOGIC,quiz);
+        startActivity(intent);*/
     }
 
-    private void CalculateResults() {
+    private ArrayList<ArrayList<String>> ParseQuizResults() {
+        // method will return a set of parallel ArrayLists
+            // first Arraylist will be the results
+            // second Arraylist will be the corresponding section tags
+        // loops through each section and concatenates each response position to an ArrayList of ArrayLists
+        ArrayList<String> sectionTags = new ArrayList<String>();
+            sectionTags.add(QuizLogic.GENERAL_SECTION);
+            sectionTags.add(QuizLogic.FRONT_END_SECTION);
+            sectionTags.add(QuizLogic.BACK_END_SECTION);
+            sectionTags.add(QuizLogic.DB_SECTION);
+        ArrayList<ArrayList<String>> arrOfQuizAnswers = new ArrayList<ArrayList<String>>();
 
+        final int counterStartingPosition = 1;
+        for(int i = 0; i <sectionTags.size(); i++) {
+            // Parse general section and add results to
+            if(sectionTags.get(i) == QuizLogic.GENERAL_SECTION) {
+                ArrayList<String> parsedGeneralSection = ParseAndReturnQuizSection(counterStartingPosition,spinnerIdGeneralPrefix,spinnerIdMiddle);
+                arrOfQuizAnswers.add(parsedGeneralSection);
+            }
+            // Set frontend questions second
+            else if(sectionTags.get(i) == QuizLogic.FRONT_END_SECTION) {
+                ArrayList<String> parsedFrontendSection = ParseAndReturnQuizSection(counterStartingPosition,spinnerIdFrontendPrefix,spinnerIdMiddle);
+                arrOfQuizAnswers.add(parsedFrontendSection);
+            }
+            // Set backend questions third
+            else if(sectionTags.get(i) == QuizLogic.BACK_END_SECTION) {
+                ArrayList<String> parsedBackendSection = ParseAndReturnQuizSection(counterStartingPosition,spinnerIdBackendPrefix,spinnerIdMiddle);
+                arrOfQuizAnswers.add(parsedBackendSection);
+            }
+            // Set DB questions fourth
+            else {
+                ArrayList<String> parsedDBSection = ParseAndReturnQuizSection(counterStartingPosition,spinnerIdDbPrefix,spinnerIdMiddle);
+                arrOfQuizAnswers.add(parsedDBSection);
+            }
+        }
+
+        // add parsed quiz answers to final array
+        // add section tag list to final array
+        arrOfQuizAnswers.add(sectionTags);
+        Log.d("MAIN_ACTIVITY","question parsing successful!");
+        return arrOfQuizAnswers; // every ArrayList, except the last, is a series of quiz answers
+    }
+
+    private ArrayList<String> ParseAndReturnQuizSection(int initialCounterValue, String spinnerIdPrefix, String spinnerIdMiddle) {
+        // check UI to see if question exists
+            // if not null
+            // increment counter
+            // get UI resource id
+            // add selected position to tempArrList
+        boolean areThereStillAQuestions = true;
+        int counter = initialCounterValue;
+        ArrayList<String> tempArrList = new ArrayList<String>();
+        while(areThereStillAQuestions == true) {
+            String spinnerName = spinnerIdPrefix + spinnerIdMiddle+ Integer.toString(counter);
+            int id = getResources().getIdentifier(spinnerName,"id", getPackageName());
+            if(id == 0) {
+                // id of zero means that the resource does not exist
+                // if the code gets here, it means all questions have been parsed
+                areThereStillAQuestions = false;
+            }
+            else {
+                // Get UI spinner element
+                Spinner UISpinner = (Spinner)findViewById(getResources().getIdentifier(spinnerName, "id", getPackageName()));
+
+                // Get and set selectedPosition to ArrayList
+                int selectedSpinnerPosition = UISpinner.getSelectedItemPosition();
+                tempArrList.add(Integer.toString(selectedSpinnerPosition));
+                Log.d("MAIN_ACTIVITY","Logging parsed integer location for question "+counter+":"+selectedSpinnerPosition);
+                // increment resource counter
+                counter+= 1;
+            }
+        }
+        return tempArrList; // if loop has been broken out of, then all questions have been parsed
     }
 }

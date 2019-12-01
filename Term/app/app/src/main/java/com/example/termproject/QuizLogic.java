@@ -37,10 +37,39 @@ public class QuizLogic implements Serializable {
     public static final String DB_SECTION = "DB_SECTION";
 
     // CLASS FIELDS
-    private int lean;
-    private String leanCategoryTag;
+    private final int lean = 2; // +2 points for what category the lean is in
+    private String leanCategory;
+    private String PreferedFrontEndTech;
+    private String PreferedCSSFramework;
+
     private ArrayList<QuizRecommendation> finalRecommendations = new ArrayList<QuizRecommendation>();
-    private ArrayList<QuizSection> quizSections = new ArrayList<QuizSection>();
+
+    public QuizLogic() {
+        // Pre-fill quiz recommendation list with recommendation objects
+        BuildAndAddRecommendations();
+    }
+
+    // METHODS
+    public ArrayList<QuizRecommendation> GenerateRecommendations() {
+        return this.finalRecommendations;
+    }
+
+    public void PassNCalcTestResults(ArrayList<ArrayList<String>> testResults) {
+
+    }
+
+    private void CalcPrefTechnologyBySection(ArrayList<String> testResults, String sectionTag) {
+
+    }
+
+    private void BuildAndAddRecommendations() {
+
+    }
+
+    private void CalcGeneralLean() {
+
+    }
+
 
 
 
