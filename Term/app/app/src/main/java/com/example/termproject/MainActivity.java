@@ -64,6 +64,19 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+        this.resetButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                BuildLayoutSpinners(); // defacto reset
+                Toast.makeText(getApplication(), "Answers have been reset!", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    // UI METHOD
+    private void ResetAnswers() {
+
     }
 
     // ADAPTER GENERATOR METHODS
@@ -220,10 +233,9 @@ public class MainActivity extends AppCompatActivity {
         QuizLogic quiz = new QuizLogic();
         quiz.PassNCalcTestResults(parsedQuizAnswers);
 
-        Toast.makeText(getApplicationContext(),"Second activity would have launched successfully!",Toast.LENGTH_LONG);
-        /*Intent intent = new Intent(getApplicationContext(),ResultsActivity.class);
+        Intent intent = new Intent(getApplicationContext(),ResultsActivity.class);
         intent.putExtra(QUIZ_LOGIC,quiz);
-        startActivity(intent);*/
+        startActivity(intent);
     }
 
     private ArrayList<ArrayList<String>> ParseQuizResults() {
