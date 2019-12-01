@@ -213,7 +213,7 @@
                     android:layout_marginBottom="0dp"
                     android:paddingTop="5dp"
                     android:paddingBottom="5dp"
-                    android:text="Should your UI scale for all devices or just desktops?" />
+                    android:text="Are you comfortable writting custom, scalable, CSS?" />
 
                 <Spinner
                     android:id="@+id/frontendQuestionSpinner2"

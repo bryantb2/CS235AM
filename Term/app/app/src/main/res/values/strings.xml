@@ -45,8 +45,8 @@
 
     <string-array name="frontEnd_2">
         <item>Select One</item>
-        <item>Just desktops is fine</item>
-        <item>My site absolutely need to be scalable</item>
+        <item>Yes</item>
+        <item>No</item>
     </string-array>
 
     <string-array name="frontEnd_3">
