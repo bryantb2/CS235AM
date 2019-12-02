@@ -1,16 +1,19 @@
 package com.example.termproject;
 
+import android.util.Log;
+
 import java.io.Serializable;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class QuizLogic implements Serializable {
     // STATIC CATEGORY TAGS (these are the general quiz categories that help determine a user's lean, or tech-attribute preference)
+    public static final String SCRIPTING_LANGUAGE = "SCRIPTING_LANGUAGE";
+    public static final String TRADITIONAL_LANGUAGE = "TRADITIONAL_LANGUAGE";
     public static final String FAST_DEV_TIME = "FAST_DEV_TIME"; // ALSO EASE OF USE
     public static final String MAINTAINABILITY = "MAINTAINABILITY";
     public static final String EFFICIENCY_AND_SPEED = "EFFICIENCY_AND_SPEED";
     public static final String STRUCTURE = "STRUCTURE";
-    public static final String SCRIPTING_LANGUAGE = "SCRIPTING_LANGUAGE";
-    public static final String TRADITIONAL_LANGUAGE = "TRADITIONAL_LANGUAGE";
     public static final String NO_SPECIFIC_CATEGORY = "NO_SPECIFIC_CATEGORY"; // this exists because sometimes only one particular answer matters in a quiz question
 
     // RECOMMENDED TECH STATIC TAGS (these are the technologies that will ultimately be recommended)
@@ -50,7 +53,8 @@ public class QuizLogic implements Serializable {
 
     // CLASS FIELDS
     private final int lean = 2; // +2 points for what category the lean is in
-    private String leanCategory;
+    private String generalCategoryLean;
+    private String languageLean;
     private String PreferedFrontEndTech;
     private String PreferedCSSFramework;
     private String PreferedBackEndTech;
@@ -73,6 +77,7 @@ public class QuizLogic implements Serializable {
         // takes in ArrayList of ArrayList strings
             // first four embedded arraylists are section results
             // the last is an ArrayList of category strings that corresponds to the order and type of the section results
+        // parse answers into their own ArrayLists
         // calc general lean
         // calc pref technology for each section
         // apply lean
@@ -81,16 +86,102 @@ public class QuizLogic implements Serializable {
         ArrayList<String> frontEndSectionAnswers = GetSectionResultsByCategory(FRONT_END_SECTION, testResults);
         ArrayList<String> backEndSectionAnswers = GetSectionResultsByCategory(BACK_END_SECTION, testResults);
         ArrayList<String> dbSectionAnswers = GetSectionResultsByCategory(DB_SECTION, testResults);
+
+        CalcLeans(generalSectionAnswers);
+
     }
 
     private void CalcPrefTechnologyBySection(ArrayList<String> testResults, String sectionTag) {
         //TODO: finish this
-        //
     }
 
-    private void CalcGeneralLean() {
-        //TODO: finish this
+    private void CalcLeans(ArrayList<String> generalSectionResults) {
+        // this method utilizes the answer converter's methods to get two things:
+            // the category that corresponds to general section quiz answer
+            // the language bias of the user
+        // the category returned from each answer will be:
+            // added to several local running counter representing the various quiz categories
+        // the two highest categories will be determined and then set to the class variable
+        int traditionalLanguageBias = 0;
+        int scriptingLanguageBias = 0;
+        int[] categoryOccuranceTracker = new int[4];
 
+        // array counter indices
+        final int FAST_DEV_TIME_INDEX = 0;
+        final int MAINTAINABILITY_INDEX = 1;
+        final int EFFICIENCY_INDEX = 2;
+        final int STRUCTURE_INDEX = 3;
+        //final int NO_CATEGORY_INDEX = 4;
+
+        // Getting and setting general answer results
+        final int CATEGORY_INCREMENTOR = 1;
+        for(int i = 0; i < generalSectionResults.size(); i++) {
+            // since the order of the quiz results haven't changed,
+            // the index+1 is the question number (a natural index is required for the answer converter)
+            int questionNumber = i + 1;
+            int answerPosition = Integer.parseInt(generalSectionResults.get(i));
+            String answerAsCategory = AnswerConverter.DetermineGeneralSectionLean(questionNumber,answerPosition);
+            if(answerAsCategory == FAST_DEV_TIME) {
+                int oldCount = categoryOccuranceTracker[FAST_DEV_TIME_INDEX];
+                categoryOccuranceTracker[FAST_DEV_TIME_INDEX] = (oldCount + CATEGORY_INCREMENTOR);
+            }
+            else if(answerAsCategory == MAINTAINABILITY) {
+                int oldCount = categoryOccuranceTracker[MAINTAINABILITY_INDEX];
+                categoryOccuranceTracker[MAINTAINABILITY_INDEX] = (oldCount + CATEGORY_INCREMENTOR);
+            }
+            else if(answerAsCategory == EFFICIENCY_AND_SPEED) {
+                int oldCount = categoryOccuranceTracker[EFFICIENCY_INDEX];
+                categoryOccuranceTracker[EFFICIENCY_INDEX] = (oldCount + CATEGORY_INCREMENTOR);
+            }
+            else if(answerAsCategory == STRUCTURE) {
+                int oldCount = categoryOccuranceTracker[STRUCTURE_INDEX];
+                categoryOccuranceTracker[STRUCTURE_INDEX] = (oldCount + CATEGORY_INCREMENTOR);
+            }
+            else if(answerAsCategory == TRADITIONAL_LANGUAGE) {
+                traditionalLanguageBias += CATEGORY_INCREMENTOR;
+            }
+            else if(answerAsCategory == SCRIPTING_LANGUAGE) {
+                scriptingLanguageBias += CATEGORY_INCREMENTOR;
+            }
+            else
+                Log.d("CAT_LOGGER","No category was returned as an answer category");
+        }
+
+        // Determine and set the language bias
+        if(scriptingLanguageBias > traditionalLanguageBias)
+            this.languageLean = SCRIPTING_LANGUAGE;
+        else
+            this.languageLean = TRADITIONAL_LANGUAGE;
+
+        // Determine general category lean
+        String categoryWithMostPoints = "";
+        int mostCategoryPoints = 0;
+        for(int i = 0; i <categoryOccuranceTracker.length; i++) {
+            if(i == 0) {
+                // set initial category points tracker to first element
+                categoryWithMostPoints = FAST_DEV_TIME;
+                mostCategoryPoints = categoryOccuranceTracker[FAST_DEV_TIME_INDEX];
+            }
+            else {
+                // compared currently indexed points tracker to the highest
+                int currentCategoryPoints = categoryOccuranceTracker[i];
+                if(currentCategoryPoints > mostCategoryPoints) {
+                    // set new highest point counter
+                    mostCategoryPoints = currentCategoryPoints;
+
+                    // set the string for the highest point category
+                    if(i == FAST_DEV_TIME_INDEX)
+                        categoryWithMostPoints = FAST_DEV_TIME;
+                    else if(i == MAINTAINABILITY_INDEX)
+                        categoryWithMostPoints = MAINTAINABILITY;
+                    else if(i == EFFICIENCY_INDEX)
+                        categoryWithMostPoints = EFFICIENCY_AND_SPEED;
+                    else
+                        categoryWithMostPoints = STRUCTURE;
+                }
+            }
+        }
+        this.generalCategoryLean = categoryWithMostPoints;
     }
 
     private ArrayList<String> GetSectionResultsByCategory(String category, ArrayList<ArrayList<String>> resultsList) {
