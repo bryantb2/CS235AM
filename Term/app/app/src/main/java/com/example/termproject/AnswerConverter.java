@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 public class AnswerConverter {
 
-    public static String DetermineGeneralSectionLean(int questionNumber, int questionAnswerPosition) {
+    public static String ConvertGeneralQuestionToCategory(int questionNumber, int questionAnswerPosition) {
         // Takes in a question number, category, and adapter integer position.
         // Each question's answer corresponds to one of the category tags in the main activity
         switch (questionNumber) {
@@ -44,7 +44,7 @@ public class AnswerConverter {
         }
     }
 
-    public static ArrayList<String> DeterminePreferedSectionTech(String questionCategory, int questionNumber, int questionAnswerPosition) {
+    public static ArrayList<String> ConvertSectionQuestionToTech(String questionCategory, int questionNumber, int questionAnswerPosition) {
         // Takes in a question number, category, and adapter integer position.
         // Each question's answer corresponds to a recommended technology
         ArrayList<String> tempArr = new ArrayList<String>();
