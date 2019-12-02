@@ -68,6 +68,7 @@ public class QuizLogic implements Serializable {
     }
 
     public void PassNCalcTestResults(ArrayList<ArrayList<String>> testResults) {
+
         // FRONTEND RECOMMENDATIONS
         // react js recommendation object
         ArrayList<String> categoryTags = new ArrayList<>();
@@ -91,7 +92,67 @@ public class QuizLogic implements Serializable {
         recommendation = new QuizRecommendation((BOOTSTRAP + " OR "+ MATERIAL_UI), CSS_FRAMEWORK, FRONT_END_SECTION,categoryTags);
         this.preGeneratedRecommendations.add(recommendation);
 
-        //TODO: finish this
+        // styled components recommendation object
+        categoryTags = new ArrayList<>();
+        categoryTags.add(MAINTAINABILITY);
+        recommendation = new QuizRecommendation((STYLED_COMPONENTS), CSS_MODULE, FRONT_END_SECTION,categoryTags);
+        this.preGeneratedRecommendations.add(recommendation);
+
+        // ASP.NET recommendation object
+        categoryTags = new ArrayList<>();
+        categoryTags.add(FAST_DEV_TIME);
+        categoryTags.add(STRUCTURE);
+        categoryTags.add(TRADITIONAL_LANGUAGE);
+        recommendation = new QuizRecommendation((ASP_DOTNET), DOTNET_FRAMEWORK, FRONT_END_SECTION,categoryTags);
+        this.preGeneratedRecommendations.add(recommendation);
+
+        // DJANGO recommendation object
+        categoryTags = new ArrayList<>();
+        categoryTags.add(FAST_DEV_TIME);
+        categoryTags.add(STRUCTURE);
+        categoryTags.add(SCRIPTING_LANGUAGE);
+        recommendation = new QuizRecommendation((DJANGO), PYTHON_WEB_FRAMEWORK, FRONT_END_SECTION,categoryTags);
+        this.preGeneratedRecommendations.add(recommendation);
+
+        // BACKEND RECOMMENDATIONS
+        // Node.js recommendation object
+        categoryTags = new ArrayList<>();
+        categoryTags.add(FAST_DEV_TIME);
+        categoryTags.add(EFFICIENCY_AND_SPEED);
+        categoryTags.add(SCRIPTING_LANGUAGE);
+        recommendation = new QuizRecommendation((NODE_JS), JS_SERVER_FRAMEWORK, BACK_END_SECTION,categoryTags);
+        this.preGeneratedRecommendations.add(recommendation);
+
+        // Express.js recommendation object
+        categoryTags = new ArrayList<>();
+        categoryTags.add(FAST_DEV_TIME);
+        categoryTags.add(EFFICIENCY_AND_SPEED);
+        categoryTags.add(STRUCTURE);
+        categoryTags.add(SCRIPTING_LANGUAGE);
+        recommendation = new QuizRecommendation((EXPRESS_JS), JS_SERVER_FRAMEWORK, BACK_END_SECTION,categoryTags);
+        this.preGeneratedRecommendations.add(recommendation);
+
+        // ASP.net web api recommendation object
+        categoryTags = new ArrayList<>();
+        categoryTags.add(MAINTAINABILITY);
+        categoryTags.add(STRUCTURE);
+        categoryTags.add(TRADITIONAL_LANGUAGE);
+        recommendation = new QuizRecommendation((ASP_DOTNET_WEB_API), DOTENET_SERVER_FRAMEWORK, BACK_END_SECTION,categoryTags);
+        this.preGeneratedRecommendations.add(recommendation);
+
+        // DB RECOMMENDATIONS
+        // Mongodb recommendation object
+        categoryTags = new ArrayList<>();
+        categoryTags.add(FAST_DEV_TIME);
+        categoryTags.add(EFFICIENCY_AND_SPEED);
+        recommendation = new QuizRecommendation((MONGODB), NON_RELATIONAL_DB, DB_SECTION,categoryTags);
+        this.preGeneratedRecommendations.add(recommendation);
+
+        // MySQL and PostgreSQL recommendation object
+        categoryTags = new ArrayList<>();
+        categoryTags.add(STRUCTURE);
+        recommendation = new QuizRecommendation((MYSQL + " OR " + POSTGRESQL), RELATIONAL_DB, DB_SECTION,categoryTags);
+        this.preGeneratedRecommendations.add(recommendation);
     }
 
     private void CalcPrefTechnologyBySection(ArrayList<String> testResults, String sectionTag) {
