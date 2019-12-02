@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class QuizLogic implements Serializable {
-    // STATIC CATEGORY TAGS
+    // STATIC CATEGORY TAGS (these are the general quiz categories that help determine a user's lean, or tech-attribute preference)
     public static final String FAST_DEV_TIME = "FAST_DEV_TIME"; // ALSO EASE OF USE
     public static final String MAINTAINABILITY = "MAINTAINABILITY";
     public static final String EFFICIENCY_AND_SPEED = "EFFICIENCY_AND_SPEED";
@@ -13,7 +13,7 @@ public class QuizLogic implements Serializable {
     public static final String TRADITIONAL_LANGUAGE = "TRADITIONAL_LANGUAGE";
     public static final String NO_SPECIFIC_CATEGORY = "NO_SPECIFIC_CATEGORY"; // this exists because sometimes only one particular answer matters in a quiz question
 
-    // RECOMMENDED TECH STATIC TAGS
+    // RECOMMENDED TECH STATIC TAGS (these are the technologies that will ultimately be recommended)
     public static final String REACT_JS = "REACT_JS";
     public static final String ANGULAR = "ANGULAR";
     //public static final String VUE = "VUE";
@@ -30,7 +30,7 @@ public class QuizLogic implements Serializable {
     public static final String MYSQL = "MYSQL";
     public static final String POSTGRESQL = "POSTGRESQL";
 
-    // PRIVATE TECH TYPE CONSTANT TAGS
+    // PRIVATE TECH TYPE CONSTANT TAGS (these describe the various technologies listed above)
     private final String JS_FRAMEWORK="JS_FRAMEWORK";
     private final String DOTNET_FRAMEWORK="DOTNET_FRAMEWORK";
     private final String PYTHON_WEB_FRAMEWORK="DOTNET_FRAMEWORK";
@@ -53,6 +53,8 @@ public class QuizLogic implements Serializable {
     private String leanCategory;
     private String PreferedFrontEndTech;
     private String PreferedCSSFramework;
+    private String PreferedBackEndTech;
+    private String PreferedDBTech;
 
     private ArrayList<QuizRecommendation> finalRecommendations = new ArrayList<QuizRecommendation>(); // stores the recommendations that will be returned and shown in the UI
     private ArrayList<QuizRecommendation> preGeneratedRecommendations = new ArrayList<QuizRecommendation>(); // this just stores all of the possible recommendations that are generated
@@ -68,7 +70,44 @@ public class QuizLogic implements Serializable {
     }
 
     public void PassNCalcTestResults(ArrayList<ArrayList<String>> testResults) {
+        // takes in ArrayList of ArrayList strings
+            // first four embedded arraylists are section results
+            // the last is an ArrayList of category strings that corresponds to the order and type of the section results
+        // calc general lean
+        // calc pref technology for each section
+        // apply lean
+        // calc final recommendations
+        ArrayList<String> generalSectionAnswers = GetSectionResultsByCategory(GENERAL_SECTION, testResults);
+        ArrayList<String> frontEndSectionAnswers = GetSectionResultsByCategory(FRONT_END_SECTION, testResults);
+        ArrayList<String> backEndSectionAnswers = GetSectionResultsByCategory(BACK_END_SECTION, testResults);
+        ArrayList<String> dbSectionAnswers = GetSectionResultsByCategory(DB_SECTION, testResults);
+    }
 
+    private void CalcPrefTechnologyBySection(ArrayList<String> testResults, String sectionTag) {
+        //TODO: finish this
+        //
+    }
+
+    private void CalcGeneralLean() {
+        //TODO: finish this
+
+    }
+
+    private ArrayList<String> GetSectionResultsByCategory(String category, ArrayList<ArrayList<String>> resultsList) {
+        // method takes in the 2D ArrayList of results and a section category tag
+        // returns the proper results list based off the position of the category tag
+        ArrayList<String> categoryTagArray = resultsList.get(resultsList.size()-1);
+        for(int i =0; i <categoryTagArray.size(); i++) {
+            if(categoryTagArray.get(i) == category) {
+                // since the category tags are in perfect parallel with the section answers,
+                // the index in the category tags correlates with the index of the results array
+                return resultsList.get(i);
+            }
+        }
+        return null;
+    }
+
+    private void BuildAndAddRecommendations() {
         // FRONTEND RECOMMENDATIONS
         // react js recommendation object
         ArrayList<String> categoryTags = new ArrayList<>();
@@ -154,20 +193,4 @@ public class QuizLogic implements Serializable {
         recommendation = new QuizRecommendation((MYSQL + " OR " + POSTGRESQL), RELATIONAL_DB, DB_SECTION,categoryTags);
         this.preGeneratedRecommendations.add(recommendation);
     }
-
-    private void CalcPrefTechnologyBySection(ArrayList<String> testResults, String sectionTag) {
-        //TODO: finish this
-    }
-
-    private void BuildAndAddRecommendations() {
-        //TODO: finish this
-    }
-
-    private void CalcGeneralLean() {
-        //TODO: finish this
-    }
-
-
-
-
 }

@@ -239,10 +239,10 @@ public class MainActivity extends AppCompatActivity {
             // second Arraylist will be the corresponding section tags
         // loops through each section and concatenates each response position to an ArrayList of ArrayLists
         ArrayList<String> sectionTags = new ArrayList<String>();
-            sectionTags.add(QuizLogic.GENERAL_SECTION);
-            sectionTags.add(QuizLogic.FRONT_END_SECTION);
-            sectionTags.add(QuizLogic.BACK_END_SECTION);
-            sectionTags.add(QuizLogic.DB_SECTION);
+            sectionTags.add(QuizLogic.GENERAL_SECTION); // index 0
+            sectionTags.add(QuizLogic.FRONT_END_SECTION); // index 1
+            sectionTags.add(QuizLogic.BACK_END_SECTION); // index 2
+            sectionTags.add(QuizLogic.DB_SECTION); // index 3
         ArrayList<ArrayList<String>> arrOfQuizAnswers = new ArrayList<ArrayList<String>>();
 
         final int counterStartingPosition = 1;
