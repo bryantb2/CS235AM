@@ -1,8 +1,9 @@
 package com.example.termproject;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class QuizRecommendation {
+public class QuizRecommendation implements Serializable {
     // STATIC FIELDS
 
 
