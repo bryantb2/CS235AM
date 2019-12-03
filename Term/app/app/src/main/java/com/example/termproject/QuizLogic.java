@@ -83,7 +83,7 @@ public class QuizLogic implements Serializable {
         ArrayList<String> backEndSectionAnswers = GetSectionResultsByCategory(BACK_END_SECTION, testResults);
         ArrayList<String> dbSectionAnswers = GetSectionResultsByCategory(DB_SECTION, testResults);
 
-        EvaluateGeneralAnswersAndCalcLeans(generalSectionAnswers); // gets the quiz leans
+        EvaluateGeneralAnswersAndCalcLeans(generalSectionAnswers); // gets the quiz leans and sets them to the class variables
         CalcAllPrefTechnologies(frontEndSectionAnswers,backEndSectionAnswers,dbSectionAnswers); // uses quiz leans to determine pref stack technologies
 
     }
@@ -205,14 +205,14 @@ public class QuizLogic implements Serializable {
         // takes in parsed section answers
         // calls CalcPrefTechnologyBySection to get the preferred tech
         String prefFrontEndTech = CalcPrefTechBySection(frontEndAnswers,FRONT_END_SECTION, false);
-        /*String prefCSSFramework = CalcPrefTechBySection(frontEndAnswers,FRONT_END_SECTION, true);
+        String prefCSSFramework = CalcPrefTechBySection(frontEndAnswers,FRONT_END_SECTION, true);
         String prefBackEndTech = CalcPrefTechBySection(backEndAnswers,BACK_END_SECTION,false);
         String prefDBTech = CalcPrefTechBySection(dbAnswers,DB_SECTION,false);
 
         this.PreferedFrontEndTech = prefFrontEndTech;
         this.PreferedCSSFramework = prefCSSFramework;
         this.PreferedBackEndTech = prefBackEndTech;
-        this.PreferedDBTech = prefDBTech;*/
+        this.PreferedDBTech = prefDBTech;
     }
 
     private String CalcPrefTechBySection(ArrayList<String> sectionAnswers, String categoryTag, boolean calculateCSSFramework) {
@@ -223,27 +223,40 @@ public class QuizLogic implements Serializable {
             // apply a lean to the finished, counted, tech categories
             // returning the tech with the highest point value
         String sectionTech = "";
-        if(categoryTag == FRONT_END_SECTION) {
-            // tech counter array
-            int cssFramework = 0;
-            int cssModules = 0;
-            int[] techOccuranceTracker = new int[4];
 
-            // array counter indices
-            final int ANGULAR_INDEX = 0;
-            final int ASP_DOTNET_INDEX = 1;
-            final int REACT_JS_INDEX = 2;
-            final int DJANO_INDEX = 3;
+        // tech counter array
+        int cssFramework = 0;
+        int cssModules = 0;
+        int[] techOccuranceTracker = new int[4];
 
-            // Getting and setting front end section answer results
-            final int TECH_RESPONSE_INCREMENTOR = 1;
-            for(int i = 0; i < sectionAnswers.size(); i++) {
-                // since the order of the quiz results haven't changed,
-                // the index+1 is the question number (a natural index is required for the answer converter)
-                int questionNumber = i + 1;
-                int answerPosition = Integer.parseInt(sectionAnswers.get(i)); // parsing as int because the sectionAnswers are originally sent to second activity as strings
-                ArrayList<String> answerAsTechnologies = AnswerConverter.ConvertSectionQuestionToTech(categoryTag,questionNumber,answerPosition);
-                for(int j = 0; j < answerAsTechnologies.size(); j++) {
+        // array counter indices
+        final int ANGULAR_INDEX = 0;
+        final int ASP_DOTNET_INDEX = 1;
+        final int REACT_JS_INDEX = 2;
+        final int DJANO_INDEX = 3;
+
+        // array counter indices
+        final int NODE_JS_INDEX = 0;
+        final int EXPRESS_JS_INDEX = 1;
+        final int ASP_DOTNET_WEB_API_INDEX = 2;
+
+        // array counter indices
+        final int MONGODB_INDEX = 0;
+        final int MYSQL_INDEX = 1;
+        final int POSTGRESQL = 2;
+
+        // Getting and setting front end section answer results
+        final int TECH_RESPONSE_INCREMENTOR = 1;
+        for(int i = 0; i < sectionAnswers.size(); i++) {
+            // since the order of the quiz results haven't changed,
+            // the index+1 is the question number (a natural index is required for the answer converter)
+            int questionNumber = i + 1;
+            int answerPosition = Integer.parseInt(sectionAnswers.get(i)); // parsing as int because the sectionAnswers are originally sent to second activity as strings
+            ArrayList<String> answerAsTechnologies = AnswerConverter.ConvertSectionQuestionToTech(categoryTag,questionNumber,answerPosition);
+
+            // will loop through the list of answers from the converter (NOTE: not all answers will have a list, but they will still be contained within an ArrayList data structure)
+            for(int j = 0; j < answerAsTechnologies.size(); j++) {
+                if(categoryTag == FRONT_END_SECTION) {
                     // loops through the returned ArrayList
                     // find the technology and increment its counter
                     if(answerAsTechnologies.get(j) == ANGULAR) {
@@ -265,37 +278,43 @@ public class QuizLogic implements Serializable {
                         cssModules += TECH_RESPONSE_INCREMENTOR;
                     }
                 }
-                if(calculateCSSFramework == true) {
-                    // if this boolean is true, it means the user wants the selected cssFramework instead of the frontend tech
-                    if(cssModules > cssFramework)
-                        return STYLED_COMPONENTS;
-                    else
-                        return BOOTSTRAP;
+                else if(categoryTag == BACK_END_SECTION) {
+                    // loops through the returned ArrayList
+                    // find the technology and increment its counter
+                    if(answerAsTechnologies.get(j) == NODE_JS) {
+                        techOccuranceTracker[NODE_JS_INDEX] += TECH_RESPONSE_INCREMENTOR;
+                    }
+                    else if(answerAsTechnologies.get(j)== EXPRESS_JS) {
+                        techOccuranceTracker[EXPRESS_JS_INDEX] += TECH_RESPONSE_INCREMENTOR;
+                    }
+                    else {
+                        techOccuranceTracker[ASP_DOTNET_WEB_API_INDEX] += TECH_RESPONSE_INCREMENTOR;
+                    }
+                }
+                else {
+                    // loops through the returned ArrayList
+                    // find the technology and increment its counter
+                    if(answerAsTechnologies.get(j) == MONGODB) {
+                        techOccuranceTracker[MONGODB_INDEX] += TECH_RESPONSE_INCREMENTOR;
+                    }
+                    else if(answerAsTechnologies.get(j)== MYSQL) {
+                        techOccuranceTracker[MYSQL_INDEX] += TECH_RESPONSE_INCREMENTOR;
+                    }
+                    else {
+                        techOccuranceTracker[POSTGRESQL] += TECH_RESPONSE_INCREMENTOR;
+                    }
                 }
             }
-            sectionTech = EvaluateTechCounterAndApplyLean(FRONT_END_SECTION,techOccuranceTracker); // pass in answers and calc pref section tech
         }
-        // TODO: FINISH THESE METHODS
-        else if(categoryTag == BACK_END_SECTION) {
-            // array counter indices
-            final int NODE_JS_INDEX = 0;
-            final int EXPRESS_JS_INDEX = 1;
-            final int ASP_DOTNET_WEB_API_INDEX = 2;
-            // Determine which tag has been passed in
-            // utilize the answer converter to get the tech that corresponds to each answer
-            // the tech choice returned from this method will be reached by:
-                // added to several local running counters representing the various quiz tech answers
-                // apply a lean to the finished, counted, tech categories
-                // returning the tech with the highest point value
+        if(calculateCSSFramework == true && categoryTag == FRONT_END_SECTION) {
+            // if this boolean is true, it means the user wants the selected cssFramework instead of the frontend tech
+            // NOTE: the css framework tech is part of the front end section, so that's why this is outside the loop
+            if(cssModules > cssFramework)
+                return STYLED_COMPONENTS;
+            else
+                return BOOTSTRAP;
         }
-        else {
-            // array counter indices
-            final int MONGODB_INDEX = 0;
-            final int MYSQL_INDEX = 1;
-            final int POSTGRESQL = 2;
-        }
-        return sectionTech;
-        // TODO: call EvaluateTechCounterAndApplyLean
+        return EvaluateTechCounterAndApplyLean(categoryTag,techOccuranceTracker); // pass in answers and calc pref section tech
     }
 
     private String EvaluateTechCounterAndApplyLean(String sectionCategory, int[] techCounterArray) {
