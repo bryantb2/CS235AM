@@ -83,7 +83,7 @@ public class QuizLogic implements Serializable {
         ArrayList<String> backEndSectionAnswers = GetSectionResultsByCategory(BACK_END_SECTION, testResults);
         ArrayList<String> dbSectionAnswers = GetSectionResultsByCategory(DB_SECTION, testResults);
 
-        CalcLeans(generalSectionAnswers);
+        AddUpAnswersAndCalcLeans(generalSectionAnswers);
         CalcAllPrefTechnologies(frontEndSectionAnswers,backEndSectionAnswers,dbSectionAnswers);
 
     }
@@ -109,7 +109,7 @@ public class QuizLogic implements Serializable {
     }
 
     // CALC LEAN METHODS -------------------------------------------------------------------------------------------------------------->
-    private void CalcLeans(ArrayList<String> generalSectionResults) {
+    private void AddUpAnswersAndCalcLeans(ArrayList<String> generalSectionResults) {
         // this method utilizes the answer converter's methods to get two things:
         // the category that corresponds to general section quiz answer
         // the language bias of the user
@@ -201,10 +201,10 @@ public class QuizLogic implements Serializable {
     private void CalcAllPrefTechnologies(ArrayList<String> frontEndAnswers, ArrayList<String> backEndAnswers, ArrayList<String> dbAnswers) {
         // takes in parsed section answers
         // calls CalcPrefTechnologyBySection to get the preferred tech
-        String prefFrontEndTech = CalcPrefTechnologyBySection(frontEndAnswers,FRONT_END_SECTION, false);
-        String prefCSSFramework = CalcPrefTechnologyBySection(frontEndAnswers,FRONT_END_SECTION, true);
-        String prefBackEndTech = CalcPrefTechnologyBySection(backEndAnswers,BACK_END_SECTION,false);
-        String prefDBTech = CalcPrefTechnologyBySection(dbAnswers,DB_SECTION,false);
+        String prefFrontEndTech = CalcPrefTechBySection(frontEndAnswers,FRONT_END_SECTION, false);
+        String prefCSSFramework = CalcPrefTechBySection(frontEndAnswers,FRONT_END_SECTION, true);
+        String prefBackEndTech = CalcPrefTechBySection(backEndAnswers,BACK_END_SECTION,false);
+        String prefDBTech = CalcPrefTechBySection(dbAnswers,DB_SECTION,false);
 
         this.PreferedFrontEndTech = prefFrontEndTech;
         this.PreferedCSSFramework = prefCSSFramework;
@@ -212,7 +212,7 @@ public class QuizLogic implements Serializable {
         this.PreferedDBTech = prefDBTech;
     }
 
-    private String CalcPrefTechnologyBySection(ArrayList<String> sectionAnswers, String categoryTag, boolean calculateCSSFramework) {
+    private String CalcPrefTechBySection(ArrayList<String> sectionAnswers, String categoryTag, boolean calculateCSSFramework) {
         // Determine which tag has been passed in
         // utilize the answer converter to get the tech that corresponds to each answer
         // the tech choice returned from this method will be reached by:
@@ -304,7 +304,11 @@ public class QuizLogic implements Serializable {
                 return techWithMostPoints;
             }
         }
-        /*else if(categoryTag == BACK_END_SECTION) {
+        else if(categoryTag == BACK_END_SECTION) {
+            // array counter indices
+            final int NODE_JS_INDEX = 0;
+            final int EXPRESS_JS_INDEX = 1;
+            final int ASP_DOTNET_WEB_API_INDEX = 2;
             // Determine which tag has been passed in
             // utilize the answer converter to get the tech that corresponds to each answer
             // the tech choice returned from this method will be reached by:
@@ -313,10 +317,12 @@ public class QuizLogic implements Serializable {
                 // returning the tech with the highest point value
         }
         else {
-
+            // array counter indices
+            final int MONGODB_INDEX = 0;
+            final int MYSQL_INDEX = 1;
+            final int POSTGRESQL = 2;
         }
-        return "";*/
-        return null;
+        return "";
     }
 
     private int[] ApplyLeanToPrefTechnologyCounter(int[] rawTechCounterArray, String sectionCategoryTag) {
@@ -342,79 +348,73 @@ public class QuizLogic implements Serializable {
 
             for(int i = 0; i < rawTechCounterArray.length; i++) {
                 if(i == ANGULAR_INDEX) {
-                    QuizRecommendation recommendation = GetRecommendationByTechname(ANGULAR);
-                    int incrementerPoints = CalcNumberOfLeanPoints(recommendation);
                     // apply incrementer
-                    counterArrayWithLean[ANGULAR_INDEX] += incrementerPoints;
+                    counterArrayWithLean[ANGULAR_INDEX] += GetRecommendationLeanPointsByCategoryTag(ANGULAR);
                 }
                 else if(i == REACT_JS_INDEX) {
-                    QuizRecommendation recommendation = GetRecommendationByTechname(REACT_JS);
-                    int incrementerPoints = CalcNumberOfLeanPoints(recommendation);
                     // apply incrementer
-                    counterArrayWithLean[REACT_JS_INDEX] += incrementerPoints;
+                    counterArrayWithLean[REACT_JS_INDEX] += GetRecommendationLeanPointsByCategoryTag(REACT_JS);
                 }
                 else if(i == ASP_DOTNET_INDEX) {
-                    QuizRecommendation recommendation = GetRecommendationByTechname(ASP_DOTNET);
-                    int incrementerPoints = CalcNumberOfLeanPoints(recommendation);
                     // apply incrementer
-                    counterArrayWithLean[ASP_DOTNET_INDEX] += incrementerPoints;
+                    counterArrayWithLean[ASP_DOTNET_INDEX] += GetRecommendationLeanPointsByCategoryTag(ASP_DOTNET);
                 }
                 else {
-                    QuizRecommendation recommendation = GetRecommendationByTechname(DJANGO);
-                    int incrementerPoints = CalcNumberOfLeanPoints(recommendation);
                     // apply incrementer
-                    counterArrayWithLean[DJANO_INDEX] += incrementerPoints;
+                    counterArrayWithLean[DJANO_INDEX] += GetRecommendationLeanPointsByCategoryTag(DJANGO);
                 }
             }
-
         }
         else if(sectionCategoryTag == BACK_END_SECTION) {
+            // array counter indices
+            final int NODE_JS_INDEX = 0;
+            final int EXPRESS_JS_INDEX = 1;
+            final int ASP_DOTNET_WEB_API_INDEX = 2;
 
+            for(int i = 0; i < rawTechCounterArray.length; i++) {
+                if(i == NODE_JS_INDEX) {
+                    // apply incrementer
+                    counterArrayWithLean[NODE_JS_INDEX] += GetRecommendationLeanPointsByCategoryTag(NODE_JS);
+                }
+                else if(i == EXPRESS_JS_INDEX) {
+                    // apply incrementer
+                    counterArrayWithLean[EXPRESS_JS_INDEX] += GetRecommendationLeanPointsByCategoryTag(EXPRESS_JS);
+                }
+                else {
+                    // apply incrementer
+                    counterArrayWithLean[ASP_DOTNET_WEB_API_INDEX] += GetRecommendationLeanPointsByCategoryTag(ASP_DOTNET_WEB_API);
+                }
+            }
         }
         else {
+            // array counter indices
+            final int MONGODB_INDEX = 0;
+            final int MYSQL_INDEX = 1;
+            final int POSTGRESQL_INDEX = 2;
 
+            for(int i = 0; i < rawTechCounterArray.length; i++) {
+                if(i == MONGODB_INDEX) {
+                    // apply incrementer
+                    counterArrayWithLean[MONGODB_INDEX] += GetRecommendationLeanPointsByCategoryTag(MONGODB);
+                }
+                else if(i == MYSQL_INDEX) {
+                    // apply incrementer
+                    counterArrayWithLean[MYSQL_INDEX] += GetRecommendationLeanPointsByCategoryTag(MYSQL);
+                }
+                else {
+                    // apply incrementer
+                    counterArrayWithLean[POSTGRESQL_INDEX] += GetRecommendationLeanPointsByCategoryTag(POSTGRESQL);
+                }
+            }
         }
         return counterArrayWithLean;
     }
 
-    private int CalcNumberOfLeanPoints(QuizRecommendation recommendation) {
-        boolean doesGeneralLeanApply = DoesRecommendationGetGeneralLean(recommendation);
-        boolean doesLanguageLeanApply = DoesRecommendationGetLanguageLean(recommendation);
-        if(doesGeneralLeanApply == true && doesLanguageLeanApply == true) { // double the incrementer points
-            return LEAN_POINT_INCREMENTOR * 2;
-        }
-        else if(doesGeneralLeanApply == true || doesLanguageLeanApply == true) { // increment once
-            return LEAN_POINT_INCREMENTOR;
-        }
-        else {
-            return 0;
-        }
-    }
-
-    private boolean DoesRecommendationGetGeneralLean(QuizRecommendation recommendationObj) {
-        // loop through recommendation objects tag
-            // return true if one of the tags is equivalent to the lean category
-            // return false if no such tag exists
-        for(int i = 0; i < recommendationObj.GetQuizTags().size(); i++) {
-            String currentRecommendationTag = recommendationObj.GetQuizTags().get(i);
-            if(currentRecommendationTag == this.generalCategoryLean) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private boolean DoesRecommendationGetLanguageLean(QuizRecommendation recommendationObj) {
-        // loop through recommendation objects tag
-            // return true if one of the tags is equivalent to the language lean category
-            // return false if no such tag exists
-        for(int i = 0; i < recommendationObj.GetQuizTags().size(); i++) {
-            String currentRecommendationTag = recommendationObj.GetQuizTags().get(i);
-            if(currentRecommendationTag == this.languageLean) {
-                return true;
-            }
-        }
-        return false;
+    private int GetRecommendationLeanPointsByCategoryTag(String recommendationName) {
+        // helper method to get the recommendation object by name and return number of lean points
+        // NOTE: this method can, and will, return zero if there are no leans applicable to the recommendation
+        QuizRecommendation recommendation = GetRecommendationByTechname(recommendationName);
+        return CalcNumberOfLeanPoints(recommendation);
     }
 
     private QuizRecommendation GetRecommendationByTechname(String techName) {
@@ -464,6 +464,46 @@ public class QuizLogic implements Serializable {
             }
         }
         return null; // error if it returns null
+    }
+
+    private int CalcNumberOfLeanPoints(QuizRecommendation recommendation) {
+        boolean doesGeneralLeanApply = DoesRecommendationGetGeneralLean(recommendation);
+        boolean doesLanguageLeanApply = DoesRecommendationGetLanguageLean(recommendation);
+        if(doesGeneralLeanApply == true && doesLanguageLeanApply == true) { // double the incrementer points
+            return LEAN_POINT_INCREMENTOR * 2;
+        }
+        else if(doesGeneralLeanApply == true || doesLanguageLeanApply == true) { // increment once
+            return LEAN_POINT_INCREMENTOR;
+        }
+        else {
+            return 0;
+        }
+    }
+
+    private boolean DoesRecommendationGetGeneralLean(QuizRecommendation recommendationObj) {
+        // loop through recommendation objects tag
+            // return true if one of the tags is equivalent to the lean category
+            // return false if no such tag exists
+        for(int i = 0; i < recommendationObj.GetQuizTags().size(); i++) {
+            String currentRecommendationTag = recommendationObj.GetQuizTags().get(i);
+            if(currentRecommendationTag == this.generalCategoryLean) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean DoesRecommendationGetLanguageLean(QuizRecommendation recommendationObj) {
+        // loop through recommendation objects tag
+            // return true if one of the tags is equivalent to the language lean category
+            // return false if no such tag exists
+        for(int i = 0; i < recommendationObj.GetQuizTags().size(); i++) {
+            String currentRecommendationTag = recommendationObj.GetQuizTags().get(i);
+            if(currentRecommendationTag == this.languageLean) {
+                return true;
+            }
+        }
+        return false;
     }
 
     // BOILER PLATE METHODS -------------------------------------------------------------------------------------------------------------->
