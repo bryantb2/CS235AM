@@ -21,7 +21,7 @@ public class TideSQLiteHelper extends SQLiteOpenHelper {
 
     // CLASS FIELDS
     private static final String DB_NAME = "Tide.SQlite";
-    private static final int DB_VERSION = 4;
+    private static final int DB_VERSION = 6;
     private Context context;
 
     // PUBLIC TABLE ID CONSTANTS
@@ -53,36 +53,39 @@ public class TideSQLiteHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         // BUILD DATABASE STRUCTURE
         // DB structure for FLORENCE
-        db.execSQL("CREATE TABLE " + TIDE_PREDICTIONS_FLORENCE
+        db.execSQL("CREATE TABLE " + TideSQLiteHelper.TIDE_PREDICTIONS_FLORENCE
                 + "( _id INTEGER PRIMARY KEY AUTOINCREMENT,"
-                + DATE + " TEXT,"
-                + DAY + " INTEGER,"
-                + TIDE_TIME + " TEXT,"
-                + WAVE_HEIGHT_CM + " TEXT,"
-                + GET_LOW + " TEXT" + ")" );
+                + TideSQLiteHelper.DATE + " TEXT,"
+                + TideSQLiteHelper.DAY + " INTEGER,"
+                + TideSQLiteHelper.TIDE_TIME + " TEXT,"
+                + TideSQLiteHelper.WAVE_HEIGHT_CM + " TEXT,"
+                + TideSQLiteHelper.GET_LOW + " TEXT" + ")" );
 
         // DB structure for NEWPORT
-        db.execSQL("CREATE TABLE " + TIDE_PREDICTIONS_NEWPORT
+        db.execSQL("CREATE TABLE " + TideSQLiteHelper.TIDE_PREDICTIONS_NEWPORT
                 + "( _id INTEGER PRIMARY KEY AUTOINCREMENT,"
-                + DATE + " TEXT,"
-                + DAY + " INTEGER,"
-                + TIDE_TIME + " TEXT,"
-                + WAVE_HEIGHT_CM + " TEXT,"
-                + GET_LOW + " TEXT" + ")" );
+                + TideSQLiteHelper.DATE + " TEXT,"
+                + TideSQLiteHelper.DAY + " INTEGER,"
+                + TideSQLiteHelper.TIDE_TIME + " TEXT,"
+                + TideSQLiteHelper.WAVE_HEIGHT_CM + " TEXT,"
+                + TideSQLiteHelper.GET_LOW + " TEXT" + ")" );
 
         // DB structure for ASTORIA
-        db.execSQL("CREATE TABLE " + TIDE_PREDICTIONS_ASTORIA
+        db.execSQL("CREATE TABLE " + TideSQLiteHelper.TIDE_PREDICTIONS_ASTORIA
                 + "( _id INTEGER PRIMARY KEY AUTOINCREMENT,"
-                + DATE + " TEXT,"
-                + DAY + " INTEGER,"
-                + TIDE_TIME + " TEXT,"
-                + WAVE_HEIGHT_CM + " TEXT,"
-                + GET_LOW + " TEXT" + ")" );
+                + TideSQLiteHelper.DATE + " TEXT,"
+                + TideSQLiteHelper.DAY + " INTEGER,"
+                + TideSQLiteHelper.TIDE_TIME + " TEXT,"
+                + TideSQLiteHelper.WAVE_HEIGHT_CM + " TEXT,"
+                + TideSQLiteHelper.GET_LOW + " TEXT" + ")" );
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+        db.execSQL("DROP TABLE IF EXISTS " + TideSQLiteHelper.TIDE_PREDICTIONS_ASTORIA);
+        db.execSQL("DROP TABLE IF EXISTS " + TideSQLiteHelper.TIDE_PREDICTIONS_FLORENCE);
+        db.execSQL("DROP TABLE IF EXISTS " + TideSQLiteHelper.TIDE_PREDICTIONS_NEWPORT);
+        onCreate(db);
     }
 
     // Parse the XML files and put the data in the db
@@ -138,7 +141,7 @@ public class TideSQLiteHelper extends SQLiteOpenHelper {
 
     public Cursor getTidePredictionsByDate(String date, String location) {
         String DATE = date;
-        // Get table id based off location string
+        // Get table id based off location stringz
         String dbTableId;
         if(location.equals(MainActivity.ASTORIA))
             dbTableId = TideSQLiteHelper.TIDE_PREDICTIONS_ASTORIA;
@@ -149,13 +152,9 @@ public class TideSQLiteHelper extends SQLiteOpenHelper {
 
         // Query DB tide items
         // String String query = "SELECT * FROM "+ dbTableId + " WHERE DATE = " + date;
-        // BEST ATTEMPT AT QUERYING: query = "SELECT DATE, DAY, TIDE_TIME, WAVE_HEIGHT_CM, GET_LOW FROM "+ dbTableId + " WHERE DATE =" + date;
-        String query = "SELECT * FROM "+ dbTableId + " WHERE DATE = ?";
-        String[] variables = new String[]{DATE};
-        Cursor tempCursorObj = db.rawQuery(query, null);
-        return tempCursorObj;
-
-
+        // BEST ATTEMPT AT QUERYING:String query = "SELECT * FROM "+ dbTableId + " WHERE " + TideSQLiteHelper.DATE + " = " + date;
+        String query = "SELECT * FROM "+ dbTableId + " WHERE " + TideSQLiteHelper.DATE + " = " + "'" + date + "'";
+        return db.rawQuery(query, null);
     }
 
     public Boolean isDBEmpty() {

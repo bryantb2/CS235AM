@@ -54,7 +54,18 @@ public class TideViewActivity extends ListActivity {
             sqLiteHelper.loadDbFromXML();
 
         // Build date string that will get passed into getTideItems method
-        String dateString = String.valueOf(year) + "/" + String.valueOf(monthOfYear) + "/" + String.valueOf(dayOfMonth);
+        // the conditional logic below will deal with leading zeros
+        String monthAsString = "";
+        String dayAsString = "";
+        if(monthOfYear < 10)
+            monthAsString = ("0" + String.valueOf(monthOfYear));
+        else
+            monthAsString = String.valueOf(monthOfYear);
+        if(dayOfMonth < 10)
+            dayAsString = ("0" + String.valueOf(dayOfMonth));
+        else
+            monthAsString = String.valueOf(dayOfMonth);
+        String dateString = String.valueOf(year) + "/" + monthAsString + "/" + dayAsString;
 
         cursor = this.sqLiteHelper.getTidePredictionsByDate(dateString, location);
 
