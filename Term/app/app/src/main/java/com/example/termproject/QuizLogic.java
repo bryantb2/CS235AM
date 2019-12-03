@@ -68,15 +68,11 @@ public class QuizLogic implements Serializable {
         BuildAndAddRecommendations();
     }
 
-    // METHODS
-    public ArrayList<QuizRecommendation> GetRecommendations() {
-        return this.finalRecommendations;
-    }
-
+    // PARENT METHODS -------------------------------------------------------------------------------------------------------------->
     public void PassNCalcTestResults(ArrayList<ArrayList<String>> testResults) {
         // takes in ArrayList of ArrayList strings
-            // first four embedded arraylists are section results
-            // the last is an ArrayList of category strings that corresponds to the order and type of the section results
+        // first four embedded arraylists are section results
+        // the last is an ArrayList of category strings that corresponds to the order and type of the section results
         // parse answers into their own ArrayLists
         // calc general lean
         // calc pref technology for each section
@@ -92,135 +88,33 @@ public class QuizLogic implements Serializable {
 
     }
 
-    private void CalcAllPrefTechnologies(ArrayList<String> frontEndAnswers, ArrayList<String> backEndAnswers, ArrayList<String> dbAnswers) {
-        // takes in parsed section answers
-        // calls CalcPrefTechnologyBySection to get the preferred tech
-        String prefFrontEndTech = CalcPrefTechnologyBySection(frontEndAnswers,FRONT_END_SECTION, false);
-        String prefCSSFramework = CalcPrefTechnologyBySection(frontEndAnswers,FRONT_END_SECTION, true);
-        String prefBackEndTech = CalcPrefTechnologyBySection(backEndAnswers,BACK_END_SECTION,false);
-        String prefDBTech = CalcPrefTechnologyBySection(dbAnswers,DB_SECTION,false);
-
-        this.PreferedFrontEndTech = prefFrontEndTech;
-        this.PreferedCSSFramework = prefCSSFramework;
-        this.PreferedBackEndTech = prefBackEndTech;
-        this.PreferedDBTech = prefDBTech;
+    // GETTER/SETTER METHODS
+    public ArrayList<QuizRecommendation> GetRecommendations() {
+        return this.finalRecommendations;
     }
 
-    private String CalcPrefTechnologyBySection(ArrayList<String> sectionAnswers, String categoryTag, boolean calculateCSSFramework) {
-        // Determine which tag has been passed in
-        // utilize the answer converter to get the tech that corresponds to each answer
-        // the tech choice returned from this method will be reached by:
-            // added to several local running counters representing the various quiz tech answers
-            // apply a lean to the finished, counted, tech categories
-            // returning the tech with the highest point value
-        if(categoryTag == FRONT_END_SECTION) {
-            // tech counter array
-            int cssFramework = 0;
-            int cssModules = 0;
-            int[] techOccuranceTracker = new int[4];
-
-            // array counter indices
-            final int ANGULAR_INDEX = 0;
-            final int ASP_DOTNET_INDEX = 1;
-            final int REACT_JS_INDEX = 2;
-            final int DJANO_INDEX = 3;
-
-            // Getting and setting front end section answer results
-            final int TECH_RESPONSE_INCREMENTOR = 1;
-            for(int i = 0; i < sectionAnswers.size(); i++) {
-                // since the order of the quiz results haven't changed,
-                // the index+1 is the question number (a natural index is required for the answer converter)
-                int questionNumber = i + 1;
-                int answerPosition = Integer.parseInt(sectionAnswers.get(i)); // parsing as int because the sectionAnswers are originally sent to second activity as strings
-                ArrayList<String> answerAsTechnologies = AnswerConverter.ConvertSectionQuestionToTech(categoryTag,questionNumber,answerPosition);
-                for(int j = 0; j < answerAsTechnologies.size(); j++) {
-                    // loops through the returned ArrayList
-                    // find the technology and increment its counter
-                    if(answerAsTechnologies.get(j) == ANGULAR) {
-                        int oldCount = techOccuranceTracker[ANGULAR_INDEX];
-                        techOccuranceTracker[ANGULAR_INDEX] = (oldCount + TECH_RESPONSE_INCREMENTOR);
-                    }
-                    else if(answerAsTechnologies.get(j)== ASP_DOTNET) {
-                        int oldCount = techOccuranceTracker[ASP_DOTNET_INDEX];
-                        techOccuranceTracker[ASP_DOTNET_INDEX] = (oldCount + TECH_RESPONSE_INCREMENTOR);
-                    }
-                    else if(answerAsTechnologies.get(j)== DJANGO) {
-                        int oldCount = techOccuranceTracker[DJANO_INDEX];
-                        techOccuranceTracker[DJANO_INDEX] = (oldCount + TECH_RESPONSE_INCREMENTOR);
-                    }
-                    else if(answerAsTechnologies.get(j)== REACT_JS) {
-                        int oldCount = techOccuranceTracker[REACT_JS_INDEX];
-                        techOccuranceTracker[REACT_JS_INDEX] = (oldCount + TECH_RESPONSE_INCREMENTOR);
-                    }
-                    else if(answerAsTechnologies.get(j)== MATERIAL_UI || answerAsTechnologies.get(j)== BOOTSTRAP) {
-                        cssFramework += TECH_RESPONSE_INCREMENTOR;
-                    }
-                    else {
-                        cssModules += TECH_RESPONSE_INCREMENTOR;
-                    }
-                }
-                if(calculateCSSFramework == true) {
-                    // if this boolean is true, it means the user wants the selected cssFramework instead of the frontend tech
-                    if(cssModules > cssFramework)
-                        return STYLED_COMPONENTS;
-                    else
-                        return BOOTSTRAP;
-                }
-                else {
-                    // Determine pref section technology
-                    String techWithMostPoints = "";
-                    int mostTechPoints = 0;
-                    for(int x = 0; x <techOccuranceTracker.length; x++) {
-                        if(x == 0) {
-                            // set initial category points tracker to first element
-                            techWithMostPoints = ANGULAR;
-                            mostTechPoints = techOccuranceTracker[ANGULAR_INDEX];
-                        }
-                        else {
-                            // compared currently indexed points tracker to the highest
-                            int currentCategoryPoints = techOccuranceTracker[x];
-                            if(currentCategoryPoints > mostTechPoints) {
-                                // set new highest point counter
-                                mostTechPoints = currentCategoryPoints;
-
-                                // set the string for the highest point category
-                                if(x == ANGULAR_INDEX)
-                                    techWithMostPoints = ANGULAR;
-                                else if(x == REACT_JS_INDEX)
-                                    techWithMostPoints = REACT_JS;
-                                else if(x == ASP_DOTNET_INDEX)
-                                    techWithMostPoints = ASP_DOTNET;
-                                else
-                                    techWithMostPoints = DJANGO;
-                            }
-                        }
-                    }
-                    // TODO: WRITE A
-                   return techWithMostPoints;
-                }
+    // DATA PARSING METHODS
+    private ArrayList<String> GetSectionResultsByCategory(String category, ArrayList<ArrayList<String>> resultsList) {
+        // method takes in the 2D ArrayList of results and a section category tag
+        // returns the proper results list based off the position of the category tag
+        ArrayList<String> categoryTagArray = resultsList.get(resultsList.size()-1);
+        for(int i =0; i <categoryTagArray.size(); i++) {
+            if(categoryTagArray.get(i) == category) {
+                // since the category tags are in perfect parallel with the section answers,
+                // the index in the category tags correlates with the index of the results array
+                return resultsList.get(i);
             }
         }
-        /*else if(categoryTag == BACK_END_SECTION) {
-            // Determine which tag has been passed in
-            // utilize the answer converter to get the tech that corresponds to each answer
-            // the tech choice returned from this method will be reached by:
-                // added to several local running counters representing the various quiz tech answers
-                // apply a lean to the finished, counted, tech categories
-                // returning the tech with the highest point value
-        }
-        else {
-
-        }
-        return "";*/
         return null;
     }
 
+    // CALC LEAN METHODS -------------------------------------------------------------------------------------------------------------->
     private void CalcLeans(ArrayList<String> generalSectionResults) {
         // this method utilizes the answer converter's methods to get two things:
-            // the category that corresponds to general section quiz answer
-            // the language bias of the user
+        // the category that corresponds to general section quiz answer
+        // the language bias of the user
         // the category returned from each answer will be:
-            // added to several local running counters representing the various quiz categories
+        // added to several local running counters representing the various quiz categories
         // the highest language and general category will be determined and then set to their respective class variables
         int traditionalLanguageBias = 0;
         int scriptingLanguageBias = 0;
@@ -303,20 +197,250 @@ public class QuizLogic implements Serializable {
         this.generalCategoryLean = categoryWithMostPoints;
     }
 
-    private ArrayList<String> GetSectionResultsByCategory(String category, ArrayList<ArrayList<String>> resultsList) {
-        // method takes in the 2D ArrayList of results and a section category tag
-        // returns the proper results list based off the position of the category tag
-        ArrayList<String> categoryTagArray = resultsList.get(resultsList.size()-1);
-        for(int i =0; i <categoryTagArray.size(); i++) {
-            if(categoryTagArray.get(i) == category) {
-                // since the category tags are in perfect parallel with the section answers,
-                // the index in the category tags correlates with the index of the results array
-                return resultsList.get(i);
+    // CALC PREF SECTION TECH / APPLY LEAN METHODS -------------------------------------------------------------------------------------------------------------->
+    private void CalcAllPrefTechnologies(ArrayList<String> frontEndAnswers, ArrayList<String> backEndAnswers, ArrayList<String> dbAnswers) {
+        // takes in parsed section answers
+        // calls CalcPrefTechnologyBySection to get the preferred tech
+        String prefFrontEndTech = CalcPrefTechnologyBySection(frontEndAnswers,FRONT_END_SECTION, false);
+        String prefCSSFramework = CalcPrefTechnologyBySection(frontEndAnswers,FRONT_END_SECTION, true);
+        String prefBackEndTech = CalcPrefTechnologyBySection(backEndAnswers,BACK_END_SECTION,false);
+        String prefDBTech = CalcPrefTechnologyBySection(dbAnswers,DB_SECTION,false);
+
+        this.PreferedFrontEndTech = prefFrontEndTech;
+        this.PreferedCSSFramework = prefCSSFramework;
+        this.PreferedBackEndTech = prefBackEndTech;
+        this.PreferedDBTech = prefDBTech;
+    }
+
+    private String CalcPrefTechnologyBySection(ArrayList<String> sectionAnswers, String categoryTag, boolean calculateCSSFramework) {
+        // Determine which tag has been passed in
+        // utilize the answer converter to get the tech that corresponds to each answer
+        // the tech choice returned from this method will be reached by:
+            // added to several local running counters representing the various quiz tech answers
+            // apply a lean to the finished, counted, tech categories
+            // returning the tech with the highest point value
+        if(categoryTag == FRONT_END_SECTION) {
+            // tech counter array
+            int cssFramework = 0;
+            int cssModules = 0;
+            int[] techOccuranceTracker = new int[4];
+
+            // array counter indices
+            final int ANGULAR_INDEX = 0;
+            final int ASP_DOTNET_INDEX = 1;
+            final int REACT_JS_INDEX = 2;
+            final int DJANO_INDEX = 3;
+
+            // Getting and setting front end section answer results
+            final int TECH_RESPONSE_INCREMENTOR = 1;
+            for(int i = 0; i < sectionAnswers.size(); i++) {
+                // since the order of the quiz results haven't changed,
+                // the index+1 is the question number (a natural index is required for the answer converter)
+                int questionNumber = i + 1;
+                int answerPosition = Integer.parseInt(sectionAnswers.get(i)); // parsing as int because the sectionAnswers are originally sent to second activity as strings
+                ArrayList<String> answerAsTechnologies = AnswerConverter.ConvertSectionQuestionToTech(categoryTag,questionNumber,answerPosition);
+                for(int j = 0; j < answerAsTechnologies.size(); j++) {
+                    // loops through the returned ArrayList
+                    // find the technology and increment its counter
+                    if(answerAsTechnologies.get(j) == ANGULAR) {
+                        int oldCount = techOccuranceTracker[ANGULAR_INDEX];
+                        techOccuranceTracker[ANGULAR_INDEX] = (oldCount + TECH_RESPONSE_INCREMENTOR);
+                    }
+                    else if(answerAsTechnologies.get(j)== ASP_DOTNET) {
+                        int oldCount = techOccuranceTracker[ASP_DOTNET_INDEX];
+                        techOccuranceTracker[ASP_DOTNET_INDEX] = (oldCount + TECH_RESPONSE_INCREMENTOR);
+                    }
+                    else if(answerAsTechnologies.get(j)== DJANGO) {
+                        int oldCount = techOccuranceTracker[DJANO_INDEX];
+                        techOccuranceTracker[DJANO_INDEX] = (oldCount + TECH_RESPONSE_INCREMENTOR);
+                    }
+                    else if(answerAsTechnologies.get(j)== REACT_JS) {
+                        int oldCount = techOccuranceTracker[REACT_JS_INDEX];
+                        techOccuranceTracker[REACT_JS_INDEX] = (oldCount + TECH_RESPONSE_INCREMENTOR);
+                    }
+                    else if(answerAsTechnologies.get(j)== MATERIAL_UI || answerAsTechnologies.get(j)== BOOTSTRAP) {
+                        cssFramework += TECH_RESPONSE_INCREMENTOR;
+                    }
+                    else {
+                        cssModules += TECH_RESPONSE_INCREMENTOR;
+                    }
+                }
+                if(calculateCSSFramework == true) {
+                    // if this boolean is true, it means the user wants the selected cssFramework instead of the frontend tech
+                    if(cssModules > cssFramework)
+                        return STYLED_COMPONENTS;
+                    else
+                        return BOOTSTRAP;
+                }
+                // Determine pref section technology
+                String techWithMostPoints = "";
+                int mostTechPoints = 0;
+                for(int x = 0; x <techOccuranceTracker.length; x++) {
+                    if(x == 0) {
+                        // set initial category points tracker to first element
+                        techWithMostPoints = ANGULAR;
+                        mostTechPoints = techOccuranceTracker[ANGULAR_INDEX];
+                    }
+                    else {
+                        // compared currently indexed points tracker to the highest
+                        int currentCategoryPoints = techOccuranceTracker[x];
+                        if(currentCategoryPoints > mostTechPoints) {
+                            // set new highest point counter
+                            mostTechPoints = currentCategoryPoints;
+
+                            // set the string for the highest point category
+                            if(x == ANGULAR_INDEX)
+                                techWithMostPoints = ANGULAR;
+                            else if(x == REACT_JS_INDEX)
+                                techWithMostPoints = REACT_JS;
+                            else if(x == ASP_DOTNET_INDEX)
+                                techWithMostPoints = ASP_DOTNET;
+                            else
+                                techWithMostPoints = DJANGO;
+                        }
+                    }
+                }
+                // TODO: WRITE AND ADD APPLY LEAN FUNCTION TO THE ABOVE LOOP!!!!!
+                return techWithMostPoints;
             }
         }
+        /*else if(categoryTag == BACK_END_SECTION) {
+            // Determine which tag has been passed in
+            // utilize the answer converter to get the tech that corresponds to each answer
+            // the tech choice returned from this method will be reached by:
+                // added to several local running counters representing the various quiz tech answers
+                // apply a lean to the finished, counted, tech categories
+                // returning the tech with the highest point value
+        }
+        else {
+
+        }
+        return "";*/
         return null;
     }
 
+    private int[] ApplyLeanToPrefTechnologyCounter(int[] rawTechCounterArray, String sectionCategoryTag) {
+        // takes in an array that represents the number of times a particular technology resulted from a quiz answer
+        // will determine which category calculation rules to apply, since each section has different property names and quantities
+
+        // Functionality:
+            // loop through counter array
+            // foreach element,
+                // get it's corresponding tech recommendation object
+                    // loop through object category tags
+                    // if one of the tags is the lean category
+                        // add two points to array element
+                    // otherwise, go to next array counter element
+            // return counter array
+        int[] counterArrayWithLean = new int[0];
+        if(sectionCategoryTag == FRONT_END_SECTION) {
+            // array counter indices
+            final int ANGULAR_INDEX = 0;
+            final int ASP_DOTNET_INDEX = 1;
+            final int REACT_JS_INDEX = 2;
+            final int DJANO_INDEX = 3;
+
+            for(int i = 0; i < rawTechCounterArray.length; i++) {
+                if(i == ANGULAR_INDEX) {
+                    GetRecommendationByTechname(ANGULAR);
+                }
+                else if(i == REACT_JS_INDEX) {
+                    GetRecommendationByTechname(REACT_JS);
+                }
+                else if(i == ASP_DOTNET_INDEX) {
+                    GetRecommendationByTechname(ASP_DOTNET);
+                }
+                else {
+                    GetRecommendationByTechname(DJANGO);
+                }
+            }
+
+        }
+        else if(sectionCategoryTag == BACK_END_SECTION) {
+
+        }
+        else {
+
+        }
+        return counterArrayWithLean;
+    }
+
+    private boolean DoesRecommendationGetGeneralLean(QuizRecommendation recommendationObj) {
+        // loop through recommendation objects tag
+            // return true if one of the tags is equivalent to the lean category
+            // return false if no such tag exists
+        for(int i = 0; i < recommendationObj.GetQuizTags().size(); i++) {
+            String currentRecommendationTag = recommendationObj.GetQuizTags().get(i);
+            if(currentRecommendationTag == this.generalCategoryLean) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean DoesRecommendationGetLanguageLean(QuizRecommendation recommendationObj) {
+        // loop through recommendation objects tag
+            // return true if one of the tags is equivalent to the language lean category
+            // return false if no such tag exists
+        for(int i = 0; i < recommendationObj.GetQuizTags().size(); i++) {
+            String currentRecommendationTag = recommendationObj.GetQuizTags().get(i);
+            if(currentRecommendationTag == this.languageLean) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private QuizRecommendation GetRecommendationByTechname(String techName) {
+        // this method takes in the string name of a recommendation, finds it in the pre-generated list, and returns it
+        for(int i = 0; i < preGeneratedRecommendations.size(); i++) {
+            String recommendationTechname = preGeneratedRecommendations.get(i).GetTechnologyName();
+            if(recommendationTechname == REACT_JS)
+                return preGeneratedRecommendations.get(i);
+            else if(recommendationTechname == ANGULAR) {
+                return preGeneratedRecommendations.get(i);
+            }
+            else if(recommendationTechname == BOOTSTRAP) {
+                return preGeneratedRecommendations.get(i);
+            }
+            else if(recommendationTechname == STYLED_COMPONENTS) {
+                return preGeneratedRecommendations.get(i);
+            }
+            else if(recommendationTechname == MATERIAL_UI) {
+                return preGeneratedRecommendations.get(i);
+            }
+            else if(recommendationTechname == ASP_DOTNET) {
+                return preGeneratedRecommendations.get(i);
+            }
+            else if(recommendationTechname == NODE_JS) {
+                return preGeneratedRecommendations.get(i);
+            }
+            else if(recommendationTechname == EXPRESS_JS) {
+                return preGeneratedRecommendations.get(i);
+            }
+            else if(recommendationTechname == ASP_DOTNET_WEB_API) {
+                return preGeneratedRecommendations.get(i);
+            }
+            else if(recommendationTechname == DJANGO) {
+                return preGeneratedRecommendations.get(i);
+            }
+            else if(recommendationTechname == MONGODB) {
+                return preGeneratedRecommendations.get(i);
+            }
+            else if(recommendationTechname == MYSQL) {
+                return preGeneratedRecommendations.get(i);
+            }
+            else if(recommendationTechname == POSTGRESQL) {
+                return preGeneratedRecommendations.get(i);
+            }
+            else {
+                throw new Error("we forgot something!");
+            }
+        }
+        return null; // error if it returns null
+    }
+
+    // BOILER PLATE METHODS -------------------------------------------------------------------------------------------------------------->
     private void BuildAndAddRecommendations() {
         // FRONTEND RECOMMENDATIONS
         // react js recommendation object
