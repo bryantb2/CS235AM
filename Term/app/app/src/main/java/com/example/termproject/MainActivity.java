@@ -14,6 +14,8 @@ import android.widget.Toast;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 
+// XML COLOR PALETTE : https://coolors.co/3a3335-d81e5b-f0544f-fdf0d5-c6d8d3
+
 public class MainActivity extends AppCompatActivity {
     // PUBLIC STATIC CONSTANTS
     public static final String QUIZ_LOGIC = "QUIZ_LOGIC";
