@@ -504,47 +504,8 @@ public class QuizLogic implements Serializable {
         // this method takes in the string name of a recommendation, finds it in the pre-generated list, and returns it
         for(int i = 0; i < preGeneratedRecommendations.size(); i++) {
             String recommendationTechname = preGeneratedRecommendations.get(i).GetTechnologyName();
-            if(recommendationTechname == REACT_JS)
+            if(recommendationTechname == techName)
                 return preGeneratedRecommendations.get(i);
-            else if(recommendationTechname == ANGULAR) {
-                return preGeneratedRecommendations.get(i);
-            }
-            else if(recommendationTechname == BOOTSTRAP) {
-                return preGeneratedRecommendations.get(i);
-            }
-            else if(recommendationTechname == STYLED_COMPONENTS) {
-                return preGeneratedRecommendations.get(i);
-            }
-            else if(recommendationTechname == MATERIAL_UI) {
-                return preGeneratedRecommendations.get(i);
-            }
-            else if(recommendationTechname == ASP_DOTNET) {
-                return preGeneratedRecommendations.get(i);
-            }
-            else if(recommendationTechname == NODE_JS) {
-                return preGeneratedRecommendations.get(i);
-            }
-            else if(recommendationTechname == EXPRESS_JS) {
-                return preGeneratedRecommendations.get(i);
-            }
-            else if(recommendationTechname == ASP_DOTNET_WEB_API) {
-                return preGeneratedRecommendations.get(i);
-            }
-            else if(recommendationTechname == DJANGO) {
-                return preGeneratedRecommendations.get(i);
-            }
-            else if(recommendationTechname == MONGODB) {
-                return preGeneratedRecommendations.get(i);
-            }
-            else if(recommendationTechname == MYSQL) {
-                return preGeneratedRecommendations.get(i);
-            }
-            else if(recommendationTechname == POSTGRESQL) {
-                return preGeneratedRecommendations.get(i);
-            }
-            else {
-                throw new Error("we forgot something!");
-            }
         }
         return null; // error if it returns null
     }
@@ -574,7 +535,7 @@ public class QuizLogic implements Serializable {
             }
         }
         return false;
-    }
+    } // CHECKED
 
     private boolean DoesRecommendationGetLanguageLean(QuizRecommendation recommendationObj) {
         // loop through recommendation objects tag
@@ -587,7 +548,7 @@ public class QuizLogic implements Serializable {
             }
         }
         return false;
-    }
+    } // CHECKED
 
     // BOILER PLATE METHODS -------------------------------------------------------------------------------------------------------------->
     private void BuildAndAddRecommendations() {
@@ -670,10 +631,17 @@ public class QuizLogic implements Serializable {
         recommendation = new QuizRecommendation((MONGODB), NON_RELATIONAL_DB, DB_SECTION,categoryTags);
         this.preGeneratedRecommendations.add(recommendation);
 
-        // MySQL and PostgreSQL recommendation object
+        // MySQL recommendation object
         categoryTags = new ArrayList<>();
         categoryTags.add(STRUCTURE);
-        recommendation = new QuizRecommendation((MYSQL + " OR " + POSTGRESQL), RELATIONAL_DB, DB_SECTION,categoryTags);
+        recommendation = new QuizRecommendation((MYSQL), RELATIONAL_DB, DB_SECTION,categoryTags);
         this.preGeneratedRecommendations.add(recommendation);
-    }
+
+        // PostgreSQL recommendation object
+        categoryTags = new ArrayList<>();
+        categoryTags.add(STRUCTURE);
+        categoryTags.add(MAINTAINABILITY);
+        recommendation = new QuizRecommendation((POSTGRESQL), RELATIONAL_DB, DB_SECTION,categoryTags);
+        this.preGeneratedRecommendations.add(recommendation);
+    } // CHECKED
 }
