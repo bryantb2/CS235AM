@@ -83,14 +83,18 @@ public class QuizLogic implements Serializable {
         ArrayList<String> backEndSectionAnswers = GetSectionResultsByCategory(BACK_END_SECTION, testResults);
         ArrayList<String> dbSectionAnswers = GetSectionResultsByCategory(DB_SECTION, testResults);
 
-        AddUpAnswersAndCalcLeans(generalSectionAnswers);
-        CalcAllPrefTechnologies(frontEndSectionAnswers,backEndSectionAnswers,dbSectionAnswers);
+        EvaluateGeneralAnswersAndCalcLeans(generalSectionAnswers); // gets the quiz leans
+        CalcAllPrefTechnologies(frontEndSectionAnswers,backEndSectionAnswers,dbSectionAnswers); // uses quiz leans to determine pref stack technologies
 
     }
 
     // GETTER/SETTER METHODS
-    public ArrayList<QuizRecommendation> GetRecommendations() {
+    public ArrayList<QuizRecommendation> GetFinalRecommendations() {
         return this.finalRecommendations;
+    }
+
+    private void SetFinalRecommendations() {
+
     }
 
     // DATA PARSING METHODS
@@ -109,7 +113,7 @@ public class QuizLogic implements Serializable {
     }
 
     // CALC LEAN METHODS -------------------------------------------------------------------------------------------------------------->
-    private void AddUpAnswersAndCalcLeans(ArrayList<String> generalSectionResults) {
+    private void EvaluateGeneralAnswersAndCalcLeans(ArrayList<String> generalSectionResults) {
         // this method utilizes the answer converter's methods to get two things:
         // the category that corresponds to general section quiz answer
         // the language bias of the user
@@ -135,20 +139,19 @@ public class QuizLogic implements Serializable {
             int answerPosition = Integer.parseInt(generalSectionResults.get(i));
             String answerAsCategory = AnswerConverter.ConvertGeneralQuestionToCategory(questionNumber,answerPosition);
             if(answerAsCategory == FAST_DEV_TIME) {
-                int oldCount = categoryOccuranceTracker[FAST_DEV_TIME_INDEX];
-                categoryOccuranceTracker[FAST_DEV_TIME_INDEX] = (oldCount + CATEGORY_INCREMENTOR);
+                categoryOccuranceTracker[FAST_DEV_TIME_INDEX] += CATEGORY_INCREMENTOR;
             }
             else if(answerAsCategory == MAINTAINABILITY) {
                 int oldCount = categoryOccuranceTracker[MAINTAINABILITY_INDEX];
-                categoryOccuranceTracker[MAINTAINABILITY_INDEX] = (oldCount + CATEGORY_INCREMENTOR);
+                categoryOccuranceTracker[MAINTAINABILITY_INDEX] += CATEGORY_INCREMENTOR;
             }
             else if(answerAsCategory == EFFICIENCY_AND_SPEED) {
                 int oldCount = categoryOccuranceTracker[EFFICIENCY_INDEX];
-                categoryOccuranceTracker[EFFICIENCY_INDEX] = (oldCount + CATEGORY_INCREMENTOR);
+                categoryOccuranceTracker[EFFICIENCY_INDEX] += CATEGORY_INCREMENTOR;
             }
             else if(answerAsCategory == STRUCTURE) {
                 int oldCount = categoryOccuranceTracker[STRUCTURE_INDEX];
-                categoryOccuranceTracker[STRUCTURE_INDEX] = (oldCount + CATEGORY_INCREMENTOR);
+                categoryOccuranceTracker[STRUCTURE_INDEX] += CATEGORY_INCREMENTOR;
             }
             else if(answerAsCategory == TRADITIONAL_LANGUAGE) {
                 traditionalLanguageBias += CATEGORY_INCREMENTOR;
@@ -202,14 +205,14 @@ public class QuizLogic implements Serializable {
         // takes in parsed section answers
         // calls CalcPrefTechnologyBySection to get the preferred tech
         String prefFrontEndTech = CalcPrefTechBySection(frontEndAnswers,FRONT_END_SECTION, false);
-        String prefCSSFramework = CalcPrefTechBySection(frontEndAnswers,FRONT_END_SECTION, true);
+        /*String prefCSSFramework = CalcPrefTechBySection(frontEndAnswers,FRONT_END_SECTION, true);
         String prefBackEndTech = CalcPrefTechBySection(backEndAnswers,BACK_END_SECTION,false);
         String prefDBTech = CalcPrefTechBySection(dbAnswers,DB_SECTION,false);
 
         this.PreferedFrontEndTech = prefFrontEndTech;
         this.PreferedCSSFramework = prefCSSFramework;
         this.PreferedBackEndTech = prefBackEndTech;
-        this.PreferedDBTech = prefDBTech;
+        this.PreferedDBTech = prefDBTech;*/
     }
 
     private String CalcPrefTechBySection(ArrayList<String> sectionAnswers, String categoryTag, boolean calculateCSSFramework) {
@@ -219,6 +222,7 @@ public class QuizLogic implements Serializable {
             // added to several local running counters representing the various quiz tech answers
             // apply a lean to the finished, counted, tech categories
             // returning the tech with the highest point value
+        String sectionTech = "";
         if(categoryTag == FRONT_END_SECTION) {
             // tech counter array
             int cssFramework = 0;
@@ -243,20 +247,16 @@ public class QuizLogic implements Serializable {
                     // loops through the returned ArrayList
                     // find the technology and increment its counter
                     if(answerAsTechnologies.get(j) == ANGULAR) {
-                        int oldCount = techOccuranceTracker[ANGULAR_INDEX];
-                        techOccuranceTracker[ANGULAR_INDEX] = (oldCount + TECH_RESPONSE_INCREMENTOR);
+                        techOccuranceTracker[ANGULAR_INDEX] += TECH_RESPONSE_INCREMENTOR;
                     }
                     else if(answerAsTechnologies.get(j)== ASP_DOTNET) {
-                        int oldCount = techOccuranceTracker[ASP_DOTNET_INDEX];
-                        techOccuranceTracker[ASP_DOTNET_INDEX] = (oldCount + TECH_RESPONSE_INCREMENTOR);
+                        techOccuranceTracker[ASP_DOTNET_INDEX] += TECH_RESPONSE_INCREMENTOR;
                     }
                     else if(answerAsTechnologies.get(j)== DJANGO) {
-                        int oldCount = techOccuranceTracker[DJANO_INDEX];
-                        techOccuranceTracker[DJANO_INDEX] = (oldCount + TECH_RESPONSE_INCREMENTOR);
+                        techOccuranceTracker[DJANO_INDEX] += TECH_RESPONSE_INCREMENTOR;
                     }
                     else if(answerAsTechnologies.get(j)== REACT_JS) {
-                        int oldCount = techOccuranceTracker[REACT_JS_INDEX];
-                        techOccuranceTracker[REACT_JS_INDEX] = (oldCount + TECH_RESPONSE_INCREMENTOR);
+                        techOccuranceTracker[REACT_JS_INDEX] += TECH_RESPONSE_INCREMENTOR;
                     }
                     else if(answerAsTechnologies.get(j)== MATERIAL_UI || answerAsTechnologies.get(j)== BOOTSTRAP) {
                         cssFramework += TECH_RESPONSE_INCREMENTOR;
@@ -272,38 +272,9 @@ public class QuizLogic implements Serializable {
                     else
                         return BOOTSTRAP;
                 }
-                // Determine pref section technology
-                String techWithMostPoints = "";
-                int mostTechPoints = 0;
-                for(int x = 0; x <techOccuranceTracker.length; x++) {
-                    if(x == 0) {
-                        // set initial category points tracker to first element
-                        techWithMostPoints = ANGULAR;
-                        mostTechPoints = techOccuranceTracker[ANGULAR_INDEX];
-                    }
-                    else {
-                        // compared currently indexed points tracker to the highest
-                        int currentCategoryPoints = techOccuranceTracker[x];
-                        if(currentCategoryPoints > mostTechPoints) {
-                            // set new highest point counter
-                            mostTechPoints = currentCategoryPoints;
-
-                            // set the string for the highest point category
-                            if(x == ANGULAR_INDEX)
-                                techWithMostPoints = ANGULAR;
-                            else if(x == REACT_JS_INDEX)
-                                techWithMostPoints = REACT_JS;
-                            else if(x == ASP_DOTNET_INDEX)
-                                techWithMostPoints = ASP_DOTNET;
-                            else
-                                techWithMostPoints = DJANGO;
-                        }
-                    }
-                }
-                // TODO: WRITE AND ADD APPLY LEAN FUNCTION TO THE ABOVE LOOP!!!!!
-                return techWithMostPoints;
             }
         }
+        // TODO: FINISH THESE METHODS
         else if(categoryTag == BACK_END_SECTION) {
             // array counter indices
             final int NODE_JS_INDEX = 0;
@@ -322,7 +293,93 @@ public class QuizLogic implements Serializable {
             final int MYSQL_INDEX = 1;
             final int POSTGRESQL = 2;
         }
-        return "";
+        return sectionTech;
+        // TODO: call EvaluateTechCounterAndApplyLean
+    }
+
+    private String EvaluateTechCounterAndApplyLean(String sectionCategory, int[] techCounterArray) {
+        // method will take in a section category and an array that corresponds to the number of times a particular technology has been returned from the answer converter
+        // the lean method will be run on the techcounter
+        // then, a conditional block will loop through the number of points for each technology
+        // method will return the string that represents the most scored technology
+        int[] techCounterWithLean = ApplyLeanToPrefTechnologyCounter(techCounterArray,sectionCategory);
+        String techWithMostPoints = "";
+        // array counter indices
+        final int ANGULAR_INDEX = 0;
+        final int ASP_DOTNET_INDEX = 1;
+        final int REACT_JS_INDEX = 2;
+        final int DJANO_INDEX = 3;
+
+        // array counter indices
+        final int NODE_JS_INDEX = 0;
+        final int EXPRESS_JS_INDEX = 1;
+        final int ASP_DOTNET_WEB_API_INDEX = 2;
+
+        // array counter indices
+        final int MONGODB_INDEX = 0;
+        final int MYSQL_INDEX = 1;
+        final int POSTGRESQL_INDEX = 2;
+
+        // Determine pref section technology
+        int mostTechPoints = 0;
+        for(int i = 0; i <techCounterWithLean.length; i++) {
+            if(i == 0) {
+                if(sectionCategory == FRONT_END_SECTION) {
+                    // set initial category points tracker to first element
+                    techWithMostPoints = ANGULAR;
+                    mostTechPoints = techCounterWithLean[ANGULAR_INDEX];
+                }
+                else if(sectionCategory == BACK_END_SECTION) {
+                    // set initial category points tracker to first element
+                    techWithMostPoints = NODE_JS;
+                    mostTechPoints = techCounterWithLean[NODE_JS_INDEX];
+                }
+                else {
+                    // set initial category points tracker to first element
+                    techWithMostPoints = MONGODB;
+                    mostTechPoints = techCounterWithLean[MONGODB_INDEX];
+                }
+            }
+            else {
+                // compare currently indexed points element to the highest point tracker
+                int currentCategoryPoints = techCounterWithLean[i];
+                if(currentCategoryPoints > mostTechPoints) {
+                    // set new highest point counter
+                    mostTechPoints = currentCategoryPoints;
+
+                    if(sectionCategory == FRONT_END_SECTION) {
+                        // set the string for the highest point category
+                        if(i == ANGULAR_INDEX)
+                            techWithMostPoints = ANGULAR;
+                        else if(i == REACT_JS_INDEX)
+                            techWithMostPoints = REACT_JS;
+                        else if(i == ASP_DOTNET_INDEX)
+                            techWithMostPoints = ASP_DOTNET;
+                        else
+                            techWithMostPoints = DJANGO;
+                    }
+                    else if(sectionCategory == BACK_END_SECTION) {
+                        // set the string for the highest point category
+                        if(i == NODE_JS_INDEX)
+                            techWithMostPoints = NODE_JS;
+                        else if(i == EXPRESS_JS_INDEX)
+                            techWithMostPoints = EXPRESS_JS;
+                        else
+                            techWithMostPoints = ASP_DOTNET_WEB_API;
+                    }
+                    else {
+                        // set the string for the highest point category
+                        if(i == MONGODB_INDEX)
+                            techWithMostPoints = NODE_JS;
+                        else if(i == MYSQL_INDEX)
+                            techWithMostPoints = MYSQL;
+                        else
+                            techWithMostPoints = POSTGRESQL;
+                    }
+                }
+            }
+        }
+        return techWithMostPoints;
     }
 
     private int[] ApplyLeanToPrefTechnologyCounter(int[] rawTechCounterArray, String sectionCategoryTag) {
