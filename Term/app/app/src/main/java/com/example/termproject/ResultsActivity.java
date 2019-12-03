@@ -31,7 +31,6 @@ public class ResultsActivity extends ListActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.web_stack_results);
 
         // Get references to UI objects
         stackCategoryTextView = R.id.stackCategoryText;
@@ -44,10 +43,13 @@ public class ResultsActivity extends ListActivity {
         QuizLogic quiz = (QuizLogic)intent.getSerializableExtra(MainActivity.QUIZ_LOGIC); // get obj using serializable interface (cast to proper type)
 
         // Generate recommendation list from quiz logic
-        ArrayList<QuizRecommendation> recommendationList = quiz.GetFinalRecommendations();
+        ArrayList<QuizRecommendation> dirtyRecommendationList = quiz.GetFinalRecommendations();
+
+        // Clean up list for UI friendliness
+        ArrayList<QuizRecommendation> cleanRecommendationList = DataBeautifier.BeautifyAndReturnRecommendations(dirtyRecommendationList);
 
         // Creates an Arraylist of HashMap objects that stores key/value pairs for Recommendation data
-        hashMap = generateListItemHashMap(recommendationList);
+        hashMap = generateListItemHashMap(cleanRecommendationList);
 
         // Build an adapter object (will transfer the Arraylist hashmap data to the ListView in the layout)
         // takes in context, data source, the target layout, and two parallel arrays (key/value pairs for the data and target UI elements)
@@ -81,8 +83,8 @@ public class ResultsActivity extends ListActivity {
             ArrayList<String> categoryTags = tempRecommendationItem.GetQuizTags();
             String concatenatedTags = "";
             for(String tag : categoryTags) {
-                concatenatedTags += " ";
                 concatenatedTags += tag;
+                concatenatedTags += ", ";
             }
 
             map.put(STACK_CATEGORY,tempRecommendationItem.GetStackCategory());

@@ -33,17 +33,17 @@ public class QuizLogic implements Serializable {
     public static final String MYSQL = "MYSQL";
     public static final String POSTGRESQL = "POSTGRESQL";
 
-    // PRIVATE TECH TYPE CONSTANT TAGS (these describe the various technologies listed above)
-    private final String JS_FRAMEWORK="JS_FRAMEWORK";
-    private final String DOTNET_FRAMEWORK="DOTNET_FRAMEWORK";
-    private final String PYTHON_WEB_FRAMEWORK="DOTNET_FRAMEWORK";
-    private final String CSS_FRAMEWORK="CSS_FRAMEWORK";
-    private final String CSS_MODULE="CSS_MODULE";
-    private final String STATE_MANAGEMENT="STATE_MANAGEMENT";
-    private final String JS_SERVER_FRAMEWORK="JS_SERVER_FRAMEWORK";
-    private final String DOTENET_SERVER_FRAMEWORK="DOTENET_SERVER_FRAMEWORK";
-    private final String NON_RELATIONAL_DB="NON_RELATIONAL_DB";
-    private final String RELATIONAL_DB="RELATIONAL_DB";
+    // PUBLIC TECH TYPE CONSTANT TAGS (these describe the various technologies listed above)
+    public static final String JS_FRAMEWORK="JS_FRAMEWORK";
+    public static final String DOTNET_FRAMEWORK="DOTNET_FRAMEWORK";
+    public static final String PYTHON_WEB_FRAMEWORK="PYTHON_WEB_FRAMEWORK";
+    public static final String CSS_FRAMEWORK="CSS_FRAMEWORK";
+    public static final String CSS_MODULE="CSS_MODULE";
+    public static final String STATE_MANAGEMENT="STATE_MANAGEMENT";
+    public static final String JS_SERVER_FRAMEWORK="JS_SERVER_FRAMEWORK";
+    public static final String DOTENET_SERVER_FRAMEWORK="DOTENET_SERVER_FRAMEWORK";
+    public static final String NON_RELATIONAL_DB="NON_RELATIONAL_DB";
+    public static final String RELATIONAL_DB="RELATIONAL_DB";
 
     // STATIC SECTION TAGS
     public static final String GENERAL_SECTION = "GENERAL_SECTION";
