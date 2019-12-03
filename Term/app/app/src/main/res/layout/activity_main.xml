@@ -10,8 +10,8 @@
         android:id="@+id/calculateButton"
         android:layout_width="151dp"
         android:layout_height="52dp"
-        android:layout_marginStart="21dp"
-        android:layout_marginTop="28dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
         android:text="Calculate"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
@@ -20,21 +20,20 @@
         android:id="@+id/resetButton"
         android:layout_width="151dp"
         android:layout_height="52dp"
-        android:layout_marginStart="68dp"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="20dp"
         android:text="Reset"
-        app:layout_constraintStart_toEndOf="@+id/calculateButton"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <LinearLayout
         android:id="@+id/linearLayout"
-        android:layout_width="359dp"
-        android:layout_height="363dp"
-        android:layout_marginTop="120dp"
+        android:layout_width="330dp"
+        android:layout_height="469dp"
         android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView">
+        app:layout_constraintStart_toStartOf="parent">
 
         <ScrollView
             android:id="@+id/questionScrollContainer"
@@ -427,8 +426,8 @@
 
     <TextView
         android:id="@+id/textView"
-        android:layout_width="370dp"
-        android:layout_height="82dp"
+        android:layout_width="416dp"
+        android:layout_height="46dp"
         android:layout_marginTop="16dp"
         android:lineSpacingExtra="5sp"
         android:paddingTop="5dp"
