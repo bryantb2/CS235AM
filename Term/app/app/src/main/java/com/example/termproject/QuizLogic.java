@@ -85,7 +85,7 @@ public class QuizLogic implements Serializable {
 
         EvaluateGeneralAnswersAndCalcLeans(generalSectionAnswers); // gets the quiz leans and sets them to the class variables
         CalcAllPrefTechnologies(frontEndSectionAnswers,backEndSectionAnswers,dbSectionAnswers); // uses quiz leans to determine pref stack technologies
-
+        SetFinalRecommendations();
     }
 
     // GETTER/SETTER METHODS
@@ -94,7 +94,17 @@ public class QuizLogic implements Serializable {
     }
 
     private void SetFinalRecommendations() {
+        // this method will get each of the pref tech class Strings (which were set previously) and get the corresponding recommendation objects
+        // will add to the final recommendation object list
+        QuizRecommendation cssFramework = GetRecommendationByTechname(this.PreferedCSSFramework);
+        QuizRecommendation frontEndTech = GetRecommendationByTechname(this.PreferedFrontEndTech);
+        QuizRecommendation backEndTech = GetRecommendationByTechname(this.PreferedBackEndTech);
+        QuizRecommendation DBTech = GetRecommendationByTechname(this.PreferedDBTech);
 
+        this.finalRecommendations.add(cssFramework);
+        this.finalRecommendations.add(frontEndTech);
+        this.finalRecommendations.add(backEndTech);
+        this.finalRecommendations.add(DBTech);
     }
 
     // DATA PARSING METHODS
@@ -436,54 +446,54 @@ public class QuizLogic implements Serializable {
             if(sectionCategoryTag == FRONT_END_SECTION) {
                 if(i == ANGULAR_INDEX) {
                     // apply incrementer
-                    counterArrayWithLean[ANGULAR_INDEX] += GetRecommendationLeanPointsByCategoryTag(ANGULAR);
+                    counterArrayWithLean[ANGULAR_INDEX] += GetRecommendationLeanPointsByTechname(ANGULAR);
                 }
                 else if(i == REACT_JS_INDEX) {
                     // apply incrementer
-                    counterArrayWithLean[REACT_JS_INDEX] += GetRecommendationLeanPointsByCategoryTag(REACT_JS);
+                    counterArrayWithLean[REACT_JS_INDEX] += GetRecommendationLeanPointsByTechname(REACT_JS);
                 }
                 else if(i == ASP_DOTNET_INDEX) {
                     // apply incrementer
-                    counterArrayWithLean[ASP_DOTNET_INDEX] += GetRecommendationLeanPointsByCategoryTag(ASP_DOTNET);
+                    counterArrayWithLean[ASP_DOTNET_INDEX] += GetRecommendationLeanPointsByTechname(ASP_DOTNET);
                 }
                 else {
                     // apply incrementer
-                    counterArrayWithLean[DJANO_INDEX] += GetRecommendationLeanPointsByCategoryTag(DJANGO);
+                    counterArrayWithLean[DJANO_INDEX] += GetRecommendationLeanPointsByTechname(DJANGO);
                 }
             }
             else if(sectionCategoryTag == BACK_END_SECTION) {
                 if(i == NODE_JS_INDEX) {
                     // apply incrementer
-                    counterArrayWithLean[NODE_JS_INDEX] += GetRecommendationLeanPointsByCategoryTag(NODE_JS);
+                    counterArrayWithLean[NODE_JS_INDEX] += GetRecommendationLeanPointsByTechname(NODE_JS);
                 }
                 else if(i == EXPRESS_JS_INDEX) {
                     // apply incrementer
-                    counterArrayWithLean[EXPRESS_JS_INDEX] += GetRecommendationLeanPointsByCategoryTag(EXPRESS_JS);
+                    counterArrayWithLean[EXPRESS_JS_INDEX] += GetRecommendationLeanPointsByTechname(EXPRESS_JS);
                 }
                 else {
                     // apply incrementer
-                    counterArrayWithLean[ASP_DOTNET_WEB_API_INDEX] += GetRecommendationLeanPointsByCategoryTag(ASP_DOTNET_WEB_API);
+                    counterArrayWithLean[ASP_DOTNET_WEB_API_INDEX] += GetRecommendationLeanPointsByTechname(ASP_DOTNET_WEB_API);
                 }
             }
             else {
                 if(i == MONGODB_INDEX) {
                     // apply incrementer
-                    counterArrayWithLean[MONGODB_INDEX] += GetRecommendationLeanPointsByCategoryTag(MONGODB);
+                    counterArrayWithLean[MONGODB_INDEX] += GetRecommendationLeanPointsByTechname(MONGODB);
                 }
                 else if(i == MYSQL_INDEX) {
                     // apply incrementer
-                    counterArrayWithLean[MYSQL_INDEX] += GetRecommendationLeanPointsByCategoryTag(MYSQL);
+                    counterArrayWithLean[MYSQL_INDEX] += GetRecommendationLeanPointsByTechname(MYSQL);
                 }
                 else {
                     // apply incrementer
-                    counterArrayWithLean[POSTGRESQL_INDEX] += GetRecommendationLeanPointsByCategoryTag(POSTGRESQL);
+                    counterArrayWithLean[POSTGRESQL_INDEX] += GetRecommendationLeanPointsByTechname(POSTGRESQL);
                 }
             }
         }
         return counterArrayWithLean;
     }
 
-    private int GetRecommendationLeanPointsByCategoryTag(String recommendationName) {
+    private int GetRecommendationLeanPointsByTechname(String recommendationName) {
         // helper method to get the recommendation object by name and return number of lean points
         // NOTE: this method can, and will, return zero if there are no leans applicable to the recommendation
         QuizRecommendation recommendation = GetRecommendationByTechname(recommendationName);
