@@ -273,6 +273,7 @@ public class QuizLogic implements Serializable {
                         return BOOTSTRAP;
                 }
             }
+            sectionTech = EvaluateTechCounterAndApplyLean(FRONT_END_SECTION,techOccuranceTracker); // pass in answers and calc pref section tech
         }
         // TODO: FINISH THESE METHODS
         else if(categoryTag == BACK_END_SECTION) {
@@ -396,14 +397,24 @@ public class QuizLogic implements Serializable {
                     // otherwise, go to next array counter element
             // return counter array
         int[] counterArrayWithLean = rawTechCounterArray;
-        if(sectionCategoryTag == FRONT_END_SECTION) {
-            // array counter indices
-            final int ANGULAR_INDEX = 0;
-            final int ASP_DOTNET_INDEX = 1;
-            final int REACT_JS_INDEX = 2;
-            final int DJANO_INDEX = 3;
+        // array counter indices
+        final int ANGULAR_INDEX = 0;
+        final int ASP_DOTNET_INDEX = 1;
+        final int REACT_JS_INDEX = 2;
+        final int DJANO_INDEX = 3;
 
-            for(int i = 0; i < rawTechCounterArray.length; i++) {
+        // array counter indices
+        final int NODE_JS_INDEX = 0;
+        final int EXPRESS_JS_INDEX = 1;
+        final int ASP_DOTNET_WEB_API_INDEX = 2;
+
+        // array counter indices
+        final int MONGODB_INDEX = 0;
+        final int MYSQL_INDEX = 1;
+        final int POSTGRESQL_INDEX = 2;
+
+        for(int i = 0; i < rawTechCounterArray.length; i++) {
+            if(sectionCategoryTag == FRONT_END_SECTION) {
                 if(i == ANGULAR_INDEX) {
                     // apply incrementer
                     counterArrayWithLean[ANGULAR_INDEX] += GetRecommendationLeanPointsByCategoryTag(ANGULAR);
@@ -421,14 +432,7 @@ public class QuizLogic implements Serializable {
                     counterArrayWithLean[DJANO_INDEX] += GetRecommendationLeanPointsByCategoryTag(DJANGO);
                 }
             }
-        }
-        else if(sectionCategoryTag == BACK_END_SECTION) {
-            // array counter indices
-            final int NODE_JS_INDEX = 0;
-            final int EXPRESS_JS_INDEX = 1;
-            final int ASP_DOTNET_WEB_API_INDEX = 2;
-
-            for(int i = 0; i < rawTechCounterArray.length; i++) {
+            else if(sectionCategoryTag == BACK_END_SECTION) {
                 if(i == NODE_JS_INDEX) {
                     // apply incrementer
                     counterArrayWithLean[NODE_JS_INDEX] += GetRecommendationLeanPointsByCategoryTag(NODE_JS);
@@ -442,14 +446,7 @@ public class QuizLogic implements Serializable {
                     counterArrayWithLean[ASP_DOTNET_WEB_API_INDEX] += GetRecommendationLeanPointsByCategoryTag(ASP_DOTNET_WEB_API);
                 }
             }
-        }
-        else {
-            // array counter indices
-            final int MONGODB_INDEX = 0;
-            final int MYSQL_INDEX = 1;
-            final int POSTGRESQL_INDEX = 2;
-
-            for(int i = 0; i < rawTechCounterArray.length; i++) {
+            else {
                 if(i == MONGODB_INDEX) {
                     // apply incrementer
                     counterArrayWithLean[MONGODB_INDEX] += GetRecommendationLeanPointsByCategoryTag(MONGODB);
