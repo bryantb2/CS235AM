@@ -52,7 +52,7 @@ public class QuizLogic implements Serializable {
     public static final String DB_SECTION = "DB_SECTION";
 
     // CLASS FIELDS
-    private final int lean = 2; // +2 points for what category the lean is in
+    private final int LEAN_POINT_INCREMENTOR = 2; // +2 points for what category the lean is in
     private String generalCategoryLean;
     private String languageLean;
     private String PreferedFrontEndTech;
@@ -332,7 +332,7 @@ public class QuizLogic implements Serializable {
                         // add two points to array element
                     // otherwise, go to next array counter element
             // return counter array
-        int[] counterArrayWithLean = new int[0];
+        int[] counterArrayWithLean = rawTechCounterArray;
         if(sectionCategoryTag == FRONT_END_SECTION) {
             // array counter indices
             final int ANGULAR_INDEX = 0;
@@ -342,16 +342,28 @@ public class QuizLogic implements Serializable {
 
             for(int i = 0; i < rawTechCounterArray.length; i++) {
                 if(i == ANGULAR_INDEX) {
-                    GetRecommendationByTechname(ANGULAR);
+                    QuizRecommendation recommendation = GetRecommendationByTechname(ANGULAR);
+                    int incrementerPoints = CalcNumberOfLeanPoints(recommendation);
+                    // apply incrementer
+                    counterArrayWithLean[ANGULAR_INDEX] += incrementerPoints;
                 }
                 else if(i == REACT_JS_INDEX) {
-                    GetRecommendationByTechname(REACT_JS);
+                    QuizRecommendation recommendation = GetRecommendationByTechname(REACT_JS);
+                    int incrementerPoints = CalcNumberOfLeanPoints(recommendation);
+                    // apply incrementer
+                    counterArrayWithLean[REACT_JS_INDEX] += incrementerPoints;
                 }
                 else if(i == ASP_DOTNET_INDEX) {
-                    GetRecommendationByTechname(ASP_DOTNET);
+                    QuizRecommendation recommendation = GetRecommendationByTechname(ASP_DOTNET);
+                    int incrementerPoints = CalcNumberOfLeanPoints(recommendation);
+                    // apply incrementer
+                    counterArrayWithLean[ASP_DOTNET_INDEX] += incrementerPoints;
                 }
                 else {
-                    GetRecommendationByTechname(DJANGO);
+                    QuizRecommendation recommendation = GetRecommendationByTechname(DJANGO);
+                    int incrementerPoints = CalcNumberOfLeanPoints(recommendation);
+                    // apply incrementer
+                    counterArrayWithLean[DJANO_INDEX] += incrementerPoints;
                 }
             }
 
@@ -363,6 +375,20 @@ public class QuizLogic implements Serializable {
 
         }
         return counterArrayWithLean;
+    }
+
+    private int CalcNumberOfLeanPoints(QuizRecommendation recommendation) {
+        boolean doesGeneralLeanApply = DoesRecommendationGetGeneralLean(recommendation);
+        boolean doesLanguageLeanApply = DoesRecommendationGetLanguageLean(recommendation);
+        if(doesGeneralLeanApply == true && doesLanguageLeanApply == true) { // double the incrementer points
+            return LEAN_POINT_INCREMENTOR * 2;
+        }
+        else if(doesGeneralLeanApply == true || doesLanguageLeanApply == true) { // increment once
+            return LEAN_POINT_INCREMENTOR;
+        }
+        else {
+            return 0;
+        }
     }
 
     private boolean DoesRecommendationGetGeneralLean(QuizRecommendation recommendationObj) {
