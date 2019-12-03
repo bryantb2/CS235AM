@@ -120,7 +120,7 @@ public class QuizLogic implements Serializable {
             }
         }
         return null;
-    }
+    } // CHECKED
 
     // CALC LEAN METHODS -------------------------------------------------------------------------------------------------------------->
     private void EvaluateGeneralAnswersAndCalcLeans(ArrayList<String> generalSectionResults) {
@@ -223,7 +223,7 @@ public class QuizLogic implements Serializable {
         this.PreferedCSSFramework = prefCSSFramework;
         this.PreferedBackEndTech = prefBackEndTech;
         this.PreferedDBTech = prefDBTech;
-    }
+    } // CHECKED
 
     private String CalcPrefTechBySection(ArrayList<String> sectionAnswers, String categoryTag, boolean calculateCSSFramework) {
         // Determine which tag has been passed in
@@ -498,7 +498,7 @@ public class QuizLogic implements Serializable {
         // NOTE: this method can, and will, return zero if there are no leans applicable to the recommendation
         QuizRecommendation recommendation = GetRecommendationByTechname(recommendationName);
         return CalcNumberOfLeanPoints(recommendation);
-    }
+    } // CHECKED
 
     private QuizRecommendation GetRecommendationByTechname(String techName) {
         // this method takes in the string name of a recommendation, finds it in the pre-generated list, and returns it
@@ -508,7 +508,7 @@ public class QuizLogic implements Serializable {
                 return preGeneratedRecommendations.get(i);
         }
         return null; // error if it returns null
-    }
+    } // CHECKED
 
     private int CalcNumberOfLeanPoints(QuizRecommendation recommendation) {
         boolean doesGeneralLeanApply = DoesRecommendationGetGeneralLean(recommendation);
@@ -522,7 +522,7 @@ public class QuizLogic implements Serializable {
         else {
             return 0;
         }
-    }
+    } // CHECKED
 
     private boolean DoesRecommendationGetGeneralLean(QuizRecommendation recommendationObj) {
         // loop through recommendation objects tag
@@ -572,7 +572,7 @@ public class QuizLogic implements Serializable {
         categoryTags = new ArrayList<>();
         categoryTags.add(FAST_DEV_TIME);
         categoryTags.add(STRUCTURE);
-        recommendation = new QuizRecommendation((BOOTSTRAP + " OR "+ MATERIAL_UI), CSS_FRAMEWORK, FRONT_END_SECTION,categoryTags);
+        recommendation = new QuizRecommendation((BOOTSTRAP), CSS_FRAMEWORK, FRONT_END_SECTION,categoryTags);
         this.preGeneratedRecommendations.add(recommendation);
 
         // styled components recommendation object
